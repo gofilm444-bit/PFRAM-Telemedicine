@@ -1,0 +1,8 @@
+node_modules
+dist
+.expo
+coverage
+dist-expo
+package-lock.json
+.env.example
+apps/api/prisma/migrations

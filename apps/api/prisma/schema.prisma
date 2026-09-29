@@ -1,0 +1,380 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  MOTHER
+  MIDWIFE
+  ADMIN
+}
+
+enum UserStatus {
+  PENDING
+  ACTIVE
+  DISABLED
+  BLOCKED
+  ARCHIVED
+}
+
+enum RegionLevel {
+  PROVINCE
+  REGENCY
+  DISTRICT
+  VILLAGE
+}
+
+enum HealthFacilityType {
+  PUSKESMAS
+  HOSPITAL
+  CLINIC
+  INDEPENDENT_MIDWIFE
+  REFERRAL_FACILITY
+  OTHER
+}
+
+enum GestationalAgeSource {
+  LMP
+  HEALTH_WORKER_ASSESSMENT
+}
+
+enum PregnancyType {
+  SINGLETON
+  MULTIPLE
+  UNKNOWN
+}
+
+enum PregnancyStatus {
+  ACTIVE
+  COMPLETED
+  DELIVERY
+  MISCARRIAGE
+  REFERRED
+  ARCHIVED
+}
+
+enum AssignmentStatus {
+  PENDING
+  ACTIVE
+  REPLACED
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id String @id @default(uuid()) @db.Uuid
+  publicId String @unique @default(uuid()) @db.Uuid
+  phoneNumber String @unique
+  passwordHash String
+  role UserRole
+  status UserStatus @default(ACTIVE)
+  phoneVerifiedAt DateTime?
+  failedLoginCount Int @default(0)
+  lockedUntil DateTime?
+  lastLoginAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deactivatedAt DateTime?
+  motherProfile MotherProfile?
+  midwifeProfile MidwifeProfile?
+  adminProfile AdminProfile?
+  refreshSessions RefreshSession[]
+  consents UserConsent[]
+  auditLogs AuditLog[]
+  assignmentsCreated MotherMidwifeAssignment[] @relation("AssignmentCreator")
+  @@index([role, status])
+  @@index([lockedUntil])
+}
+
+model Region {
+  id String @id @default(uuid()) @db.Uuid
+  publicId String @unique @default(uuid()) @db.Uuid
+  code String?
+  name String
+  level RegionLevel
+  parentId String? @db.Uuid
+  active Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  archivedAt DateTime?
+  parent Region? @relation("RegionHierarchy", fields: [parentId], references: [id])
+  children Region[] @relation("RegionHierarchy")
+  provinceFacilities HealthFacility[] @relation("FacilityProvince")
+  regencyFacilities HealthFacility[] @relation("FacilityRegency")
+  districtFacilities HealthFacility[] @relation("FacilityDistrict")
+  villageFacilities HealthFacility[] @relation("FacilityVillage")
+  provinceMothers MotherProfile[] @relation("MotherProvince")
+  regencyMothers MotherProfile[] @relation("MotherRegency")
+  districtMothers MotherProfile[] @relation("MotherDistrict")
+  villageMothers MotherProfile[] @relation("MotherVillage")
+  midwifeAssignments MidwifeRegionAssignment[]
+  @@unique([parentId, level, name])
+  @@index([level, active, name])
+  @@index([parentId, active])
+}
+
+model HealthFacility {
+  id String @id @default(uuid()) @db.Uuid
+  publicId String @unique @default(uuid()) @db.Uuid
+  name String
+  type HealthFacilityType
+  address String
+  provinceId String @db.Uuid
+  regencyId String @db.Uuid
+  districtId String @db.Uuid
+  villageId String? @db.Uuid
+  phoneNumber String?
+  whatsappNumber String?
+  emergencyPhone String?
+  openingHours Json?
+  latitude Decimal? @db.Decimal(10, 7)
+  longitude Decimal? @db.Decimal(10, 7)
+  serviceInformation String?
+  active Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  archivedAt DateTime?
+  province Region @relation("FacilityProvince", fields: [provinceId], references: [id])
+  regency Region @relation("FacilityRegency", fields: [regencyId], references: [id])
+  district Region @relation("FacilityDistrict", fields: [districtId], references: [id])
+  village Region? @relation("FacilityVillage", fields: [villageId], references: [id])
+  primaryMidwives MidwifeProfile[] @relation("PrimaryFacility")
+  midwifeAssignments MidwifeFacilityAssignment[]
+  mothers MotherProfile[]
+  motherAssignments MotherMidwifeAssignment[]
+  @@index([active, type, name])
+  @@index([provinceId, regencyId, districtId])
+}
+
+model MotherProfile {
+  id String @id @default(uuid()) @db.Uuid
+  publicId String @unique @default(uuid()) @db.Uuid
+  userId String @unique @db.Uuid
+  fullName String
+  preferredName String?
+  dateOfBirth DateTime? @db.Date
+  address String?
+  provinceId String? @db.Uuid
+  regencyId String? @db.Uuid
+  districtId String? @db.Uuid
+  villageId String? @db.Uuid
+  primaryFacilityId String? @db.Uuid
+  familyContactName String?
+  familyContactPhone String?
+  emergencyContactName String?
+  emergencyContactPhone String?
+  emergencyContactRelationship String?
+  profileCompleted Boolean @default(false)
+  completedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  province Region? @relation("MotherProvince", fields: [provinceId], references: [id])
+  regency Region? @relation("MotherRegency", fields: [regencyId], references: [id])
+  district Region? @relation("MotherDistrict", fields: [districtId], references: [id])
+  village Region? @relation("MotherVillage", fields: [villageId], references: [id])
+  primaryFacility HealthFacility? @relation(fields: [primaryFacilityId], references: [id])
+  pregnancies Pregnancy[]
+  midwifeAssignments MotherMidwifeAssignment[]
+  @@index([profileCompleted])
+  @@index([primaryFacilityId])
+}
+
+model MidwifeProfile {
+  id String @id @default(uuid()) @db.Uuid
+  publicId String @unique @default(uuid()) @db.Uuid
+  userId String @unique @db.Uuid
+  fullName String
+  preferredName String?
+  phoneNumber String
+  whatsappNumber String?
+  professionalRegistrationNumber String?
+  position String?
+  serviceHours Json?
+  primaryFacilityId String? @db.Uuid
+  active Boolean @default(true)
+  profileCompleted Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  archivedAt DateTime?
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  primaryFacility HealthFacility? @relation("PrimaryFacility", fields: [primaryFacilityId], references: [id])
+  facilityAssignments MidwifeFacilityAssignment[]
+  regionAssignments MidwifeRegionAssignment[]
+  motherAssignments MotherMidwifeAssignment[]
+  @@index([active])
+  @@index([primaryFacilityId])
+}
+
+model MidwifeFacilityAssignment {
+  id String @id @default(uuid()) @db.Uuid
+  publicId String @unique @default(uuid()) @db.Uuid
+  midwifeId String @db.Uuid
+  facilityId String @db.Uuid
+  primary Boolean @default(false)
+  active Boolean @default(true)
+  startedAt DateTime @default(now())
+  endedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  midwife MidwifeProfile @relation(fields: [midwifeId], references: [id])
+  facility HealthFacility @relation(fields: [facilityId], references: [id])
+  @@index([midwifeId, active])
+  @@index([facilityId, active])
+}
+
+model MidwifeRegionAssignment {
+  id String @id @default(uuid()) @db.Uuid
+  publicId String @unique @default(uuid()) @db.Uuid
+  midwifeId String @db.Uuid
+  regionId String @db.Uuid
+  active Boolean @default(true)
+  startedAt DateTime @default(now())
+  endedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  midwife MidwifeProfile @relation(fields: [midwifeId], references: [id])
+  region Region @relation(fields: [regionId], references: [id])
+  @@index([midwifeId, active])
+  @@index([regionId, active])
+}
+
+model Pregnancy {
+  id String @id @default(uuid()) @db.Uuid
+  publicId String @unique @default(uuid()) @db.Uuid
+  motherId String @db.Uuid
+  pregnancyNumber Int
+  lastMenstrualPeriod DateTime? @db.Date
+  estimatedDueDate DateTime @db.Date
+  gestationalAgeSource GestationalAgeSource
+  assessmentDate DateTime? @db.Date
+  initialGestationalAgeWeeks Int?
+  initialGestationalAgeDays Int?
+  pregnancyType PregnancyType @default(UNKNOWN)
+  previousPregnancyCount Int @default(0)
+  previousDeliveryCount Int @default(0)
+  miscarriageCount Int @default(0)
+  previousCesarean Boolean @default(false)
+  hypertensionHistory Boolean @default(false)
+  preeclampsiaHistory Boolean @default(false)
+  diabetesHistory Boolean @default(false)
+  heartDiseaseHistory Boolean @default(false)
+  kidneyDiseaseHistory Boolean @default(false)
+  otherDiseaseHistory String?
+  additionalNotes String?
+  status PregnancyStatus @default(ACTIVE)
+  startedAt DateTime @default(now())
+  endedAt DateTime?
+  outcome String?
+  completedProfile Boolean @default(false)
+  dueDateCorrectionReason String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  mother MotherProfile @relation(fields: [motherId], references: [id])
+  assignments MotherMidwifeAssignment[]
+  @@unique([motherId, pregnancyNumber])
+  @@index([motherId, status])
+}
+
+model MotherMidwifeAssignment {
+  id String @id @default(uuid()) @db.Uuid
+  publicId String @unique @default(uuid()) @db.Uuid
+  motherId String @db.Uuid
+  pregnancyId String @db.Uuid
+  midwifeId String @db.Uuid
+  facilityId String @db.Uuid
+  status AssignmentStatus @default(ACTIVE)
+  startedAt DateTime @default(now())
+  endedAt DateTime?
+  assignedByUserId String @db.Uuid
+  replacementReason String?
+  notes String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  mother MotherProfile @relation(fields: [motherId], references: [id])
+  pregnancy Pregnancy @relation(fields: [pregnancyId], references: [id])
+  midwife MidwifeProfile @relation(fields: [midwifeId], references: [id])
+  facility HealthFacility @relation(fields: [facilityId], references: [id])
+  assignedBy User @relation("AssignmentCreator", fields: [assignedByUserId], references: [id])
+  @@index([motherId, pregnancyId, status])
+  @@index([midwifeId, status])
+  @@index([facilityId, status])
+}
+
+model AdminProfile {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @unique @db.Uuid
+  fullName String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model RefreshSession {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  tokenHash String @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  deviceName String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId, revokedAt])
+  @@index([expiresAt])
+}
+
+model ConsentDocument {
+  id String @id @default(uuid()) @db.Uuid
+  documentType String
+  version String
+  title String
+  content String
+  active Boolean @default(false)
+  effectiveAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  consents UserConsent[]
+  @@unique([documentType, version])
+  @@index([active, effectiveAt])
+}
+
+model UserConsent {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  documentId String @db.Uuid
+  agreedAt DateTime @default(now())
+  withdrawnAt DateTime?
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  document ConsentDocument @relation(fields: [documentId], references: [id])
+  @@unique([userId, documentId])
+}
+
+model AuditLog {
+  id String @id @default(uuid()) @db.Uuid
+  actorUserId String? @db.Uuid
+  actorRole UserRole?
+  action String
+  entityType String?
+  entityId String?
+  result String
+  requestId String?
+  metadata Json?
+  createdAt DateTime @default(now())
+  actor User? @relation(fields: [actorUserId], references: [id], onDelete: SetNull)
+  @@index([createdAt])
+  @@index([actorUserId, createdAt])
+  @@index([action, result])
+}
+
+model SystemSetting {
+  id String @id @default(uuid()) @db.Uuid
+  key String @unique
+  value Json
+  updatedAt DateTime @updatedAt
+}

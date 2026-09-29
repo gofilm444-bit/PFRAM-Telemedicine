@@ -1,0 +1,47 @@
+{
+  "name": "pfram-telemedicine",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "prepare:dev": "node infrastructure/scripts/prepare-dev.mjs",
+    "predev": "npm run prepare:dev && npm run infra:up && npm run db:generate && npm run db:migrate && npm run db:seed",
+    "dev": "concurrently -n api,web,mobile -c green,cyan,magenta \"npm run dev:api\" \"npm run dev:web\" \"npm run dev:mobile\"",
+    "dev:mobile": "dotenv -e .env -- npm run start -w @pfram/mobile",
+    "dev:web": "dotenv -e .env -- npm run dev -w @pfram/web",
+    "dev:api": "dotenv -e .env -- npm run dev -w @pfram/api",
+    "build": "npm run build:web && npm run build:api",
+    "build:web": "npm run build -w @pfram/web",
+    "build:api": "npm run build -w @pfram/api",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:api": "npm run test -w @pfram/api",
+    "test:web": "npm run test -w @pfram/web",
+    "lint": "eslint . --max-warnings=0",
+    "format:check": "prettier --check .",
+    "db:generate": "dotenv -e .env -- npm run db:generate -w @pfram/api",
+    "db:migrate": "dotenv -e .env -- npm run db:migrate -w @pfram/api",
+    "db:seed": "dotenv -e .env -- npm run db:seed -w @pfram/api",
+    "db:studio": "dotenv -e .env -- npm run db:studio -w @pfram/api",
+    "infra:up": "docker compose -f infrastructure/docker/docker-compose.yml up -d --wait postgres minio && docker compose -f infrastructure/docker/docker-compose.yml --profile bootstrap run --rm minio-bootstrap",
+    "infra:down": "docker compose -f infrastructure/docker/docker-compose.yml down",
+    "verify": "npm run typecheck && npm run lint && npm run test && npm run build"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "concurrently": "^9.1.2",
+    "dotenv-cli": "^8.0.0",
+    "eslint": "^9.17.0",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "globals": "^15.14.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.2"
+  }
+}

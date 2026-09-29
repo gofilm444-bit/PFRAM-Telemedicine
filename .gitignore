@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.expo/
+coverage/
+.env
+.env.*
+!.env.example
+*.log
+.smoke*.log
+.DS_Store
+apps/mobile/.expo/
+apps/mobile/dist-expo/
