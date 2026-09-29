@@ -924,18 +924,7 @@ export async function adminStage3Routes(app: FastifyInstance) {
   app.get("/mothers/:publicId", async (req, reply) => {
     const row = await app.prisma.motherProfile.findUnique({
       where: { publicId: routeParams(req).publicId },
-      select: {
-        publicId: true,
-        fullName: true,
-        preferredName: true,
-        phoneNumber: true,
-        whatsappNumber: true,
-        professionalRegistrationNumber: true,
-        position: true,
-        serviceHours: true,
-        active: true,
-        profileCompleted: true,
-        user: { select: { publicId: true, status: true } },
+      include: {
         primaryFacility: { select: { publicId: true, name: true } },
         pregnancies: { where: { status: "ACTIVE" }, take: 1 },
       },
@@ -1280,6 +1269,8 @@ export async function motherStage3Routes(app: FastifyInstance) {
     });
     return app.ok(req, {
       publicId: p.publicId,
+      fullName: p.fullName,
+      preferredName: p.preferredName,
       profileCompleted: p.profileCompleted,
     });
   });

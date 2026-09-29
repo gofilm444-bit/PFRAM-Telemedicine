@@ -7,6 +7,7 @@ import {
   parseDateOnly,
   pregnancySchema,
   trimesterFromWeeks,
+  monitoringCreateSchema,
 } from "./index";
 
 describe("perhitungan date-only", () => {
@@ -58,3 +59,68 @@ describe("perhitungan date-only", () => {
       calculateGestationalAge("2026-08-01", 10, 3, parseDateOnly("2026-08-06")),
     ).toEqual({ weeks: 11, days: 1, totalDays: 78 }));
 });
+
+describe("monitoring validation schemas", () => {
+  it("menerima catatan berat badan saja", () => {
+    const res = monitoringCreateSchema.safeParse({ weightKg: 58.5 });
+    expect(res.success).toBe(true);
+  });
+
+  it("menerima catatan tekanan darah saja", () => {
+    const res = monitoringCreateSchema.safeParse({ systolicBp: 110, diastolicBp: 70 });
+    expect(res.success).toBe(true);
+  });
+
+  it("menerima kombinasi berat badan dan tekanan darah", () => {
+    const res = monitoringCreateSchema.safeParse({
+      weightKg: 62.0,
+      systolicBp: 120,
+      diastolicBp: 80,
+      source: "PUSKESMAS",
+    });
+    expect(res.success).toBe(true);
+  });
+
+  it("menolak catatan monitoring kosong", () => {
+    const res = monitoringCreateSchema.safeParse({});
+    expect(res.success).toBe(false);
+  });
+
+  it("menolak berat badan non-positif atau ekstrem", () => {
+    expect(monitoringCreateSchema.safeParse({ weightKg: 0 }).success).toBe(false);
+    expect(monitoringCreateSchema.safeParse({ weightKg: -5 }).success).toBe(false);
+    expect(monitoringCreateSchema.safeParse({ weightKg: 10 }).success).toBe(false);
+    expect(monitoringCreateSchema.safeParse({ weightKg: 350 }).success).toBe(false);
+  });
+
+  it("menolak tekanan darah tidak berpasangan", () => {
+    expect(monitoringCreateSchema.safeParse({ systolicBp: 120 }).success).toBe(false);
+    expect(monitoringCreateSchema.safeParse({ diastolicBp: 80 }).success).toBe(false);
+  });
+
+  it("menolak sistolik lebih kecil atau sama dengan diastolik", () => {
+    expect(
+      monitoringCreateSchema.safeParse({ systolicBp: 80, diastolicBp: 80 }).success,
+    ).toBe(false);
+    expect(
+      monitoringCreateSchema.safeParse({ systolicBp: 70, diastolicBp: 90 }).success,
+    ).toBe(false);
+  });
+
+  it("menolak tekanan darah di luar batas teknis wajar", () => {
+    expect(
+      monitoringCreateSchema.safeParse({ systolicBp: 350, diastolicBp: 80 }).success,
+    ).toBe(false);
+    expect(
+      monitoringCreateSchema.safeParse({ systolicBp: 120, diastolicBp: 20 }).success,
+    ).toBe(false);
+  });
+
+  it("menolak recordedAt di masa depan", () => {
+    const future = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+    expect(
+      monitoringCreateSchema.safeParse({ weightKg: 55, recordedAt: future }).success,
+    ).toBe(false);
+  });
+});
+

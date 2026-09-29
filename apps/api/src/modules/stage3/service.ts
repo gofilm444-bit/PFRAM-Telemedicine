@@ -106,22 +106,25 @@ export async function profileCompletion(
   });
   if (!profile)
     return {
-      status: "PERSONAL_PROFILE_INCOMPLETE" as const,
+      status: "ACCOUNT_READY" as const,
       profileCompleted: false,
       activePregnancy: null,
       selectedFacility: null,
       activeMidwifeAssignment: null,
     };
   const pregnancy = profile.pregnancies[0];
-  const status = !profile.profileCompleted
-    ? "PERSONAL_PROFILE_INCOMPLETE"
-    : !profile.primaryFacility
-      ? "FACILITY_NOT_SELECTED"
-      : !pregnancy?.completedProfile
-        ? "PREGNANCY_PROFILE_INCOMPLETE"
-        : !pregnancy.assignments[0]
-          ? "MIDWIFE_NOT_ASSIGNED"
-          : "COMPLETE";
+  const isFreshAccount = !profile.profileCompleted && !profile.dateOfBirth && !profile.address && !profile.provinceId;
+  const status = isFreshAccount
+    ? ("ACCOUNT_READY" as const)
+    : !profile.profileCompleted
+      ? ("PERSONAL_PROFILE_INCOMPLETE" as const)
+      : !profile.primaryFacility
+        ? ("FACILITY_NOT_SELECTED" as const)
+        : !pregnancy?.completedProfile
+          ? ("PREGNANCY_PROFILE_INCOMPLETE" as const)
+          : !pregnancy.assignments[0]
+            ? ("MIDWIFE_NOT_ASSIGNED" as const)
+            : ("COMPLETE" as const);
   return {
     status,
     profileCompleted: status === "COMPLETE",

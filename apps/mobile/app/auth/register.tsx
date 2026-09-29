@@ -10,6 +10,8 @@ import {
   ScreenContainer,
 } from "../../components/ui";
 import { useAuth } from "../../lib/auth";
+import { destinationFor } from "../../lib/profile-routing";
+
 export default function Register() {
   const { register, request } = useAuth();
   const [form, setForm] = useState({
@@ -66,11 +68,11 @@ export default function Register() {
         disabled={!agreed || !consents.length}
         onPress={async () => {
           try {
-            await register({
+            const user = await register({
               ...form,
               consentDocumentIds: consents.map((x) => x.id),
             });
-            router.replace("/(app)/home");
+            router.replace(destinationFor(user));
           } catch (e) {
             setError(e instanceof Error ? e.message : "Registrasi gagal");
           }

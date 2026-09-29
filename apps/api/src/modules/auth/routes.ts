@@ -5,9 +5,8 @@ import {
   motherRegistrationSchema,
   refreshSessionSchema,
 } from "@pfram/validation";
-import { audit, issueSession, publicUser, verifyPassword } from "./service.js";
+import { audit, authenticatedUserView, issueSession, verifyPassword } from "./service.js";
 import { hashToken, newOpaqueToken, safeEqual } from "../../shared/security.js";
-import { profileCompletion } from "../stage3/service.js";
 const profileInclude = {
   motherProfile: true,
   midwifeProfile: true,
@@ -126,7 +125,7 @@ export async function authRoutes(app: FastifyInstance) {
             refreshToken:
               v.clientType === "mobile" ? s.refreshToken : undefined,
             csrfToken: csrf,
-            user: publicUser(user),
+            user: await authenticatedUserView(app.prisma, user),
           }),
         );
       } catch (e) {
@@ -235,7 +234,7 @@ export async function authRoutes(app: FastifyInstance) {
         ...s,
         refreshToken: v.clientType === "mobile" ? s.refreshToken : undefined,
         csrfToken: csrf,
-        user: publicUser(user),
+        user: await authenticatedUserView(app.prisma, user),
       });
     },
   );
@@ -289,7 +288,7 @@ export async function authRoutes(app: FastifyInstance) {
         refreshToken:
           parsed.data.clientType === "mobile" ? s.refreshToken : undefined,
         csrfToken: csrf,
-        user: publicUser(session.user),
+        user: await authenticatedUserView(app.prisma, session.user),
       });
     },
   );
@@ -319,21 +318,6 @@ export async function authRoutes(app: FastifyInstance) {
       return reply
         .code(404)
         .send(app.fail(req, "USER_NOT_FOUND", "Pengguna tidak ditemukan"));
-    const completion =
-      user.role === "MOTHER"
-        ? await profileCompletion(app.prisma, user.id)
-        : null;
-    return app.ok(req, {
-      ...publicUser(user),
-      ...(completion
-        ? {
-            profileCompletionStatus: completion.status,
-            profileCompleted: completion.profileCompleted,
-            activePregnancy: completion.activePregnancy,
-            selectedFacility: completion.selectedFacility,
-            activeMidwifeAssignment: completion.activeMidwifeAssignment,
-          }
-        : {}),
-    });
+    return app.ok(req, await authenticatedUserView(app.prisma, user));
   });
 }

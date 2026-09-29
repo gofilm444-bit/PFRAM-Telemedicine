@@ -17,6 +17,10 @@ import {
   motherStage3Routes,
   referenceRoutes,
 } from "./modules/stage3/routes.js";
+import {
+  midwifeMonitoringRoutes,
+  motherMonitoringRoutes,
+} from "./modules/monitoring/routes.js";
 declare module "fastify" {
   interface FastifyInstance {
     prisma: PrismaClient;
@@ -106,7 +110,12 @@ export function buildApp(
   app.register(swagger, {
     openapi: {
       info: { title: "PFRAM Telemedicine API", version: "0.1.0" },
-      tags: [{ name: "health" }, { name: "auth" }],
+      tags: [
+        { name: "health" },
+        { name: "auth" },
+        { name: "stage3" },
+        { name: "monitoring" },
+      ],
     },
   });
   app.register(swaggerUi, { routePrefix: "/docs" });
@@ -117,6 +126,8 @@ export function buildApp(
   app.register(adminStage3Routes, { prefix: "/api/admin" });
   app.register(motherStage3Routes, { prefix: "/api/mother" });
   app.register(midwifeStage3Routes, { prefix: "/api/midwife" });
+  app.register(motherMonitoringRoutes, { prefix: "/api/mother" });
+  app.register(midwifeMonitoringRoutes, { prefix: "/api/midwife" });
   app.setErrorHandler((error, req, reply) => {
     req.log.error({ err: error }, "request_failed");
     const status = (error as { statusCode?: number }).statusCode ?? 500;

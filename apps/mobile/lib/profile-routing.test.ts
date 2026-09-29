@@ -13,8 +13,16 @@ const user = (
   profileCompletionStatus,
 });
 describe("bootstrap profil mobile", () => {
+  it("mengarahkan akun baru ke profil pribadi", () =>
+    expect(destinationFor(user("ACCOUNT_READY"))).toBe(
+      "/registration/personal-profile",
+    ));
   it("mengarahkan profil kosong ke profil pribadi", () =>
     expect(destinationFor(user("PERSONAL_PROFILE_INCOMPLETE"))).toBe(
+      "/registration/personal-profile",
+    ));
+  it("mengarahkan fasilitas belum dipilih ke profil pribadi", () =>
+    expect(destinationFor(user("FACILITY_NOT_SELECTED"))).toBe(
       "/registration/personal-profile",
     ));
   it("mengarahkan profil pribadi lengkap ke profil kehamilan", () =>

@@ -14,6 +14,9 @@ const IDS = {
   village: "31000000-0000-4000-8000-000000000004",
   facility: "32000000-0000-4000-8000-000000000001",
   assignment: "33000000-0000-4000-8000-000000000001",
+  monitoringWeight: "34000000-0000-4000-8000-000000000001",
+  monitoringBp: "34000000-0000-4000-8000-000000000002",
+  monitoringCombined: "34000000-0000-4000-8000-000000000003",
 } as const;
 
 async function upsertUser(
@@ -292,8 +295,89 @@ async function main() {
       },
     },
   });
+  await prisma.monitoringEntry.upsert({
+    where: { publicId: IDS.monitoringWeight },
+    update: {
+      motherId: mother.id,
+      pregnancyId: pregnancy.id,
+      recordedAt: new Date("2026-08-01T08:00:00Z"),
+      source: "SELF",
+      weightKg: 56.5,
+      systolicBp: null,
+      diastolicBp: null,
+      notes: "Catatan berat badan mandiri development",
+      createdByUserId: motherUser.id,
+      archivedAt: null,
+    },
+    create: {
+      publicId: IDS.monitoringWeight,
+      motherId: mother.id,
+      pregnancyId: pregnancy.id,
+      recordedAt: new Date("2026-08-01T08:00:00Z"),
+      source: "SELF",
+      weightKg: 56.5,
+      notes: "Catatan berat badan mandiri development",
+      createdByUserId: motherUser.id,
+    },
+  });
+
+  await prisma.monitoringEntry.upsert({
+    where: { publicId: IDS.monitoringBp },
+    update: {
+      motherId: mother.id,
+      pregnancyId: pregnancy.id,
+      recordedAt: new Date("2026-08-03T09:30:00Z"),
+      source: "POSYANDU",
+      weightKg: null,
+      systolicBp: 115,
+      diastolicBp: 75,
+      notes: "Pemeriksaan tensi di Posyandu development",
+      createdByUserId: midwifeUser.id,
+      archivedAt: null,
+    },
+    create: {
+      publicId: IDS.monitoringBp,
+      motherId: mother.id,
+      pregnancyId: pregnancy.id,
+      recordedAt: new Date("2026-08-03T09:30:00Z"),
+      source: "POSYANDU",
+      systolicBp: 115,
+      diastolicBp: 75,
+      notes: "Pemeriksaan tensi di Posyandu development",
+      createdByUserId: midwifeUser.id,
+    },
+  });
+
+  await prisma.monitoringEntry.upsert({
+    where: { publicId: IDS.monitoringCombined },
+    update: {
+      motherId: mother.id,
+      pregnancyId: pregnancy.id,
+      recordedAt: new Date("2026-08-05T10:15:00Z"),
+      source: "PUSKESMAS",
+      weightKg: 57.8,
+      systolicBp: 118,
+      diastolicBp: 78,
+      notes: "Pemeriksaan rutin Puskesmas development",
+      createdByUserId: midwifeUser.id,
+      archivedAt: null,
+    },
+    create: {
+      publicId: IDS.monitoringCombined,
+      motherId: mother.id,
+      pregnancyId: pregnancy.id,
+      recordedAt: new Date("2026-08-05T10:15:00Z"),
+      source: "PUSKESMAS",
+      weightKg: 57.8,
+      systolicBp: 118,
+      diastolicBp: 78,
+      notes: "Pemeriksaan rutin Puskesmas development",
+      createdByUserId: midwifeUser.id,
+    },
+  });
+
   console.log(
-    "Seed Tahap 3 development selesai. Kredensial tercantum di README.",
+    "Seed Tahap 4A development selesai. Kredensial tercantum di README.",
   );
 }
 

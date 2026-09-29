@@ -314,3 +314,141 @@ export const replacementSchema = z.object({
 export const assignmentActionSchema = z.object({
   reason: z.string().trim().min(3).max(500).optional(),
 });
+
+export const monitoringSourceSchema = z.enum([
+  "SELF",
+  "POSYANDU",
+  "PUSKESMAS",
+  "HOSPITAL",
+  "CLINIC",
+  "MIDWIFE",
+  "OTHER",
+]);
+
+export const weightSchema = z.coerce
+  .number()
+  .refine((w) => w > 0, "Berat badan harus lebih besar dari 0 kg")
+  .refine(
+    (w) => w >= 20 && w <= 300,
+    "Berat badan di luar batas wajar (20 - 300 kg)",
+  );
+
+export const systolicBpSchema = z.coerce
+  .number()
+  .int("Tekanan darah sistolik harus bilangan bulat")
+  .min(40, "Tekanan sistolik minimal 40 mmHg")
+  .max(300, "Tekanan sistolik maksimal 300 mmHg");
+
+export const diastolicBpSchema = z.coerce
+  .number()
+  .int("Tekanan darah diastolik harus bilangan bulat")
+  .min(30, "Tekanan diastolik minimal 30 mmHg")
+  .max(200, "Tekanan diastolik maksimal 200 mmHg");
+
+export const recordedAtSchema = z.string().refine((val) => {
+  const d = new Date(val);
+  if (isNaN(d.getTime())) return false;
+  return d.getTime() <= Date.now() + 5 * 60 * 1000;
+}, "Waktu pengukuran tidak boleh di masa depan");
+
+export const monitoringBaseSchema = z.object({
+  pregnancyPublicId: publicIdSchema.optional(),
+  recordedAt: recordedAtSchema.optional(),
+  source: monitoringSourceSchema.optional(),
+  weightKg: weightSchema.optional(),
+  systolicBp: systolicBpSchema.optional(),
+  diastolicBp: diastolicBpSchema.optional(),
+  notes: z.string().trim().max(500, "Catatan maksimal 500 karakter").optional(),
+});
+
+export const monitoringCreateSchema = monitoringBaseSchema.superRefine((v, ctx) => {
+  const hasWeight = v.weightKg !== undefined && v.weightKg !== null;
+  const hasSystolic = v.systolicBp !== undefined && v.systolicBp !== null;
+  const hasDiastolic = v.diastolicBp !== undefined && v.diastolicBp !== null;
+
+  if (!hasWeight && !hasSystolic && !hasDiastolic) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Minimal salah satu harus diisi: berat badan atau tekanan darah",
+    });
+    return;
+  }
+
+  if (hasSystolic && !hasDiastolic) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["diastolicBp"],
+      message: "Tekanan diastolik wajib diisi jika tekanan sistolik diisi",
+    });
+  }
+
+  if (!hasSystolic && hasDiastolic) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["systolicBp"],
+      message: "Tekanan sistolik wajib diisi jika tekanan diastolik diisi",
+    });
+  }
+
+  if (hasSystolic && hasDiastolic && v.systolicBp! <= v.diastolicBp!) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["systolicBp"],
+      message: "Tekanan sistolik harus lebih besar dari diastolik",
+    });
+  }
+});
+
+export const monitoringUpdateSchema = z
+  .object({
+    recordedAt: recordedAtSchema.optional(),
+    source: monitoringSourceSchema.optional(),
+    weightKg: weightSchema.nullable().optional(),
+    systolicBp: systolicBpSchema.nullable().optional(),
+    diastolicBp: diastolicBpSchema.nullable().optional(),
+    notes: z
+      .string()
+      .trim()
+      .max(500, "Catatan maksimal 500 karakter")
+      .nullable()
+      .optional(),
+  })
+  .superRefine((v, ctx) => {
+    const hasSystolic = v.systolicBp !== undefined && v.systolicBp !== null;
+    const hasDiastolic = v.diastolicBp !== undefined && v.diastolicBp !== null;
+
+    if (hasSystolic && !hasDiastolic) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["diastolicBp"],
+        message: "Tekanan diastolik wajib diisi jika tekanan sistolik diisi",
+      });
+    }
+
+    if (!hasSystolic && hasDiastolic) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["systolicBp"],
+        message: "Tekanan sistolik wajib diisi jika tekanan diastolik diisi",
+      });
+    }
+
+    if (hasSystolic && hasDiastolic && v.systolicBp! <= v.diastolicBp!) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["systolicBp"],
+        message: "Tekanan sistolik harus lebih besar dari diastolik",
+      });
+    }
+  });
+
+export const monitoringQuerySchema = z.object({
+  pregnancyPublicId: publicIdSchema.optional(),
+  from: z.string().optional(),
+  to: z.string().optional(),
+  type: z.enum(["all", "weight", "blood_pressure", "both"]).optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(50).default(10),
+  sort: z.enum(["asc", "desc"]).default("desc"),
+});
+

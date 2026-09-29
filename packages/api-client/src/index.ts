@@ -1,4 +1,15 @@
-import type { ApiError, ApiSuccess, SessionInfo } from "@pfram/shared-types";
+import type {
+  ApiError,
+  ApiSuccess,
+  MonitoringCreateInput,
+  MonitoringEntry,
+  MonitoringListItem,
+  MonitoringQuery,
+  MonitoringSummary,
+  MonitoringUpdateInput,
+  PaginatedResponse,
+  SessionInfo,
+} from "@pfram/shared-types";
 export interface SessionAdapter {
   getRefreshToken(): Promise<string | null>;
   setRefreshToken(token: string | null): Promise<void>;
@@ -120,3 +131,74 @@ export function createApiClient(options: {
     refresh,
   };
 }
+export function createMonitoringClient(client: ReturnType<typeof createApiClient>) {
+  return {
+    mother: {
+      list: (query?: MonitoringQuery) => {
+        const sp = new URLSearchParams();
+        if (query?.pregnancyPublicId) sp.set("pregnancyPublicId", query.pregnancyPublicId);
+        if (query?.from) sp.set("from", query.from);
+        if (query?.to) sp.set("to", query.to);
+        if (query?.type) sp.set("type", query.type);
+        if (query?.page) sp.set("page", String(query.page));
+        if (query?.limit) sp.set("limit", String(query.limit));
+        if (query?.sort) sp.set("sort", query.sort);
+        const qs = sp.toString();
+        return client.request<PaginatedResponse<MonitoringListItem>>(
+          `/mother/monitoring${qs ? `?${qs}` : ""}`,
+        );
+      },
+      get: (publicId: string) =>
+        client.request<MonitoringEntry>(`/mother/monitoring/${publicId}`),
+      getSummary: () => client.request<MonitoringSummary>("/mother/monitoring/summary"),
+      create: (input: MonitoringCreateInput) =>
+        client.request<MonitoringEntry>("/mother/monitoring", {
+          method: "POST",
+          body: JSON.stringify(input),
+        }),
+      update: (publicId: string, input: MonitoringUpdateInput) =>
+        client.request<MonitoringEntry>(`/mother/monitoring/${publicId}`, {
+          method: "PATCH",
+          body: JSON.stringify(input),
+        }),
+      archive: (publicId: string) =>
+        client.request<{ publicId: string; archivedAt: string }>(
+          `/mother/monitoring/${publicId}/archive`,
+          { method: "POST" },
+        ),
+    },
+    midwife: {
+      list: (motherPublicId: string, query?: MonitoringQuery) => {
+        const sp = new URLSearchParams();
+        if (query?.pregnancyPublicId) sp.set("pregnancyPublicId", query.pregnancyPublicId);
+        if (query?.from) sp.set("from", query.from);
+        if (query?.to) sp.set("to", query.to);
+        if (query?.type) sp.set("type", query.type);
+        if (query?.page) sp.set("page", String(query.page));
+        if (query?.limit) sp.set("limit", String(query.limit));
+        if (query?.sort) sp.set("sort", query.sort);
+        const qs = sp.toString();
+        return client.request<PaginatedResponse<MonitoringListItem>>(
+          `/midwife/mothers/${motherPublicId}/monitoring${qs ? `?${qs}` : ""}`,
+        );
+      },
+      get: (motherPublicId: string, publicId: string) =>
+        client.request<MonitoringEntry>(
+          `/midwife/mothers/${motherPublicId}/monitoring/${publicId}`,
+        ),
+      getSummary: (motherPublicId: string) =>
+        client.request<MonitoringSummary>(
+          `/midwife/mothers/${motherPublicId}/monitoring/summary`,
+        ),
+      create: (motherPublicId: string, input: MonitoringCreateInput) =>
+        client.request<MonitoringEntry>(
+          `/midwife/mothers/${motherPublicId}/monitoring`,
+          {
+            method: "POST",
+            body: JSON.stringify(input),
+          },
+        ),
+    },
+  };
+}
+

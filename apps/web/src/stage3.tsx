@@ -503,13 +503,56 @@ export function MothersPage({ midwife = false }: { midwife?: boolean }) {
   );
 }
 export function AssignmentsPage() {
+  const { request } = useAuth();
   const list = useList<Assignment>("/admin/assignments");
+  const [actionId, setActionId] = useState<string | null>(null);
+  const [actionType, setActionType] = useState<"replace" | "complete" | "cancel" | null>(null);
+  const [replacementMidwifeId, setReplacementMidwifeId] = useState("");
+  const [reason, setReason] = useState("");
+  const [message, setMessage] = useState("");
+  const [midwives, setMidwives] = useState<{ publicId: string; fullName: string }[]>([]);
+
+  useEffect(() => {
+    request<Page<{ publicId: string; fullName: string }>>("/admin/midwives?active=true&limit=100")
+      .then((res) => setMidwives(res.items))
+      .catch(() => setMidwives([]));
+  }, [request]);
+
+  const handleAction = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!actionId || !actionType) return;
+    setMessage("");
+    try {
+      if (actionType === "replace") {
+        await request(`/admin/assignments/${actionId}/replace`, {
+          method: "POST",
+          body: JSON.stringify({ midwifePublicId: replacementMidwifeId, reason }),
+        });
+        setMessage("Bidan berhasil diganti.");
+      } else {
+        await request(`/admin/assignments/${actionId}/${actionType}`, {
+          method: "POST",
+          body: JSON.stringify({ reason: reason || undefined }),
+        });
+        setMessage(`Penugasan berhasil di-${actionType === "complete" ? "selesaikan" : "batalkan"}.`);
+      }
+      setActionId(null);
+      setActionType(null);
+      setReason("");
+      setReplacementMidwifeId("");
+      list.load();
+    } catch (err) {
+      setMessage(err instanceof Error ? err.message : "Aksi gagal diproses");
+    }
+  };
+
   return (
     <>
       <PageHeader
         title="Penugasan Bidan"
-        description="Tetapkan dan pertahankan riwayat pendampingan ibu."
+        description="Tetapkan, ganti, dan pantau riwayat pendampingan ibu hamil."
       />
+      {message && <div className="rounded-xl bg-slate-100 p-3 text-sm font-medium">{message}</div>}
       <Card>
         <State
           loading={!list.data}
@@ -517,11 +560,119 @@ export function AssignmentsPage() {
           empty={list.data?.items.length === 0}
         />
         {list.data?.items.map((v) => (
-          <div className="border-b py-3" key={v.publicId}>
-            <b>{v.mother.fullName}</b>
-            <p className="text-sm text-slate-600">
-              {v.midwife.fullName} · {v.facility.name} · {v.status}
-            </p>
+          <div className="border-b py-4" key={v.publicId}>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <b className="text-base">{v.mother.fullName}</b>
+                <p className="text-sm text-slate-600">
+                  Bidan: {v.midwife.fullName} · {v.facility.name}
+                </p>
+                <p className="text-xs text-slate-500">Mulai: {new Date(v.startedAt).toLocaleDateString("id-ID")}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span
+                  className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
+                    v.status === "ACTIVE"
+                      ? "bg-emerald-100 text-emerald-800"
+                      : v.status === "COMPLETED"
+                        ? "bg-blue-100 text-blue-800"
+                        : v.status === "REPLACED"
+                          ? "bg-amber-100 text-amber-800"
+                          : "bg-slate-200 text-slate-800"
+                  }`}
+                >
+                  {v.status}
+                </span>
+                {v.status === "ACTIVE" && (
+                  <>
+                    <button
+                      type="button"
+                      className="rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-medium hover:bg-slate-100"
+                      onClick={() => {
+                        setActionId(v.publicId);
+                        setActionType("replace");
+                        setReason("");
+                      }}
+                    >
+                      Ganti Bidan
+                    </button>
+                    <button
+                      type="button"
+                      className="rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-medium hover:bg-slate-100"
+                      onClick={() => {
+                        setActionId(v.publicId);
+                        setActionType("complete");
+                        setReason("");
+                      }}
+                    >
+                      Selesai
+                    </button>
+                    <button
+                      type="button"
+                      className="rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-medium text-rose-600 hover:bg-rose-50"
+                      onClick={() => {
+                        setActionId(v.publicId);
+                        setActionType("cancel");
+                        setReason("");
+                      }}
+                    >
+                      Batal
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+            {actionId === v.publicId && actionType && (
+              <form onSubmit={handleAction} className="mt-3 grid gap-3 rounded-xl bg-slate-50 p-4">
+                <div className="font-semibold text-sm">
+                  {actionType === "replace"
+                    ? "Ganti Bidan Pendamping"
+                    : actionType === "complete"
+                      ? "Selesaikan Penugasan"
+                      : "Batalkan Penugasan"}
+                </div>
+                {actionType === "replace" && (
+                  <label className="grid gap-1 text-sm font-medium">
+                    <span>Bidan Pengganti</span>
+                    <select
+                      className="min-h-11 rounded-xl border border-slate-300 bg-white px-3 text-slate-900"
+                      value={replacementMidwifeId}
+                      onChange={(e) => setReplacementMidwifeId(e.target.value)}
+                      required
+                    >
+                      <option value="">-- Pilih Bidan Pengganti --</option>
+                      {midwives.map((m) => (
+                        <option key={m.publicId} value={m.publicId}>
+                          {m.fullName}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                )}
+                <Input
+                  label={actionType === "replace" ? "Alasan Pergantian (wajib)" : "Alasan (opsional)"}
+                  value={reason}
+                  onChange={(e) => setReason(e.target.value)}
+                  placeholder={actionType === "replace" ? "Contoh: Bidan berpindah tugas" : "Catatan penyelesaian"}
+                  required={actionType === "replace"}
+                />
+                <div className="flex gap-2">
+                  <Button type="submit" className="min-h-9 text-xs">
+                    Simpan
+                  </Button>
+                  <button
+                    type="button"
+                    className="rounded-xl border border-slate-300 px-3 py-1 text-xs"
+                    onClick={() => {
+                      setActionId(null);
+                      setActionType(null);
+                    }}
+                  >
+                    Batal
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         ))}
       </Card>
@@ -538,11 +689,43 @@ export function MidwifeProfilePage() {
     active: boolean;
   } | null>(null);
   const [error, setError] = useState("");
-  useEffect(() => {
+  const [success, setSuccess] = useState("");
+  const [preferredName, setPreferredName] = useState("");
+  const [whatsappNumber, setWhatsappNumber] = useState("");
+
+  const load = useCallback(() => {
     request<typeof data>("/midwife/profile")
-      .then(setData)
+      .then((res) => {
+        setData(res);
+        if (res) {
+          setPreferredName(res.preferredName ?? "");
+          setWhatsappNumber(res.whatsappNumber ?? "");
+        }
+      })
       .catch((e) => setError(e instanceof Error ? e.message : "Gagal memuat"));
   }, [request]);
+
+  useEffect(load, [load]);
+
+  const save = async (e: FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    try {
+      await request("/midwife/profile", {
+        method: "PATCH",
+        body: JSON.stringify({
+          preferredName: preferredName || undefined,
+          whatsappNumber: whatsappNumber || undefined,
+        }),
+      });
+      setSuccess("Profil berhasil diperbarui.");
+      load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Gagal menyimpan");
+    }
+  };
+
   return (
     <>
       <PageHeader
@@ -550,15 +733,33 @@ export function MidwifeProfilePage() {
         description="Informasi layanan dan penugasan Anda."
       />
       {error && <ErrorState message={error} />}
+      {success && <div className="rounded-xl bg-emerald-50 p-3 text-sm text-emerald-800 font-medium">{success}</div>}
       {!data ? (
         <LoadingSkeleton />
       ) : (
         <Card>
-          <b>{data.fullName}</b>
-          <p>Nama panggilan: {data.preferredName ?? "-"}</p>
-          <p>WhatsApp: {data.whatsappNumber ?? "-"}</p>
-          <p>Fasilitas: {data.primaryFacility?.name ?? "-"}</p>
-          <p>Status: {data.active ? "Aktif" : "Nonaktif"}</p>
+          <div className="mb-4">
+            <h2 className="text-xl font-bold">{data.fullName}</h2>
+            <p className="text-sm text-slate-600">Fasilitas Utama: {data.primaryFacility?.name ?? "Belum ada"}</p>
+            <p className="text-xs text-slate-500 mt-1">Status: {data.active ? "Aktif" : "Nonaktif"}</p>
+          </div>
+          <form onSubmit={save} className="grid gap-4 border-t pt-4">
+            <Input
+              label="Nama Panggilan"
+              value={preferredName}
+              onChange={(e) => setPreferredName(e.target.value)}
+              placeholder="Nama sapaan"
+            />
+            <Input
+              label="Nomor WhatsApp"
+              value={whatsappNumber}
+              onChange={(e) => setWhatsappNumber(e.target.value)}
+              placeholder="08..."
+            />
+            <div>
+              <Button type="submit">Simpan Perubahan</Button>
+            </div>
+          </form>
         </Card>
       )}
     </>

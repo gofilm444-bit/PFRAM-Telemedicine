@@ -25,8 +25,8 @@ const api = createApiClient({
 type Auth = {
   user: AuthenticatedUser | null;
   loading: boolean;
-  login: (phone: string, password: string) => Promise<void>;
-  register: (data: Record<string, unknown>) => Promise<void>;
+  login: (phone: string, password: string) => Promise<AuthenticatedUser>;
+  register: (data: Record<string, unknown>) => Promise<AuthenticatedUser>;
   logout: () => Promise<void>;
   request: ReturnType<typeof createApiClient>["request"];
   refreshProfile: () => Promise<void>;
@@ -63,6 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         api.setAccessToken(s.accessToken);
         if (s.refreshToken) await adapter.setRefreshToken(s.refreshToken);
         setUser(s.user);
+        return s.user;
       },
       register: async (data) => {
         const s = await api.request<SessionInfo>("/auth/register/mother", {
@@ -72,6 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         api.setAccessToken(s.accessToken);
         if (s.refreshToken) await adapter.setRefreshToken(s.refreshToken);
         setUser(s.user);
+        return s.user;
       },
       logout: async () => {
         const token = await adapter.getRefreshToken();

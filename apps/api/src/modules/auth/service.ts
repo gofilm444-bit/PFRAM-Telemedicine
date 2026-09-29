@@ -6,6 +6,8 @@ import {
   newOpaqueToken,
   sanitizeAuditMetadata,
 } from "../../shared/security.js";
+import { profileCompletion } from "../stage3/service.js";
+
 export const publicUser = (
   u: User & {
     motherProfile?: { fullName: string } | null;
@@ -24,6 +26,27 @@ export const publicUser = (
     "Pengguna PFRAM",
   phoneVerifiedAt: u.phoneVerifiedAt?.toISOString() ?? null,
 });
+
+export async function authenticatedUserView(
+  prisma: PrismaClient,
+  u: User & {
+    motherProfile?: { fullName: string } | null;
+    midwifeProfile?: { fullName: string } | null;
+    adminProfile?: { fullName: string } | null;
+  },
+) {
+  const base = publicUser(u);
+  if (u.role !== "MOTHER") return base;
+  const completion = await profileCompletion(prisma, u.id);
+  return {
+    ...base,
+    profileCompletionStatus: completion.status,
+    profileCompleted: completion.profileCompleted,
+    activePregnancy: completion.activePregnancy,
+    selectedFacility: completion.selectedFacility,
+    activeMidwifeAssignment: completion.activeMidwifeAssignment,
+  };
+}
 export async function audit(
   prisma: PrismaClient,
   req: FastifyRequest,

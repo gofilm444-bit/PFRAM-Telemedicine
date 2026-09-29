@@ -13,6 +13,8 @@ import {
   ScreenContainer,
 } from "../../components/ui";
 import { useAuth } from "../../lib/auth";
+import { destinationFor } from "../../lib/profile-routing";
+
 export default function Login() {
   const { login } = useAuth();
   const [error, setError] = useState("");
@@ -59,8 +61,8 @@ export default function Login() {
         disabled={isSubmitting}
         onPress={handleSubmit(async (v) => {
           try {
-            await login(v.phoneNumber, v.password);
-            router.replace("/(app)/home");
+            const user = await login(v.phoneNumber, v.password);
+            router.replace(destinationFor(user));
           } catch (e) {
             setError(e instanceof Error ? e.message : "Login gagal");
           }

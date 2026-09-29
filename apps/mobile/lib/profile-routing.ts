@@ -2,6 +2,7 @@ import type { AuthenticatedUser } from "@pfram/shared-types";
 export function destinationFor(user: AuthenticatedUser | null) {
   if (!user) return "/auth/welcome" as const;
   if (
+    user.profileCompletionStatus === "ACCOUNT_READY" ||
     user.profileCompletionStatus === "PERSONAL_PROFILE_INCOMPLETE" ||
     user.profileCompletionStatus === "FACILITY_NOT_SELECTED"
   )
