@@ -8,9 +8,23 @@
     "userInterfaceStyle": "light",
     "android": {
       "package": "id.pfram.telemedicine",
-      "adaptiveIcon": { "backgroundColor": "#FFF8F2" }
+      "adaptiveIcon": {
+        "backgroundColor": "#FFF8F2"
+      }
     },
-    "plugins": ["expo-router", "expo-secure-store"],
-    "experiments": { "typedRoutes": true }
+    "plugins": [
+      "expo-router",
+      "expo-secure-store"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "7fd6acfe-1588-45e6-b6b3-30de36135322"
+      }
+    },
+    "owner": "junaedi89"
   }
 }
