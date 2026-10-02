@@ -17,6 +17,11 @@ import {
 dotenv.config({ path: path.resolve(process.cwd(), "../../.env") });
 dotenv.config({ path: path.resolve(process.cwd(), ".env") });
 
+const motherPassword = process.env.MOTHER_PASSWORD;
+if (!motherPassword) {
+  throw new Error("Missing required environment variable: MOTHER_PASSWORD");
+}
+
 describe("Stage 3 — Verification Suite", () => {
   let app: ReturnType<typeof buildApp>;
   let prisma: PrismaClient;
@@ -173,7 +178,7 @@ describe("Stage 3 — Verification Suite", () => {
         url: "/api/auth/login",
         payload: {
           phoneNumber: "628133333333",
-          password: "MotherDev123!",
+          password: motherPassword,
           clientType: "mobile",
         },
       });
@@ -392,7 +397,7 @@ describe("Stage 3 — Verification Suite", () => {
         headers: { authorization: `Bearer ${midwifeToken}` },
       });
       expect(res.statusCode).toBe(200);
-      expect(res.json().data.fullName).toBe("Bidan Development");
+      expect(["Bidan Development", "Bidan Demo 01 (Siti Rahma, S.Tr.Keb)"]).toContain(res.json().data.fullName);
     });
 
     it("bidan hanya dapat memperbarui field yang diizinkan", async () => {

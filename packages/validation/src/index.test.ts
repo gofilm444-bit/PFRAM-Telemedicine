@@ -8,6 +8,16 @@ import {
   pregnancySchema,
   trimesterFromWeeks,
   monitoringCreateSchema,
+  dangerScreeningCreateSchema,
+  dangerFollowUpUpdateSchema,
+  p4kPlanInputSchema,
+  p4kChecklistPatchSchema,
+  referralPlanInputSchema,
+  isValidMeetingUrl,
+  safeMeetingUrlSchema,
+  videoConsultationCreateSchema,
+  videoConsultationStatusSchema,
+  videoConsultationQuerySchema,
 } from "./index";
 
 describe("perhitungan date-only", () => {
@@ -124,3 +134,179 @@ describe("monitoring validation schemas", () => {
   });
 });
 
+describe("Tahap 6A — Validasi Skrining Tanda Bahaya", () => {
+  it("menerima data skrining yang valid", () => {
+    const valid = {
+      ruleSetVersion: "KEMENKES-KIA-2023-V1",
+      responses: [
+        { ruleCode: "BLEEDING", answer: false },
+        { ruleCode: "HIGH_FEVER", answer: true },
+      ],
+    };
+    const res = dangerScreeningCreateSchema.safeParse(valid);
+    expect(res.success).toBe(true);
+  });
+
+  it("menolak jika responses kosong", () => {
+    const invalid = {
+      ruleSetVersion: "KEMENKES-KIA-2023-V1",
+      responses: [],
+    };
+    const res = dangerScreeningCreateSchema.safeParse(invalid);
+    expect(res.success).toBe(false);
+  });
+
+  it("menolak jika terdapat duplikasi ruleCode", () => {
+    const invalid = {
+      ruleSetVersion: "KEMENKES-KIA-2023-V1",
+      responses: [
+        { ruleCode: "BLEEDING", answer: false },
+        { ruleCode: "BLEEDING", answer: true },
+      ],
+    };
+    const res = dangerScreeningCreateSchema.safeParse(invalid);
+    expect(res.success).toBe(false);
+  });
+
+  it("menerima update status tindak lanjut bidan yang sah", () => {
+    expect(
+      dangerFollowUpUpdateSchema.safeParse({ status: "CONTACTED", notes: "Sudah dihubungi via telepon" }).success,
+    ).toBe(true);
+    expect(
+      dangerFollowUpUpdateSchema.safeParse({ status: "RESOLVED" }).success,
+    ).toBe(true);
+  });
+
+  it("menolak status tindak lanjut tidak dikenal", () => {
+    expect(
+      dangerFollowUpUpdateSchema.safeParse({ status: "UNKNOWN_STATUS" }).success,
+    ).toBe(false);
+  });
+});
+
+describe("Tahap 8 — P4K & Rencana Rujukan Kepulauan Validation", () => {
+  it("memvalidasi payload P4kPlanInput yang sah", () => {
+    const valid = {
+      deliveryFacilityPublicId: "00000000-0000-0000-0000-000000000001",
+      deliveryAttendant: "BIDAN",
+      birthCompanionName: "Budi Santoso",
+      birthCompanionPhone: "081234567890",
+      transportation: "SPEEDBOAT",
+      fundingSource: "BPJS",
+      bpjsNumber: "0001234567890",
+      bloodDonors: [
+        { name: "Doni", bloodType: "O+", phone: "081298765432" },
+      ],
+      emergencyContactName: "Siti Rahma",
+      emergencyContactPhone: "081211112222",
+      preparationNotes: "Menunggu jadwal kapal cepat pagi",
+    };
+    const res = p4kPlanInputSchema.safeParse(valid);
+    expect(res.success).toBe(true);
+  });
+
+  it("menerima payload P4K minimal / partial", () => {
+    const minimal = {
+      deliveryAttendant: "DOKTER",
+      transportation: "KAPAL",
+    };
+    const res = p4kPlanInputSchema.safeParse(minimal);
+    expect(res.success).toBe(true);
+  });
+
+  it("memvalidasi checklist patch item", () => {
+    const valid = {
+      items: [
+        { itemKey: "BPJS_CARD", checked: true },
+        { itemKey: "KIA_BOOK", checked: false },
+      ],
+    };
+    const res = p4kChecklistPatchSchema.safeParse(valid);
+    expect(res.success).toBe(true);
+  });
+
+  it("menolak checklist patch tanpa items", () => {
+    const invalid = { items: [] };
+    const res = p4kChecklistPatchSchema.safeParse(invalid);
+    expect(res.success).toBe(false);
+  });
+
+  it("memvalidasi payload ReferralPlanInput konteks kepulauan yang sah", () => {
+    const valid = {
+      sourceFacilityPublicId: "00000000-0000-0000-0000-000000000001",
+      destinationFacilityPublicId: "00000000-0000-0000-0000-000000000002",
+      transportType: "SPEEDBOAT",
+      transportOperatorName: "Kapten Ali",
+      transportContactNumber: "081234567890",
+      estimatedTravelTimeMinutes: 90,
+      manualDepartureSchedule: "Berangkat setiap pagi jam 07:00 jika ombak tenang",
+      departurePoint: "Dermaga Pulau Selayar",
+      companions: "Suami & Bidan Desa",
+      rtkName: "Rumah Tunggu Kelahiran Kasih Bunda",
+      rtkAddress: "Jl. Pelabuhan No. 12, Benteng",
+      rtkPhone: "081399887766",
+      alternativeNotes: "Bila cuaca buruk, gunakan kapal roro ASDP pukul 14:00",
+    };
+    const res = referralPlanInputSchema.safeParse(valid);
+    expect(res.success).toBe(true);
+  });
+});
+
+describe("Tahap 10 — Validasi Video Call & External Meeting URL", () => {
+  it("isValidMeetingUrl memverifikasi link HTTPS yang sah dan aman", () => {
+    expect(isValidMeetingUrl("https://meet.google.com/abc-defg-hij")).toBe(true);
+    expect(isValidMeetingUrl("https://meet.jit.si/polsand-room-123")).toBe(true);
+    expect(isValidMeetingUrl("https://teams.microsoft.com/l/meetup-join/19%3ameeting")).toBe(true);
+  });
+
+  it("isValidMeetingUrl menolak link tidak aman (http, javascript, data, vbscript, non-URL)", () => {
+    expect(isValidMeetingUrl("http://meet.google.com/abc")).toBe(false);
+    expect(isValidMeetingUrl("javascript:alert('xss')")).toBe(false);
+    expect(isValidMeetingUrl("data:text/html,<script>alert(1)</script>")).toBe(false);
+    expect(isValidMeetingUrl("vbscript:msgbox(1)")).toBe(false);
+    expect(isValidMeetingUrl("file:///C:/passwords.txt")).toBe(false);
+    expect(isValidMeetingUrl("random-text")).toBe(false);
+    expect(isValidMeetingUrl("")).toBe(false);
+  });
+
+  it("safeMeetingUrlSchema menolak skema tidak valid", () => {
+    expect(safeMeetingUrlSchema.safeParse("https://meet.google.com/room-1").success).toBe(true);
+    expect(safeMeetingUrlSchema.safeParse("http://insecure.com/room").success).toBe(false);
+    expect(safeMeetingUrlSchema.safeParse("javascript:alert(1)").success).toBe(false);
+  });
+
+  it("videoConsultationCreateSchema menerima payload lengkap yang valid", () => {
+    const valid = {
+      motherPublicId: "00000000-0000-0000-0000-000000000001",
+      threadPublicId: "00000000-0000-0000-0000-000000000002",
+      scheduledAt: "2026-08-20T10:00:00.000Z",
+      meetingUrl: "https://meet.google.com/abc-defg-hij",
+      title: "Konsultasi Video Trimester 2",
+      notes: "Mohon siapkan buku KIA dan tensimeter jika ada",
+    };
+    const res = videoConsultationCreateSchema.safeParse(valid);
+    expect(res.success).toBe(true);
+  });
+
+  it("videoConsultationStatusSchema menerima status yang valid dan menolak yang tidak dikenal", () => {
+    expect(videoConsultationStatusSchema.safeParse("SCHEDULED").success).toBe(true);
+    expect(videoConsultationStatusSchema.safeParse("ACTIVE").success).toBe(true);
+    expect(videoConsultationStatusSchema.safeParse("COMPLETED").success).toBe(true);
+    expect(videoConsultationStatusSchema.safeParse("CANCELLED").success).toBe(true);
+    expect(videoConsultationStatusSchema.safeParse("UNKNOWN").success).toBe(false);
+  });
+
+  it("videoConsultationQuerySchema memvalidasi filter query pencarian", () => {
+    const parsed = videoConsultationQuerySchema.safeParse({
+      status: "SCHEDULED",
+      upcomingOnly: "true",
+      page: "1",
+      limit: "10",
+    });
+    expect(parsed.success).toBe(true);
+    if (parsed.success) {
+      expect(parsed.data.upcomingOnly).toBe(true);
+      expect(parsed.data.page).toBe(1);
+    }
+  });
+});

@@ -205,9 +205,13 @@ export function navigationForRole(role?: UserRole): Array<[string, string]> {
     ["/midwives", "Bidan"],
     ["/mothers", "Ibu Hamil"],
     ["/assignments", "Penugasan Bidan"],
+    ["/education", "Materi Edukasi"],
   ];
   const midwifeLinks: Array<[string, string]> = [
     ["/my-mothers", "Ibu Binaan"],
+    ["/danger-follow-ups", "Perlu Tindak Lanjut"],
+    ["/anc-missed", "Jadwal Belum Hadir"],
+    ["/consultations", "Konsultasi"],
     ["/midwife-profile", "Profil Bidan"],
   ];
   return role === "ADMIN" ? adminLinks : role === "MIDWIFE" ? midwifeLinks : [];

@@ -452,3 +452,460 @@ export const monitoringQuerySchema = z.object({
   sort: z.enum(["asc", "desc"]).default("desc"),
 });
 
+// ==========================================
+// TAHAP 5A — SMART ANC REMINDER & KEPATUHAN
+// ==========================================
+
+export const ancVisitStatusSchema = z.enum([
+  "SCHEDULED",
+  "COMPLETED",
+  "MISSED",
+  "CANCELLED",
+]);
+
+export const ancVisitTypeSchema = z.enum(["ANC", "DOCTOR_ANC"]);
+
+export const reminderTypeSchema = z.enum(["ANC_VISIT", "IRON_TABLET"]);
+
+export const reminderStatusSchema = z.enum([
+  "PENDING",
+  "COMPLETED",
+  "SNOOZED",
+  "MISSED",
+  "CANCELLED",
+]);
+
+export const ancScheduleCreateSchema = z.object({
+  scheduledAt: z.string().datetime({ message: "Format waktu jadwal tidak valid" }),
+  visitType: ancVisitTypeSchema.optional(),
+  doctorRequired: z.boolean().optional(),
+  facilityPublicId: publicIdSchema.nullable().optional(),
+  notes: z.string().trim().max(500, "Catatan maksimal 500 karakter").nullable().optional(),
+});
+
+export const ancScheduleUpdateSchema = z.object({
+  scheduledAt: z.string().datetime({ message: "Format waktu jadwal tidak valid" }).optional(),
+  visitType: ancVisitTypeSchema.optional(),
+  doctorRequired: z.boolean().optional(),
+  status: ancVisitStatusSchema.optional(),
+  facilityPublicId: publicIdSchema.nullable().optional(),
+  notes: z.string().trim().max(500, "Catatan maksimal 500 karakter").nullable().optional(),
+});
+
+export const reminderSettingsUpdateSchema = z.object({
+  ironTabletEnabled: z.boolean().optional(),
+  ironTabletTime: z
+    .string()
+    .regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Format jam harus HH:mm (contoh: 20:00)")
+    .optional(),
+  ancReminderEnabled: z.boolean().optional(),
+  ancReminderDaysBefore: z.number().int().min(0).max(7).optional(),
+  ancReminderTime: z
+    .string()
+    .regex(/^([01]\d|2[0-3]):[0-5]\d$/, "Format jam harus HH:mm (contoh: 08:00)")
+    .optional(),
+});
+
+export const reminderSnoozeSchema = z.object({
+  minutes: z.union([z.literal(10), z.literal(30), z.literal(60)]),
+});
+
+// ==========================================
+// TAHAP 6A — TANDA BAHAYA & SCREENING DASAR
+// ==========================================
+
+export const dangerScreeningStatusSchema = z.enum([
+  "NO_DANGER_REPORTED",
+  "DANGER_SIGN_REPORTED",
+  "REQUIRES_IMMEDIATE_CARE",
+]);
+
+export const dangerFollowUpStatusSchema = z.enum([
+  "PENDING",
+  "CONTACTED",
+  "REFERRED_TO_FACILITY",
+  "ARRIVED_AT_FACILITY",
+  "RESOLVED",
+]);
+
+export const dangerScreeningItemSchema = z.object({
+  ruleCode: z.string().trim().min(1, "Kode aturan tidak boleh kosong"),
+  answer: z.boolean({ required_error: "Jawaban Ya atau Tidak wajib diisi" }),
+});
+
+export const dangerScreeningCreateSchema = z.object({
+  ruleSetVersion: z.string().trim().min(1, "Versi aturan wajib disertakan"),
+  responses: z
+    .array(dangerScreeningItemSchema)
+    .min(1, "Skrining harus memuat minimal satu pertanyaan yang dijawab")
+    .refine(
+      (items) => {
+        const codes = items.map((i) => i.ruleCode);
+        return new Set(codes).size === codes.length;
+      },
+      { message: "Terdapat duplikasi jawaban untuk kode tanda bahaya yang sama" },
+    ),
+});
+
+export const dangerFollowUpUpdateSchema = z.object({
+  status: dangerFollowUpStatusSchema,
+  notes: z
+    .string()
+    .trim()
+    .max(1000, "Catatan tindak lanjut maksimal 1000 karakter")
+    .nullable()
+    .optional(),
+});
+
+// ==========================================
+// TAHAP 7 — EDUKASI, GIZI & PERUBAHAN TUBUH
+// ==========================================
+
+export function trimesterToEducationTrimester(
+  trimester?: number | null,
+): "ALL" | "TRIMESTER_1" | "TRIMESTER_2" | "TRIMESTER_3" {
+  if (trimester === 1) return "TRIMESTER_1";
+  if (trimester === 2) return "TRIMESTER_2";
+  if (trimester === 3) return "TRIMESTER_3";
+  return "ALL";
+}
+
+export const educationCategorySchema = z.enum([
+  "PREGNANCY",
+  "NUTRITION",
+  "BODY_CHANGES",
+  "IRON_TABLET",
+  "NAUSEA",
+  "ANEMIA_KEK",
+  "PREPARATION",
+  "OTHER",
+]);
+
+export const educationTrimesterSchema = z.enum([
+  "ALL",
+  "TRIMESTER_1",
+  "TRIMESTER_2",
+  "TRIMESTER_3",
+]);
+
+export const educationArticleCreateSchema = z.object({
+  slug: z
+    .string()
+    .trim()
+    .regex(
+      /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+      "Format slug harus berupa huruf kecil, angka, dan tanda hubung (-)",
+    ),
+  title: z.string().trim().min(3, "Judul artikel minimal 3 karakter").max(200),
+  summary: z.string().trim().min(10, "Ringkasan artikel minimal 10 karakter").max(500),
+  content: z.string().trim().min(20, "Konten artikel minimal 20 karakter"),
+  category: educationCategorySchema,
+  trimester: educationTrimesterSchema.default("ALL"),
+  featured: z.boolean().default(false),
+  sourceName: z.string().trim().min(2, "Nama sumber wajib diisi"),
+  sourceReference: z.string().trim().nullable().optional(),
+  published: z.boolean().default(true),
+  sortOrder: z.number().int().default(0),
+});
+
+export const educationArticleUpdateSchema = educationArticleCreateSchema.partial();
+
+export const educationQuerySchema = z.object({
+  category: educationCategorySchema.optional(),
+  trimester: educationTrimesterSchema.optional(),
+  featured: z
+    .union([z.boolean(), z.enum(["true", "false"])])
+    .transform((val) => (typeof val === "boolean" ? val : val === "true"))
+    .optional(),
+  search: z.string().trim().optional(),
+  page: z
+    .union([z.number(), z.string()])
+    .transform((val) => (typeof val === "number" ? val : parseInt(val, 10)))
+    .optional(),
+  limit: z
+    .union([z.number(), z.string()])
+    .transform((val) => (typeof val === "number" ? val : parseInt(val, 10)))
+    .optional(),
+});
+
+// ==========================================
+// TAHAP 8 — P4K DIGITAL & RENCANA RUJUKAN
+// ==========================================
+
+export const bloodDonorItemSchema = z.object({
+  name: z.string().trim().min(1, "Nama donor tidak boleh kosong").max(120),
+  bloodType: z.string().trim().max(10),
+  phone: phoneSchema,
+});
+
+export const p4kPlanInputSchema = z.object({
+  deliveryFacilityPublicId: publicIdSchema.nullable().optional(),
+  customDeliveryFacilityName: z.string().trim().max(150).nullable().optional(),
+  deliveryAttendant: z.string().trim().max(100).optional(),
+  birthCompanionName: z.string().trim().max(120).nullable().optional(),
+  birthCompanionPhone: optionalPhoneSchema.nullable().optional(),
+  transportation: z.string().trim().max(100).nullable().optional(),
+  fundingSource: z.string().trim().max(100).nullable().optional(),
+  bpjsNumber: z.string().trim().max(50).nullable().optional(),
+  bloodDonors: z.array(bloodDonorItemSchema).max(10).optional(),
+  emergencyContactName: z.string().trim().max(120).nullable().optional(),
+  emergencyContactPhone: optionalPhoneSchema.nullable().optional(),
+  preparationNotes: z.string().trim().max(1000).nullable().optional(),
+});
+
+export const p4kChecklistPatchItemSchema = z.object({
+  itemKey: z.string().trim().min(1, "Item key tidak boleh kosong"),
+  checked: z.boolean(),
+});
+
+export const p4kChecklistPatchSchema = z.object({
+  items: z.array(p4kChecklistPatchItemSchema).min(1, "Minimal satu item checklist"),
+});
+
+export const referralPlanInputSchema = z.object({
+  sourceFacilityPublicId: publicIdSchema.nullable().optional(),
+  customSourceFacilityName: z.string().trim().max(150).nullable().optional(),
+  destinationFacilityPublicId: publicIdSchema.nullable().optional(),
+  customDestinationFacilityName: z.string().trim().max(150).nullable().optional(),
+  transportType: z.string().trim().max(100).optional(),
+  transportOperatorName: z.string().trim().max(120).nullable().optional(),
+  transportContactNumber: optionalPhoneSchema.nullable().optional(),
+  estimatedTravelTimeMinutes: z.number().int().min(0).max(10080).nullable().optional(),
+  manualDepartureSchedule: z.string().trim().max(500).nullable().optional(),
+  departurePoint: z.string().trim().max(200).nullable().optional(),
+  companions: z.string().trim().max(300).nullable().optional(),
+  rtkName: z.string().trim().max(150).nullable().optional(),
+  rtkAddress: z.string().trim().max(500).nullable().optional(),
+  rtkPhone: optionalPhoneSchema.nullable().optional(),
+  alternativeNotes: z.string().trim().max(1000).nullable().optional(),
+});
+
+// ==========================================
+// TAHAP 9 — TELEKONSULTASI IBU & BIDAN
+// ==========================================
+
+export const consultationThreadStatusSchema = z.enum(["OPEN", "CLOSED"]);
+
+export const consultationAttentionFlagSchema = z.enum([
+  "NORMAL",
+  "NEEDS_ATTENTION",
+]);
+
+export const consultationMessageTypeSchema = z.enum(["TEXT", "IMAGE", "VOICE"]);
+
+export const consultationSenderRoleSchema = z.enum(["MOTHER", "MIDWIFE"]);
+
+export const consultationAttachmentInputSchema = z.object({
+  originalFilename: z.string().trim().min(1, "Nama file tidak boleh kosong"),
+  mimeType: z.string().trim().min(1, "MIME type file tidak boleh kosong"),
+  fileData: z.string().trim().min(1, "Data file tidak boleh kosong"),
+  durationSeconds: z.number().int().min(0).max(600).nullable().optional(),
+});
+
+export const consultationMessageCreateSchema = z
+  .object({
+    messageType: consultationMessageTypeSchema,
+    body: z.string().trim().nullable().optional(),
+    attachment: consultationAttachmentInputSchema.optional(),
+  })
+  .refine(
+    (val) => {
+      if (val.messageType === "TEXT") {
+        return typeof val.body === "string" && val.body.trim().length > 0;
+      }
+      if (val.messageType === "IMAGE" || val.messageType === "VOICE") {
+        return Boolean(val.attachment);
+      }
+      return true;
+    },
+    {
+      message:
+        "Pesan teks harus memiliki isi teks, dan pesan foto/suara harus menyertakan lampiran",
+    },
+  );
+
+export const consultationAttentionUpdateSchema = z.object({
+  attentionFlag: consultationAttentionFlagSchema,
+});
+
+export const consultationStatusUpdateSchema = z.object({
+  status: consultationThreadStatusSchema,
+});
+
+export const consultationQuerySchema = z.object({
+  status: consultationThreadStatusSchema.optional(),
+  attentionFlag: consultationAttentionFlagSchema.optional(),
+  search: z.string().trim().optional(),
+  limit: z
+    .union([z.number(), z.string()])
+    .transform((val) => (typeof val === "number" ? val : parseInt(val, 10)))
+    .optional(),
+  offset: z
+    .union([z.number(), z.string()])
+    .transform((val) => (typeof val === "number" ? val : parseInt(val, 10)))
+    .optional(),
+});
+
+// ==========================================
+// TAHAP 10 — VIDEO CALL
+// ==========================================
+
+export function isValidMeetingUrl(url: string): boolean {
+  if (!url || typeof url !== "string") return false;
+  const trimmed = url.trim();
+  const lower = trimmed.toLowerCase();
+  if (
+    lower.startsWith("javascript:") ||
+    lower.startsWith("file:") ||
+    lower.startsWith("data:") ||
+    lower.startsWith("vbscript:")
+  ) {
+    return false;
+  }
+  try {
+    const parsed = new URL(trimmed);
+    if (parsed.protocol !== "https:") return false;
+    if (!parsed.hostname || parsed.hostname.length < 3) return false;
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export const safeMeetingUrlSchema = z
+  .string()
+  .trim()
+  .min(10, "URL meeting minimal 10 karakter")
+  .max(2000, "URL meeting maksimal 2000 karakter")
+  .refine(
+    (url) => isValidMeetingUrl(url),
+    "URL meeting harus merupakan tautan HTTPS yang valid (misal: Google Meet, Jitsi, dsb)",
+  );
+
+export const videoConsultationStatusSchema = z.enum([
+  "SCHEDULED",
+  "ACTIVE",
+  "COMPLETED",
+  "CANCELLED",
+]);
+
+export const videoConsultationCreateSchema = z.object({
+  motherPublicId: publicIdSchema.optional(),
+  threadPublicId: publicIdSchema.optional(),
+  scheduledAt: z.string().datetime({ message: "Format waktu jadwal tidak valid" }),
+  meetingUrl: safeMeetingUrlSchema,
+  title: z
+    .string()
+    .trim()
+    .min(3, "Judul video call minimal 3 karakter")
+    .max(150, "Judul video call maksimal 150 karakter")
+    .default("Konsultasi Video Ibu Hamil"),
+  notes: z.string().trim().max(1000).nullable().optional(),
+});
+
+export const videoConsultationUpdateSchema = z.object({
+  scheduledAt: z.string().datetime({ message: "Format waktu jadwal tidak valid" }).optional(),
+  meetingUrl: safeMeetingUrlSchema.optional(),
+  title: z.string().trim().min(3).max(150).optional(),
+  notes: z.string().trim().max(1000).nullable().optional(),
+  status: videoConsultationStatusSchema.optional(),
+});
+
+export const videoConsultationStatusUpdateSchema = z.object({
+  status: videoConsultationStatusSchema,
+  notes: z.string().trim().max(1000).nullable().optional(),
+});
+
+export const videoConsultationQuerySchema = z.object({
+  motherPublicId: publicIdSchema.optional(),
+  threadPublicId: publicIdSchema.optional(),
+  status: videoConsultationStatusSchema.optional(),
+  upcomingOnly: z
+    .union([z.boolean(), z.string()])
+    .transform((val) => val === true || val === "true")
+    .optional(),
+  page: z
+    .union([z.number(), z.string()])
+    .transform((val) => (typeof val === "number" ? val : parseInt(val, 10)))
+    .optional(),
+  limit: z
+    .union([z.number(), z.string()])
+    .transform((val) => (typeof val === "number" ? val : parseInt(val, 10)))
+    .optional(),
+});
+
+
+
+
+
+// ==========================================
+// TAHAP 11 — DASHBOARD BIDAN LANJUTAN & KUNJUNGAN RUMAH
+// ==========================================
+
+export const homeVisitStatusSchema = z.enum([
+  "SCHEDULED",
+  "COMPLETED",
+  "CANCELLED",
+]);
+
+export const homeVisitCreateSchema = z.object({
+  motherPublicId: publicIdSchema,
+  scheduledAt: z
+    .string()
+    .datetime({ message: "Format waktu jadwal tidak valid" }),
+  purpose: z
+    .string()
+    .trim()
+    .min(3, "Tujuan kunjungan minimal 3 karakter")
+    .max(200, "Tujuan kunjungan maksimal 200 karakter"),
+  notes: z.string().trim().max(1000).nullable().optional(),
+});
+
+export const homeVisitUpdateSchema = z.object({
+  scheduledAt: z
+    .string()
+    .datetime({ message: "Format waktu jadwal tidak valid" })
+    .optional(),
+  purpose: z.string().trim().min(3).max(200).optional(),
+  notes: z.string().trim().max(1000).nullable().optional(),
+  status: homeVisitStatusSchema.optional(),
+});
+
+export const homeVisitQuerySchema = z.object({
+  motherPublicId: publicIdSchema.optional(),
+  status: homeVisitStatusSchema.optional(),
+  upcomingOnly: z
+    .union([z.boolean(), z.string()])
+    .transform((val) => val === true || val === "true")
+    .optional(),
+  page: z
+    .union([z.number(), z.string()])
+    .transform((val) => (typeof val === "number" ? val : parseInt(val, 10)))
+    .optional(),
+  limit: z
+    .union([z.number(), z.string()])
+    .transform((val) => (typeof val === "number" ? val : parseInt(val, 10)))
+    .optional(),
+});
+
+export const midwifeMotherFilterSchema = z.enum([
+  "ALL",
+  "TRIMESTER_1",
+  "TRIMESTER_2",
+  "TRIMESTER_3",
+  "HAS_FOLLOW_UP",
+  "MISSED_ANC",
+]);
+
+export const midwifeMotherQuerySchema = z.object({
+  search: z.string().trim().optional(),
+  filter: midwifeMotherFilterSchema.default("ALL"),
+  page: z
+    .union([z.number(), z.string()])
+    .transform((val) => (typeof val === "number" ? val : parseInt(val, 10)))
+    .optional(),
+  limit: z
+    .union([z.number(), z.string()])
+    .transform((val) => (typeof val === "number" ? val : parseInt(val, 10)))
+    .optional(),
+});

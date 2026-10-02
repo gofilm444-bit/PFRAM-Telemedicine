@@ -1,0 +1,11 @@
+﻿export default {};
+export const Platform = { OS: "ios", select: (objs) => objs.ios ?? objs.default };
+export const StyleSheet = { create: (s) => s };
+export const View = "View";
+export const Text = "Text";
+export const Pressable = "Pressable";
+export const TextInput = "TextInput";
+export const Modal = "Modal";
+export const ActivityIndicator = "ActivityIndicator";
+export const ScrollView = "ScrollView";
+export const SafeAreaView = "SafeAreaView";

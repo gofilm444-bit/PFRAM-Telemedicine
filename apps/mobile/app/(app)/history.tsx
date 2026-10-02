@@ -1,12 +1,5 @@
-import { AppHeader, EmptyState, ScreenContainer } from "../../components/ui";
-export default function History() {
-  return (
-    <ScreenContainer>
-      <AppHeader
-        title="Riwayat"
-        subtitle="Riwayat pemantauan belum tersedia."
-      />
-      <EmptyState />
-    </ScreenContainer>
-  );
+import MonitoringHistoryScreen from "../monitoring/history";
+
+export default function HistoryTab() {
+  return <MonitoringHistoryScreen />;
 }

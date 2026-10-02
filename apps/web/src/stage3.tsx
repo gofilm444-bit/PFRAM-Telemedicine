@@ -1,4 +1,6 @@
+import { Link } from "react-router-dom";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
+import type { MidwifeEnrichedMotherItem, MidwifeMotherFilter } from "@pfram/shared-types";
 import { useAuth } from "./auth";
 import {
   Button,
@@ -468,34 +470,214 @@ export function MidwivesPage() {
   );
 }
 export function MothersPage({ midwife = false }: { midwife?: boolean }) {
-  const list = useList<Mother>(midwife ? "/midwife/mothers" : "/admin/mothers");
+  const { request } = useAuth();
+  const [filter, setFilter] = useState<MidwifeMotherFilter>("ALL");
+  const [search, setSearch] = useState("");
+  const [enrichedData, setEnrichedData] = useState<{
+    items: MidwifeEnrichedMotherItem[];
+    total: number;
+  } | null>(null);
+  const [adminList, setAdminList] = useState<Page<Mother> | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const loadData = useCallback(() => {
+    setLoading(true);
+    setError("");
+    if (midwife) {
+      const q = new URLSearchParams();
+      if (search) q.set("search", search);
+      if (filter) q.set("filter", filter);
+      q.set("limit", "50");
+      request<{ items: MidwifeEnrichedMotherItem[]; total: number }>(
+        "/midwife/enriched-mothers?" + q.toString(),
+      )
+        .then((res) => {
+          setEnrichedData(res);
+          setLoading(false);
+        })
+        .catch((err) => {
+          setError(
+            err instanceof Error ? err.message : "Gagal memuat data ibu binaan",
+          );
+          setLoading(false);
+        });
+    } else {
+      const q = new URLSearchParams();
+      if (search) q.set("search", search);
+      q.set("limit", "50");
+      request<Page<Mother>>("/admin/mothers?" + q.toString())
+        .then((res) => {
+          setAdminList(res);
+          setLoading(false);
+        })
+        .catch((err) => {
+          setError(err instanceof Error ? err.message : "Gagal memuat data ibu");
+          setLoading(false);
+        });
+    }
+  }, [midwife, search, filter, request]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  const filterTabs: { id: MidwifeMotherFilter; label: string }[] = [
+    { id: "ALL", label: "Semua" },
+    { id: "TRIMESTER_1", label: "Trimester 1" },
+    { id: "TRIMESTER_2", label: "Trimester 2" },
+    { id: "TRIMESTER_3", label: "Trimester 3" },
+    { id: "HAS_FOLLOW_UP", label: "Ada Tindak Lanjut" },
+    { id: "MISSED_ANC", label: "ANC Terlewat" },
+  ];
+
+  if (midwife) {
+    return (
+      <div className="space-y-6">
+        <PageHeader
+          title="Ibu Binaan"
+          description="Daftar pemantauan klinis terpadu, jadwal ANC, status P4K, dan tindak lanjut ibu binaan aktif."
+        />
+
+        {/* Filter Bar */}
+        <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-3">
+          {filterTabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setFilter(tab.id)}
+              className={
+                "rounded-full px-3.5 py-1 text-xs font-semibold transition " +
+                (filter === tab.id
+                  ? "bg-pfram-primary text-white shadow-sm"
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200")
+              }
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        <Card>
+          <Search value={search} onChange={setSearch} />
+          <State
+            loading={loading}
+            error={error}
+            empty={enrichedData?.items.length === 0}
+          />
+          {enrichedData?.items.map((v) => (
+            <div
+              className="flex flex-col gap-3 border-b border-slate-100 py-4 last:border-b-0 sm:flex-row sm:items-center sm:justify-between"
+              key={v.publicId}
+            >
+              <div className="space-y-1.5">
+                <div className="flex flex-wrap items-center gap-2">
+                  <b className="text-base text-slate-900">{v.fullName}</b>
+                  {v.activePregnancy?.gestationalAge && (
+                    <span className="rounded-md bg-sky-50 px-2 py-0.5 text-xs font-semibold text-sky-700 ring-1 ring-sky-200">
+                      {v.activePregnancy.gestationalAge.weeks} mgg {v.activePregnancy.gestationalAge.days} hr (T{v.activePregnancy.trimester})
+                    </span>
+                  )}
+                  {v.unreadMessagesCount > 0 && (
+                    <span className="rounded-md bg-indigo-50 px-2 py-0.5 text-xs font-bold text-indigo-700 ring-1 ring-indigo-200">
+                      ✉️ {v.unreadMessagesCount} pesan baru
+                    </span>
+                  )}
+                  {v.hasFollowUp && (
+                    <span className="rounded-md bg-rose-50 px-2 py-0.5 text-xs font-bold text-rose-700 ring-1 ring-rose-200">
+                      ⚠️ Tindak Lanjut
+                    </span>
+                  )}
+                  {v.hasMissedAnc && (
+                    <span className="rounded-md bg-amber-50 px-2 py-0.5 text-xs font-bold text-amber-700 ring-1 ring-amber-200">
+                      ANC Terlewat
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-600">
+                  <span>
+                    <b>ANC Berikutnya:</b>{" "}
+                    {v.nextAnc
+                      ? new Date(v.nextAnc.scheduledAt).toLocaleDateString("id-ID", {
+                          day: "numeric",
+                          month: "short",
+                        }) + " (" + v.nextAnc.visitType + ")"
+                      : "Belum terjadwal"}
+                  </span>
+                  <span>
+                    <b>Monitoring Terakhir:</b>{" "}
+                    {v.lastMonitoring
+                      ? (v.lastMonitoring.systolicBp
+                          ? "TD " + v.lastMonitoring.systolicBp + "/" + v.lastMonitoring.diastolicBp + " mmHg"
+                          : "") +
+                        (v.lastMonitoring.weightKg ? " · BB " + v.lastMonitoring.weightKg + " kg" : "")
+                      : "Belum ada"}
+                  </span>
+                  {v.p4kStatus ? (
+                    <span>
+                      <b>Status P4K:</b>{" "}
+                      <span
+                        className={
+                          v.p4kStatus.isComplete
+                            ? "font-semibold text-emerald-700"
+                            : "font-semibold text-amber-700"
+                        }
+                      >
+                        {v.p4kStatus.isComplete
+                          ? "Lengkap"
+                          : "Belum Lengkap (" + v.p4kStatus.checkedCount + "/" + v.p4kStatus.totalCount + " checklist)"}
+                      </span>
+                    </span>
+                  ) : null}
+                </div>
+
+                {(v.followUpReasons?.length ?? 0) > 0 && (
+                  <p className="text-[11px] text-rose-600">
+                    Alasan: {v.followUpReasons?.join(" · ")}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <Link
+                  to={"/my-mothers/" + v.publicId}
+                  className="inline-flex min-h-9 items-center justify-center rounded-lg border border-slate-300 bg-white px-3.5 text-xs font-semibold text-pfram-primary shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-pfram-primary/50"
+                >
+                  Lihat Detail & Pemantauan →
+                </Link>
+              </div>
+            </div>
+          ))}
+        </Card>
+      </div>
+    );
+  }
+
+  // Admin view
   return (
     <>
       <PageHeader
-        title={midwife ? "Ibu Binaan" : "Ibu Hamil"}
-        description={
-          midwife
-            ? "Hanya ibu dengan penugasan aktif kepada Anda."
-            : "Daftar ringkas tanpa rincian kesehatan sensitif."
-        }
+        title="Ibu Hamil"
+        description="Daftar ringkas tanpa rincian kesehatan sensitif."
       />
       <Card>
-        <Search value={list.search} onChange={list.setSearch} />
+        <Search value={search} onChange={setSearch} />
         <State
-          loading={!list.data}
-          error={list.error}
-          empty={list.data?.items.length === 0}
+          loading={loading}
+          error={error}
+          empty={adminList?.items.length === 0}
         />
-        {list.data?.items.map((v) => (
-          <div className="border-b py-3" key={v.publicId}>
-            <b>{v.fullName}</b>
-            <p className="text-sm text-slate-600">
-              Usia {v.age ?? "-"} ·{" "}
-              {v.facility?.name ?? "Belum memilih fasilitas"} ·{" "}
-              {v.activePregnancy?.gestationalAge
-                ? `${v.activePregnancy.gestationalAge.weeks} minggu ${v.activePregnancy.gestationalAge.days} hari · Trimester ${v.activePregnancy.trimester}`
-                : "Profil kehamilan belum lengkap"}
-            </p>
+        {adminList?.items.map((v) => (
+          <div
+            className="flex flex-wrap items-center justify-between border-b py-3"
+            key={v.publicId}
+          >
+            <div>
+              <b>{v.fullName}</b>
+              <p className="text-sm text-slate-600">
+                Usia {v.age ?? "-"} · {v.facility?.name ?? "Belum memilih fasilitas"}
+              </p>
+            </div>
           </div>
         ))}
       </Card>

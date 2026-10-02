@@ -148,13 +148,41 @@ export const LoadingState = () => (
 );
 export const EmptyState = ({
   message = "Belum ada data.",
+  actionTitle,
+  onAction,
 }: {
   message?: string;
-}) => <Text style={s.muted}>{message}</Text>;
-export const ErrorState = ({ message }: { message: string }) => (
-  <Text accessibilityRole="alert" style={s.errorBox}>
-    {message}
-  </Text>
+  actionTitle?: string;
+  onAction?: () => void;
+}) => (
+  <View style={s.stateBox}>
+    <Text style={s.muted}>{message}</Text>
+    {actionTitle && onAction && (
+      <View style={{ marginTop: spacing.sm }}>
+        <AppButton title={actionTitle} onPress={onAction} />
+      </View>
+    )}
+  </View>
+);
+export const ErrorState = ({
+  message,
+  retryTitle,
+  onRetry,
+}: {
+  message: string;
+  retryTitle?: string;
+  onRetry?: () => void;
+}) => (
+  <View style={s.stateBox}>
+    <Text accessibilityRole="alert" style={s.errorBox}>
+      {message}
+    </Text>
+    {retryTitle && onRetry && (
+      <View style={{ marginTop: spacing.sm }}>
+        <AppButton title={retryTitle} onPress={onRetry} />
+      </View>
+    )}
+  </View>
 );
 export const AppHeader = ({
   title,
@@ -367,4 +395,5 @@ const s = StyleSheet.create({
   choiceSelected: { borderColor: colors.primary, backgroundColor: "#DDF3EC" },
   choiceText: { color: "#173B31" },
   choiceTextSelected: { color: colors.text, fontWeight: "700" },
+  stateBox: { gap: spacing.sm, paddingVertical: spacing.md },
 });

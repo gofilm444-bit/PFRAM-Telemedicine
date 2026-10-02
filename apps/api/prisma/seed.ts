@@ -52,6 +52,14 @@ async function upsertUser(
   return user;
 }
 
+function requiredSeedPassword(name: string) {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+  return value;
+}
+
 async function main() {
   const privacy = await prisma.consentDocument.upsert({
     where: {
@@ -84,19 +92,19 @@ async function main() {
   const admin = await upsertUser(
     "ADMIN",
     process.env.ADMIN_PHONE ?? "628111111111",
-    process.env.ADMIN_PASSWORD ?? "AdminDev123!",
+    requiredSeedPassword("ADMIN_PASSWORD"),
     "Administrator Development",
   );
   const midwifeUser = await upsertUser(
     "MIDWIFE",
     process.env.MIDWIFE_PHONE ?? "628122222222",
-    process.env.MIDWIFE_PASSWORD ?? "MidwifeDev123!",
+    requiredSeedPassword("MIDWIFE_PASSWORD"),
     "Bidan Development",
   );
   const motherUser = await upsertUser(
     "MOTHER",
     process.env.MOTHER_PHONE ?? "628133333333",
-    process.env.MOTHER_PASSWORD ?? "MotherDev123!",
+    requiredSeedPassword("MOTHER_PASSWORD"),
     "Ibu Development",
   );
 

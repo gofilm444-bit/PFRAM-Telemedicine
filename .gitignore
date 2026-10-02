@@ -6,8 +6,11 @@ coverage/
 .env.*
 !.env.example
 *.log
+*.key
+*.pem
 .smoke*.log
 *.tsbuildinfo
 .DS_Store
 apps/mobile/.expo/
 apps/mobile/dist-expo/
+apps/api/.local_storage/

@@ -1,3 +1,4 @@
+import { MidwifeMotherDetailPage } from "./MidwifeMotherDetailPage";
 import { useEffect, useState } from "react";
 import {
   BrowserRouter,
@@ -153,6 +154,14 @@ function Layout() {
               element={
                 <RoleGuard roles={["MIDWIFE"]}>
                   <MothersPage midwife />
+                </RoleGuard>
+              }
+            />
+            <Route
+              path="my-mothers/:motherPublicId"
+              element={
+                <RoleGuard roles={["MIDWIFE"]}>
+                  <MidwifeMotherDetailPage />
                 </RoleGuard>
               }
             />
