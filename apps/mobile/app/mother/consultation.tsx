@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -18,10 +18,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import {
-  Audio,
-  isAudioSupported,
-  type AudioRecording,
-  type AudioSound,
+  createAudioPlayer,
+  useAudioRecorder,
+  useAudioRecorderState,
+  requestRecordingPermissionsAsync,
+  VOICE_RECORDING_OPTIONS,
+  configureAudioForVoiceRecording,
+  getVoiceMetadata,
+  type AudioPlayer,
+  type AudioStatus,
 } from "../../lib/audio-helper";
 import { colors, radius, spacing, minimumTouchTarget } from "@pfram/design-tokens";
 import type {
@@ -64,14 +69,40 @@ export default function MotherConsultationScreen() {
   const [pendingImage, setPendingImage] = useState<ConsultationAttachmentInput | null>(null);
   const [pendingAudio, setPendingAudio] = useState<ConsultationAttachmentInput | null>(null);
 
-  // Audio Recording states
-  const [recording, setRecording] = useState<AudioRecording | null>(null);
-  const [recordingDuration, setRecordingDuration] = useState(0);
-  const recordingTimerRef = useRef<NodeJS.Timeout | null>(null);
+  // Audio Recording states via expo-audio
+  const recorder = useAudioRecorder(VOICE_RECORDING_OPTIONS);
+  const recorderState = useAudioRecorderState(recorder, 250);
+  const isRecording = recorderState.isRecording;
+  const recordingDuration = Math.max(0, Math.round(recorderState.durationMillis / 1000));
 
-  // Audio Playback states
+  // Audio Playback states via expo-audio
   const [playingUri, setPlayingUri] = useState<string | null>(null);
-  const soundRef = useRef<AudioSound | null>(null);
+  const playerRef = useRef<AudioPlayer | null>(null);
+  const playbackSubRef = useRef<{ remove: () => void } | null>(null);
+
+  const cleanupPlayback = useCallback(() => {
+    if (playbackSubRef.current) {
+      try {
+        playbackSubRef.current.remove();
+      } catch (e) {
+        void e;
+      }
+      playbackSubRef.current = null;
+    }
+    if (playerRef.current) {
+      try {
+        playerRef.current.pause();
+      } catch (e) {
+        void e;
+      }
+      try {
+        playerRef.current.release();
+      } catch (e) {
+        void e;
+      }
+      playerRef.current = null;
+    }
+  }, []);
 
   // Image viewer modal
   const [viewingImageUri, setViewingImageUri] = useState<string | null>(null);
@@ -88,17 +119,15 @@ export default function MotherConsultationScreen() {
     }
   }, [thread, markReadMutation, messages.length]);
 
-  // Clean up sound on unmount
+  // Clean up player and recorder on unmount
   useEffect(() => {
     return () => {
-      if (soundRef.current) {
-        soundRef.current.unloadAsync().catch(() => {});
-      }
-      if (recordingTimerRef.current) {
-        clearInterval(recordingTimerRef.current);
+      cleanupPlayback();
+      if (recorder.isRecording) {
+        recorder.stop().catch(() => {});
       }
     };
-  }, []);
+  }, [cleanupPlayback, recorder]);
 
   // Pick Image
   const handlePickImage = async () => {
@@ -135,54 +164,33 @@ export default function MotherConsultationScreen() {
 
   // Start Voice Recording
   const handleStartRecording = async () => {
-    if (!Audio || !isAudioSupported) {
-      Alert.alert(
-        "Modul Audio Tidak Tersedia",
-        "Perekaman suara memerlukan Expo Development Build (APK PFRAM). Modul native audio tidak tersedia di lingkungan Expo Go standar.",
-      );
-      return;
-    }
     try {
-      const permission = await Audio.requestPermissionsAsync();
+      const permission = await requestRecordingPermissionsAsync();
       if (!permission.granted) {
         Alert.alert("Izin Ditolak", "Aplikasi memerlukan izin mikrofon untuk merekam suara.");
         return;
       }
 
-      await Audio.setAudioModeAsync({
-        allowsRecordingIOS: true,
-        playsInSilentModeIOS: true,
-      });
-
-      const { recording: newRecording } = await Audio.Recording.createAsync(
-        Audio.RecordingOptionsPresets.LOW_QUALITY,
-      );
-
-      setRecording(newRecording);
-      setRecordingDuration(0);
-      recordingTimerRef.current = setInterval(() => {
-        setRecordingDuration((prev) => prev + 1);
-      }, 1000);
-    } catch {
+      await configureAudioForVoiceRecording();
+      await recorder.prepareToRecordAsync();
+      recorder.record();
+    } catch (error) {
+      console.warn("Gagal memulai perekaman suara", error);
       Alert.alert("Error", "Gagal memulai perekaman suara.");
     }
   };
 
   // Stop Voice Recording
   const handleStopRecording = async () => {
-    if (!recording) return;
-
-    if (recordingTimerRef.current) {
-      clearInterval(recordingTimerRef.current);
-      recordingTimerRef.current = null;
-    }
+    if (!recorderState.isRecording) return;
 
     try {
-      await recording.stopAndUnloadAsync();
-      const uri = recording.getURI();
-      setRecording(null);
+      const durationSeconds = Math.max(1, Math.round(recorderState.durationMillis / 1000));
+      await recorder.stop();
+      const uri = recorder.uri;
 
       if (uri) {
+        const metadata = getVoiceMetadata(uri, durationSeconds);
         // Read audio as base64
         // In Expo React Native, fetch local file as blob or base64
         const response = await fetch(uri);
@@ -192,59 +200,52 @@ export default function MotherConsultationScreen() {
           const base64Data = (reader.result as string)?.split(",")[1];
           if (base64Data) {
             setPendingAudio({
-              originalFilename: `voice_${Date.now()}.m4a`,
-              mimeType: "audio/m4a",
+              originalFilename: metadata.originalFilename,
+              mimeType: metadata.mimeType,
               fileData: base64Data,
-              durationSeconds: Math.max(1, recordingDuration),
+              durationSeconds: metadata.durationSeconds,
             });
             setPendingImage(null);
           }
         };
         reader.readAsDataURL(blob);
       }
-    } catch {
+    } catch (error) {
+      console.warn("Gagal menyelesaikan rekaman suara", error);
       Alert.alert("Error", "Gagal menyelesaikan rekaman suara.");
     }
   };
 
   // Play Audio
-  const handleTogglePlayAudio = async (url: string) => {
-    if (!Audio || !isAudioSupported) {
-      Alert.alert(
-        "Modul Audio Tidak Tersedia",
-        "Pemutaran audio memerlukan Expo Development Build (APK PFRAM). Modul native audio tidak tersedia di lingkungan Expo Go standar.",
-      );
-      return;
-    }
+  const handleTogglePlayAudio = (url: string) => {
     try {
-      if (playingUri === url && soundRef.current) {
-        await soundRef.current.stopAsync();
-        await soundRef.current.unloadAsync();
-        soundRef.current = null;
+      if (playingUri === url && playerRef.current) {
+        cleanupPlayback();
         setPlayingUri(null);
         return;
       }
 
-      if (soundRef.current) {
-        await soundRef.current.stopAsync();
-        await soundRef.current.unloadAsync();
-        soundRef.current = null;
-      }
+      cleanupPlayback();
 
-      const { sound } = await Audio.Sound.createAsync(
-        { uri: url },
-        { shouldPlay: true },
-      );
-      soundRef.current = sound;
+      const player = createAudioPlayer(url);
+      playerRef.current = player;
       setPlayingUri(url);
 
-      sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.isLoaded && status.didJustFinish) {
-          setPlayingUri(null);
-          sound.unloadAsync().catch(() => {});
-        }
-      });
-    } catch {
+      const subscription = player.addListener(
+        "playbackStatusUpdate",
+        (status: AudioStatus) => {
+          if (status.didJustFinish) {
+            setPlayingUri(null);
+            cleanupPlayback();
+          }
+        },
+      );
+      playbackSubRef.current = subscription;
+
+      player.play();
+    } catch (error) {
+      console.warn("Gagal memutar audio", error);
+      cleanupPlayback();
       Alert.alert("Pemutaran Gagal", "Gagal memutar rekaman suara.");
       setPlayingUri(null);
     }
@@ -642,7 +643,7 @@ export default function MotherConsultationScreen() {
         )}
 
         {/* Recording active bar */}
-        {recording && (
+        {isRecording && (
           <View style={s.recordingBar}>
             <View style={s.recordingDot} />
             <Text style={s.recordingTimeText}>
@@ -665,8 +666,8 @@ export default function MotherConsultationScreen() {
           </Pressable>
 
           <Pressable
-            style={[s.attachBtn, recording ? s.micActive : null]}
-            onPress={recording ? handleStopRecording : handleStartRecording}
+            style={[s.attachBtn, isRecording ? s.micActive : null]}
+            onPress={isRecording ? handleStopRecording : handleStartRecording}
             accessibilityLabel="Kirim Pesan Suara"
           >
             <Text style={s.attachBtnText}>🎤</Text>
@@ -692,6 +693,7 @@ export default function MotherConsultationScreen() {
             style={[
               s.sendBtn,
               (!inputText.trim() && !pendingImage && !pendingAudio) ||
+              isRecording ||
               sendMessageMutation.isPending
                 ? s.sendBtnDisabled
                 : null,
@@ -699,6 +701,7 @@ export default function MotherConsultationScreen() {
             onPress={handleSendMessage}
             disabled={
               (!inputText.trim() && !pendingImage && !pendingAudio) ||
+              isRecording ||
               sendMessageMutation.isPending
             }
           >
