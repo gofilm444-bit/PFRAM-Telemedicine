@@ -2,7 +2,6 @@ import { useState, type ReactNode } from "react";
 import {
   ActivityIndicator,
   Pressable,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -11,6 +10,7 @@ import {
   type PressableProps,
   type TextInputProps,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import {
   colors,
   minimumTouchTarget,

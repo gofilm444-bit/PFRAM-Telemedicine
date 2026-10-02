@@ -18,8 +18,17 @@ const adapter = {
         })
       : SecureStore.deleteItemAsync("pfram_refresh_token"),
 };
+function resolveApiBaseUrl(): string {
+  const envUrl = process.env.EXPO_PUBLIC_API_URL?.trim();
+  if (!envUrl) {
+    return "http://10.0.2.2:3200/api";
+  }
+  const clean = envUrl.replace(/\/+$/, "");
+  return clean.endsWith("/api") ? clean : `${clean}/api`;
+}
+
 export const api = createApiClient({
-  baseUrl: process.env.EXPO_PUBLIC_API_URL ?? "http://10.0.2.2:3200/api",
+  baseUrl: resolveApiBaseUrl(),
   sessionAdapter: adapter,
 });
 type Auth = {

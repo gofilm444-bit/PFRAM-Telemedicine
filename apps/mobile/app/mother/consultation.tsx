@@ -17,7 +17,12 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
-import { Audio } from "expo-av";
+import {
+  Audio,
+  isAudioSupported,
+  type AudioRecording,
+  type AudioSound,
+} from "../../lib/audio-helper";
 import { colors, radius, spacing, minimumTouchTarget } from "@pfram/design-tokens";
 import type {
   ConsultationAttachmentInput,
@@ -60,13 +65,13 @@ export default function MotherConsultationScreen() {
   const [pendingAudio, setPendingAudio] = useState<ConsultationAttachmentInput | null>(null);
 
   // Audio Recording states
-  const [recording, setRecording] = useState<Audio.Recording | null>(null);
+  const [recording, setRecording] = useState<AudioRecording | null>(null);
   const [recordingDuration, setRecordingDuration] = useState(0);
   const recordingTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Audio Playback states
   const [playingUri, setPlayingUri] = useState<string | null>(null);
-  const soundRef = useRef<Audio.Sound | null>(null);
+  const soundRef = useRef<AudioSound | null>(null);
 
   // Image viewer modal
   const [viewingImageUri, setViewingImageUri] = useState<string | null>(null);
@@ -130,6 +135,13 @@ export default function MotherConsultationScreen() {
 
   // Start Voice Recording
   const handleStartRecording = async () => {
+    if (!Audio || !isAudioSupported) {
+      Alert.alert(
+        "Modul Audio Tidak Tersedia",
+        "Perekaman suara memerlukan Expo Development Build (APK PFRAM). Modul native audio tidak tersedia di lingkungan Expo Go standar.",
+      );
+      return;
+    }
     try {
       const permission = await Audio.requestPermissionsAsync();
       if (!permission.granted) {
@@ -197,6 +209,13 @@ export default function MotherConsultationScreen() {
 
   // Play Audio
   const handleTogglePlayAudio = async (url: string) => {
+    if (!Audio || !isAudioSupported) {
+      Alert.alert(
+        "Modul Audio Tidak Tersedia",
+        "Pemutaran audio memerlukan Expo Development Build (APK PFRAM). Modul native audio tidak tersedia di lingkungan Expo Go standar.",
+      );
+      return;
+    }
     try {
       if (playingUri === url && soundRef.current) {
         await soundRef.current.stopAsync();
