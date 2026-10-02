@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
-import type { MidwifeEnrichedMotherItem, MidwifeMotherFilter } from "@pfram/shared-types";
+import type {
+  MidwifeEnrichedMotherItem,
+  MidwifeMotherFilter,
+} from "@pfram/shared-types";
 import { useAuth } from "./auth";
 import {
   Button,
@@ -10,6 +13,10 @@ import {
   Input,
   LoadingSkeleton,
   PageHeader,
+  StatusBadge,
+  formatAssignmentStatus,
+  formatFacilityType,
+  formatRegionLevel,
 } from "./components";
 
 type Page<T> = { items: T[]; total: number; page: number; pageSize: number };
@@ -72,6 +79,7 @@ function useList<T>(path: string) {
   useEffect(load, [load]);
   return { data, error, search, setSearch, load };
 }
+
 function Search({
   value,
   onChange,
@@ -81,13 +89,14 @@ function Search({
 }) {
   return (
     <Input
-      label="Pencarian"
+      label="Pencarian Data"
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      placeholder="Cari data…"
+      placeholder="Ketik kata kunci untuk mencari…"
     />
   );
 }
+
 function State({
   loading,
   error,
@@ -103,6 +112,10 @@ function State({
   return null;
 }
 
+/* =========================================================================
+   REGIONS PAGE
+   ========================================================================= */
+
 export function RegionsPage() {
   const { request } = useAuth();
   const list = useList<Region>("/admin/regions");
@@ -114,6 +127,7 @@ export function RegionsPage() {
     level: "PROVINCE",
     parentPublicId: "",
   });
+
   useEffect(() => {
     const parentLevel = {
       REGENCY: "PROVINCE",
@@ -127,6 +141,7 @@ export function RegionsPage() {
       .then((v) => setParentOptions(v.items))
       .catch(() => setParentOptions([]));
   }, [form.level, request]);
+
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     setMessage("");
@@ -139,60 +154,67 @@ export function RegionsPage() {
         }),
       });
       setForm({ ...form, name: "", code: "" });
-      setMessage("Wilayah berhasil disimpan.");
+      setMessage("Wilayah berhasil ditambahkan ke sistem.");
       list.load();
     } catch (err) {
-      setMessage(err instanceof Error ? err.message : "Gagal menyimpan");
+      setMessage(err instanceof Error ? err.message : "Gagal menyimpan wilayah");
     }
   };
+
   return (
-    <>
+    <div className="space-y-6">
       <PageHeader
-        title="Wilayah"
-        description="Kelola hierarki wilayah tanpa penghapusan permanen."
+        title="Wilayah Administrasi"
+        description="Kelola hierarki dan cakupan wilayah operasional layanan PFRAM."
       />
+
       <Card>
+        <h2 className="mb-4 text-base font-bold text-slate-900">Tambah Wilayah Baru</h2>
         <form
           className="grid gap-3 md:grid-cols-2"
           onSubmit={(e) => void submit(e)}
         >
           <Input
-            label="Nama wilayah"
+            label="Nama Wilayah"
             required
+            placeholder="Contoh: Kabupaten Maluku Tengah"
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
           />
           <Input
-            label="Kode"
+            label="Kode Wilayah (Opsional)"
+            placeholder="Contoh: 81.01"
             value={form.code}
             onChange={(e) => setForm({ ...form, code: e.target.value })}
           />
-          <label className="grid gap-1 text-sm font-medium">
-            Tingkat
+          <label className="grid gap-1.5 text-sm font-medium text-slate-800">
+            <span>Tingkat Wilayah</span>
             <select
-              className="min-h-11 rounded-xl border p-2"
+              className="min-h-11 rounded-xl border border-slate-300 bg-white px-3 text-slate-900 shadow-sm focus:border-pfram-primary focus:outline-none focus:ring-2 focus:ring-pfram-primary/20"
               value={form.level}
               onChange={(e) =>
                 setForm({ ...form, level: e.target.value, parentPublicId: "" })
               }
             >
               {["PROVINCE", "REGENCY", "DISTRICT", "VILLAGE"].map((v) => (
-                <option key={v}>{v}</option>
+                <option key={v} value={v}>
+                  {formatRegionLevel(v)}
+                </option>
               ))}
             </select>
           </label>
           {form.level !== "PROVINCE" && (
-            <label className="grid gap-1 text-sm font-medium">
-              Parent
+            <label className="grid gap-1.5 text-sm font-medium text-slate-800">
+              <span>Induk Wilayah (Parent)</span>
               <select
                 required
-                className="min-h-11 rounded-xl border p-2"
+                className="min-h-11 rounded-xl border border-slate-300 bg-white px-3 text-slate-900 shadow-sm focus:border-pfram-primary focus:outline-none focus:ring-2 focus:ring-pfram-primary/20"
                 value={form.parentPublicId}
                 onChange={(e) =>
                   setForm({ ...form, parentPublicId: e.target.value })
                 }
               >
-                <option value="">Pilih parent</option>
+                <option value="">-- Pilih Wilayah Induk --</option>
                 {parentOptions.map((v) => (
                   <option value={v.publicId} key={v.publicId}>
                     {v.name}
@@ -201,50 +223,82 @@ export function RegionsPage() {
               </select>
             </label>
           )}
-          <Button className="md:col-span-2">Tambah wilayah</Button>
+          <div className="md:col-span-2 pt-1">
+            <Button type="submit">Tambah Wilayah</Button>
+          </div>
         </form>
         {message && (
-          <p role="status" className="mt-3">
+          <p
+            role="status"
+            className="mt-3 rounded-lg bg-emerald-50 p-2.5 text-sm font-medium text-emerald-800"
+          >
             {message}
           </p>
         )}
       </Card>
+
       <Card>
-        <Search value={list.search} onChange={list.setSearch} />
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex-1">
+            <Search value={list.search} onChange={list.setSearch} />
+          </div>
+          <span className="text-xs font-semibold text-slate-500">
+            Total {list.data?.total ?? list.data?.items?.length ?? 0} wilayah
+          </span>
+        </div>
+
         <State
           loading={!list.data}
           error={list.error}
           empty={list.data?.items.length === 0}
         />
-        {list.data?.items.map((v) => (
-          <div
-            className="flex items-center justify-between border-b py-3"
-            key={v.publicId}
-          >
-            <span>
-              <b>{v.name}</b>
-              <small className="block text-slate-500">
-                {v.level}
-                {v.parent ? ` · ${v.parent.name}` : ""}
-              </small>
-            </span>
-            <Button
-              className="bg-white text-pfram-primary ring-1 ring-pfram-primary"
-              onClick={() =>
-                void request(
-                  `/admin/regions/${v.publicId}/${v.active ? "deactivate" : "activate"}`,
-                  { method: "POST" },
-                ).then(list.load)
-              }
+
+        <div className="divide-y divide-slate-100">
+          {list.data?.items.map((v) => (
+            <div
+              className="flex flex-col gap-2 py-3.5 sm:flex-row sm:items-center sm:justify-between"
+              key={v.publicId}
             >
-              {v.active ? "Nonaktifkan" : "Aktifkan"}
-            </Button>
-          </div>
-        ))}
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-bold text-slate-900">{v.name}</span>
+                  <StatusBadge variant={v.active ? "success" : "neutral"}>
+                    {v.active ? "Aktif" : "Nonaktif"}
+                  </StatusBadge>
+                </div>
+                <div className="text-xs text-slate-500">
+                  <span className="font-medium text-slate-600">
+                    {formatRegionLevel(v.level)}
+                  </span>
+                  {v.parent ? ` · Bagian dari: ${v.parent.name}` : ""}
+                </div>
+              </div>
+
+              <div className="shrink-0">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    void request(
+                      `/admin/regions/${v.publicId}/${v.active ? "deactivate" : "activate"}`,
+                      { method: "POST" },
+                    ).then(list.load)
+                  }
+                >
+                  {v.active ? "Nonaktifkan" : "Aktifkan"}
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
       </Card>
-    </>
+    </div>
   );
 }
+
+/* =========================================================================
+   REGION CHAIN COMPONENT
+   ========================================================================= */
 
 function RegionChain({
   values,
@@ -255,12 +309,15 @@ function RegionChain({
 }) {
   const { request } = useAuth();
   const levels = ["province", "regency", "district", "village"] as const;
+  const levelLabels = ["Provinsi", "Kabupaten/Kota", "Kecamatan", "Kelurahan/Desa"];
   const [options, setOptions] = useState<Record<string, Region[]>>({});
+
   useEffect(() => {
     request<Page<Region>>("/reference/regions?level=PROVINCE&limit=100")
       .then((v) => setOptions((o) => ({ ...o, province: v.items })))
       .catch(() => undefined);
   }, [request]);
+
   useEffect(() => {
     const load = async (
       key: "regency" | "district" | "village",
@@ -274,26 +331,29 @@ function RegionChain({
     };
     void load("regency", values.province ?? "");
   }, [request, values.province]);
+
   useEffect(() => {
     if (values.regency)
       request<Region[]>(`/reference/regions/${values.regency}/children`)
         .then((v) => setOptions((o) => ({ ...o, district: v })))
         .catch(() => undefined);
   }, [request, values.regency]);
+
   useEffect(() => {
     if (values.district)
       request<Region[]>(`/reference/regions/${values.district}/children`)
         .then((v) => setOptions((o) => ({ ...o, village: v })))
         .catch(() => undefined);
   }, [request, values.district]);
+
   return (
     <>
       {levels.map((key, index) => (
-        <label className="grid gap-1 text-sm font-medium" key={key}>
-          {["Provinsi", "Kabupaten/Kota", "Kecamatan", "Kelurahan/Desa"][index]}
+        <label className="grid gap-1.5 text-sm font-medium text-slate-800" key={key}>
+          <span>{levelLabels[index]}</span>
           <select
             required={key !== "village"}
-            className="min-h-11 rounded-xl border p-2"
+            className="min-h-11 rounded-xl border border-slate-300 bg-white px-3 text-slate-900 shadow-sm focus:border-pfram-primary focus:outline-none focus:ring-2 focus:ring-pfram-primary/20"
             value={values[key] ?? ""}
             onChange={(e) => {
               const next = { ...values, [key]: e.target.value };
@@ -303,7 +363,7 @@ function RegionChain({
               setValues(next);
             }}
           >
-            <option value="">Pilih</option>
+            <option value="">-- Pilih {levelLabels[index]} --</option>
             {options[key]?.map((v) => (
               <option key={v.publicId} value={v.publicId}>
                 {v.name}
@@ -316,6 +376,10 @@ function RegionChain({
   );
 }
 
+/* =========================================================================
+   FACILITIES PAGE
+   ========================================================================= */
+
 export function FacilitiesPage() {
   const { request } = useAuth();
   const list = useList<Facility>("/admin/facilities");
@@ -323,6 +387,7 @@ export function FacilitiesPage() {
     type: "PUSKESMAS",
   });
   const [message, setMessage] = useState("");
+
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     try {
@@ -341,134 +406,215 @@ export function FacilitiesPage() {
           serviceInformation: form.serviceInformation || undefined,
         }),
       });
-      setMessage("Fasilitas berhasil disimpan.");
+      setMessage("Fasilitas kesehatan berhasil disimpan.");
       list.load();
     } catch (err) {
-      setMessage(err instanceof Error ? err.message : "Gagal menyimpan");
+      setMessage(err instanceof Error ? err.message : "Gagal menyimpan fasilitas");
     }
   };
+
+  const facilityTypes = [
+    "PUSKESMAS",
+    "HOSPITAL",
+    "CLINIC",
+    "INDEPENDENT_MIDWIFE",
+    "REFERRAL_FACILITY",
+    "OTHER",
+  ];
+
   return (
-    <>
+    <div className="space-y-6">
       <PageHeader
         title="Fasilitas Kesehatan"
-        description="Kelola fasilitas aktif dan cakupan wilayahnya."
+        description="Kelola data fasilitas pelayanan rujukan dan pembina wilayah kerja."
       />
+
       <Card>
+        <h2 className="mb-4 text-base font-bold text-slate-900">Tambah Fasilitas Baru</h2>
         <form
-          className="grid gap-3 md:grid-cols-2"
+          className="grid gap-3.5 md:grid-cols-2"
           onSubmit={(e) => void submit(e)}
         >
           <Input
-            label="Nama fasilitas"
+            label="Nama Fasilitas"
             required
+            placeholder="Contoh: Puskesmas Banda"
             value={form.name ?? ""}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
           />
-          <label className="grid gap-1 text-sm font-medium">
-            Jenis
+          <label className="grid gap-1.5 text-sm font-medium text-slate-800">
+            <span>Jenis Fasilitas</span>
             <select
-              className="min-h-11 rounded-xl border p-2"
+              className="min-h-11 rounded-xl border border-slate-300 bg-white px-3 text-slate-900 shadow-sm focus:border-pfram-primary focus:outline-none focus:ring-2 focus:ring-pfram-primary/20"
               value={form.type}
               onChange={(e) => setForm({ ...form, type: e.target.value })}
             >
-              {[
-                "PUSKESMAS",
-                "HOSPITAL",
-                "CLINIC",
-                "INDEPENDENT_MIDWIFE",
-                "REFERRAL_FACILITY",
-                "OTHER",
-              ].map((v) => (
-                <option key={v}>{v}</option>
+              {facilityTypes.map((v) => (
+                <option key={v} value={v}>
+                  {formatFacilityType(v)}
+                </option>
               ))}
             </select>
           </label>
           <Input
-            label="Alamat"
+            label="Alamat Lengkap"
             required
+            placeholder="Alamat jalan, nomor, RT/RW"
             value={form.address ?? ""}
             onChange={(e) => setForm({ ...form, address: e.target.value })}
           />
           <Input
-            label="Nomor telepon"
+            label="Nomor Telepon Kontak"
+            placeholder="Nomor kontak operasional"
             value={form.phoneNumber ?? ""}
             onChange={(e) => setForm({ ...form, phoneNumber: e.target.value })}
           />
           <RegionChain values={form} setValues={setForm} />
-          <Button className="md:col-span-2">Tambah fasilitas</Button>
+          <div className="md:col-span-2 pt-2">
+            <Button type="submit">Tambah Fasilitas</Button>
+          </div>
         </form>
         {message && (
-          <p role="status" className="mt-3">
+          <p
+            role="status"
+            className="mt-3 rounded-lg bg-emerald-50 p-2.5 text-sm font-medium text-emerald-800"
+          >
             {message}
           </p>
         )}
       </Card>
+
       <Card>
-        <Search value={list.search} onChange={list.setSearch} />
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex-1">
+            <Search value={list.search} onChange={list.setSearch} />
+          </div>
+          <span className="text-xs font-semibold text-slate-500">
+            Total {list.data?.total ?? list.data?.items?.length ?? 0} fasilitas
+          </span>
+        </div>
+
         <State
           loading={!list.data}
           error={list.error}
           empty={list.data?.items.length === 0}
         />
-        {list.data?.items.map((v) => (
-          <div
-            className="flex items-center justify-between border-b py-3"
-            key={v.publicId}
-          >
-            <span>
-              <b>{v.name}</b>
-              <small className="block text-slate-500">
-                {v.type} · {v.district.name}
-              </small>
-            </span>
-            <Button
-              className="bg-white text-pfram-primary ring-1 ring-pfram-primary"
-              onClick={() =>
-                void request(
-                  `/admin/facilities/${v.publicId}/${v.active ? "deactivate" : "activate"}`,
-                  { method: "POST" },
-                ).then(list.load)
-              }
+
+        <div className="divide-y divide-slate-100">
+          {list.data?.items.map((v) => (
+            <div
+              className="flex flex-col gap-2 py-3.5 sm:flex-row sm:items-center sm:justify-between"
+              key={v.publicId}
             >
-              {v.active ? "Nonaktifkan" : "Aktifkan"}
-            </Button>
-          </div>
-        ))}
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-bold text-slate-900">{v.name}</span>
+                  <StatusBadge variant={v.active ? "success" : "neutral"}>
+                    {v.active ? "Aktif" : "Nonaktif"}
+                  </StatusBadge>
+                </div>
+                <p className="text-xs text-slate-500">
+                  <span className="font-semibold text-pfram-primary">
+                    {formatFacilityType(v.type)}
+                  </span>{" "}
+                  · Kecamatan {v.district?.name ?? "-"} · {v.address}
+                </p>
+              </div>
+
+              <div className="shrink-0">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    void request(
+                      `/admin/facilities/${v.publicId}/${v.active ? "deactivate" : "activate"}`,
+                      { method: "POST" },
+                    ).then(list.load)
+                  }
+                >
+                  {v.active ? "Nonaktifkan" : "Aktifkan"}
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
       </Card>
-    </>
+    </div>
   );
 }
 
+/* =========================================================================
+   MIDWIVES PAGE
+   ========================================================================= */
+
 export function MidwivesPage() {
   const list = useList<Midwife>("/admin/midwives");
+
   return (
-    <>
+    <div className="space-y-6">
       <PageHeader
-        title="Bidan"
-        description="Profil, fasilitas, wilayah kerja, dan jumlah ibu binaan."
+        title="Daftar Bidan"
+        description="Profil tenaga kesehatan pembina, fasilitas penugasan, dan ringkasan ibu binaan."
       />
+
       <Card>
-        <Search value={list.search} onChange={list.setSearch} />
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex-1">
+            <Search value={list.search} onChange={list.setSearch} />
+          </div>
+          <span className="text-xs font-semibold text-slate-500">
+            Total {list.data?.total ?? list.data?.items?.length ?? 0} bidan
+          </span>
+        </div>
+
         <State
           loading={!list.data}
           error={list.error}
           empty={list.data?.items.length === 0}
         />
-        {list.data?.items.map((v) => (
-          <div className="border-b py-3" key={v.publicId}>
-            <b>{v.fullName}</b>
-            <p className="text-sm text-slate-600">
-              {v.professionalRegistrationNumber ??
-                "Nomor registrasi belum diisi"}{" "}
-              · {v.primaryFacility?.name ?? "Belum ada fasilitas"} ·{" "}
-              {v.motherCount} ibu binaan · {v.active ? "Aktif" : "Nonaktif"}
-            </p>
-          </div>
-        ))}
+
+        <div className="divide-y divide-slate-100">
+          {list.data?.items.map((v) => (
+            <div
+              className="flex flex-col gap-2 py-3.5 sm:flex-row sm:items-center sm:justify-between"
+              key={v.publicId}
+            >
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-bold text-slate-900">{v.fullName}</span>
+                  <StatusBadge variant={v.active ? "success" : "neutral"}>
+                    {v.active ? "Aktif" : "Nonaktif"}
+                  </StatusBadge>
+                </div>
+                <div className="flex flex-wrap items-center gap-x-3 text-xs text-slate-600">
+                  <span>
+                    <b>STR:</b>{" "}
+                    {v.professionalRegistrationNumber ?? "Belum terdaftar"}
+                  </span>
+                  <span>
+                    <b>Fasilitas:</b>{" "}
+                    {v.primaryFacility?.name ?? "Belum ditautkan"}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="rounded-lg bg-emerald-50 px-3 py-1 text-xs font-semibold text-pfram-text ring-1 ring-emerald-200/60">
+                  {v.motherCount} ibu binaan
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
       </Card>
-    </>
+    </div>
   );
 }
+
+/* =========================================================================
+   MOTHERS PAGE (MIDWIFE + ADMIN VIEWS)
+   ========================================================================= */
+
 export function MothersPage({ midwife = false }: { midwife?: boolean }) {
   const { request } = useAuth();
   const [filter, setFilter] = useState<MidwifeMotherFilter>("ALL");
@@ -641,7 +787,7 @@ export function MothersPage({ midwife = false }: { midwife?: boolean }) {
               <div>
                 <Link
                   to={"/my-mothers/" + v.publicId}
-                  className="inline-flex min-h-9 items-center justify-center rounded-lg border border-slate-300 bg-white px-3.5 text-xs font-semibold text-pfram-primary shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-pfram-primary/50"
+                  className="inline-flex min-h-9 items-center justify-center rounded-lg border border-pfram-primary bg-white px-3.5 text-xs font-semibold text-pfram-primary shadow-sm hover:bg-emerald-50 focus:outline-none focus:ring-2 focus:ring-pfram-primary/50"
                 >
                   Lihat Detail & Pemantauan →
                 </Link>
@@ -653,49 +799,76 @@ export function MothersPage({ midwife = false }: { midwife?: boolean }) {
     );
   }
 
-  // Admin view
+  // Admin view (administrative listing only - zero sensitive clinical data exposed)
   return (
-    <>
+    <div className="space-y-6">
       <PageHeader
         title="Ibu Hamil"
-        description="Daftar ringkas tanpa rincian kesehatan sensitif."
+        description="Daftar administratif kependudukan ibu hamil dan fasilitas pembinanya."
       />
+
       <Card>
-        <Search value={search} onChange={setSearch} />
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex-1">
+            <Search value={search} onChange={setSearch} />
+          </div>
+          <span className="text-xs font-semibold text-slate-500">
+            Total {adminList?.total ?? adminList?.items?.length ?? 0} ibu terdaftar
+          </span>
+        </div>
+
         <State
           loading={loading}
           error={error}
           empty={adminList?.items.length === 0}
         />
-        {adminList?.items.map((v) => (
-          <div
-            className="flex flex-wrap items-center justify-between border-b py-3"
-            key={v.publicId}
-          >
-            <div>
-              <b>{v.fullName}</b>
-              <p className="text-sm text-slate-600">
-                Usia {v.age ?? "-"} · {v.facility?.name ?? "Belum memilih fasilitas"}
-              </p>
+
+        <div className="divide-y divide-slate-100">
+          {adminList?.items.map((v) => (
+            <div
+              className="flex flex-col gap-2 py-3.5 sm:flex-row sm:items-center sm:justify-between"
+              key={v.publicId}
+            >
+              <div className="space-y-0.5">
+                <span className="text-sm font-bold text-slate-900">{v.fullName}</span>
+                <p className="text-xs text-slate-600">
+                  Usia: {v.age != null ? `${v.age} tahun` : "-"} · Fasilitas Terdaftar:{" "}
+                  {v.facility?.name ?? "Belum memilih fasilitas"}
+                </p>
+              </div>
+              <div className="text-xs text-slate-400 font-mono">
+                {v.publicId}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </Card>
-    </>
+    </div>
   );
 }
+
+/* =========================================================================
+   ASSIGNMENTS PAGE
+   ========================================================================= */
+
 export function AssignmentsPage() {
   const { request } = useAuth();
   const list = useList<Assignment>("/admin/assignments");
   const [actionId, setActionId] = useState<string | null>(null);
-  const [actionType, setActionType] = useState<"replace" | "complete" | "cancel" | null>(null);
+  const [actionType, setActionType] = useState<
+    "replace" | "complete" | "cancel" | null
+  >(null);
   const [replacementMidwifeId, setReplacementMidwifeId] = useState("");
   const [reason, setReason] = useState("");
   const [message, setMessage] = useState("");
-  const [midwives, setMidwives] = useState<{ publicId: string; fullName: string }[]>([]);
+  const [midwives, setMidwives] = useState<
+    { publicId: string; fullName: string }[]
+  >([]);
 
   useEffect(() => {
-    request<Page<{ publicId: string; fullName: string }>>("/admin/midwives?active=true&limit=100")
+    request<Page<{ publicId: string; fullName: string }>>(
+      "/admin/midwives?active=true&limit=100",
+    )
       .then((res) => setMidwives(res.items))
       .catch(() => setMidwives([]));
   }, [request]);
@@ -710,13 +883,15 @@ export function AssignmentsPage() {
           method: "POST",
           body: JSON.stringify({ midwifePublicId: replacementMidwifeId, reason }),
         });
-        setMessage("Bidan berhasil diganti.");
+        setMessage("Pergantian bidan pembina berhasil diproses.");
       } else {
         await request(`/admin/assignments/${actionId}/${actionType}`, {
           method: "POST",
           body: JSON.stringify({ reason: reason || undefined }),
         });
-        setMessage(`Penugasan berhasil di-${actionType === "complete" ? "selesaikan" : "batalkan"}.`);
+        setMessage(
+          `Penugasan berhasil di-${actionType === "complete" ? "selesaikan" : "batalkan"}.`,
+        );
       }
       setActionId(null);
       setActionType(null);
@@ -724,143 +899,176 @@ export function AssignmentsPage() {
       setReplacementMidwifeId("");
       list.load();
     } catch (err) {
-      setMessage(err instanceof Error ? err.message : "Aksi gagal diproses");
+      setMessage(err instanceof Error ? err.message : "Aksi penugasan gagal");
     }
   };
 
   return (
-    <>
+    <div className="space-y-6">
       <PageHeader
         title="Penugasan Bidan"
-        description="Tetapkan, ganti, dan pantau riwayat pendampingan ibu hamil."
+        description="Tetapkan, alihkan pendampingan, dan pantau status pembinaan ibu hamil."
       />
-      {message && <div className="rounded-xl bg-slate-100 p-3 text-sm font-medium">{message}</div>}
+
+      {message && (
+        <div className="rounded-xl bg-emerald-50 p-3.5 text-sm font-medium text-emerald-800 ring-1 ring-emerald-200">
+          {message}
+        </div>
+      )}
+
       <Card>
         <State
           loading={!list.data}
           error={list.error}
           empty={list.data?.items.length === 0}
         />
-        {list.data?.items.map((v) => (
-          <div className="border-b py-4" key={v.publicId}>
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div>
-                <b className="text-base">{v.mother.fullName}</b>
-                <p className="text-sm text-slate-600">
-                  Bidan: {v.midwife.fullName} · {v.facility.name}
-                </p>
-                <p className="text-xs text-slate-500">Mulai: {new Date(v.startedAt).toLocaleDateString("id-ID")}</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <span
-                  className={`rounded-full px-2.5 py-1 text-xs font-semibold ${
-                    v.status === "ACTIVE"
-                      ? "bg-emerald-100 text-emerald-800"
-                      : v.status === "COMPLETED"
-                        ? "bg-blue-100 text-blue-800"
-                        : v.status === "REPLACED"
-                          ? "bg-amber-100 text-amber-800"
-                          : "bg-slate-200 text-slate-800"
-                  }`}
-                >
-                  {v.status}
-                </span>
-                {v.status === "ACTIVE" && (
-                  <>
-                    <button
-                      type="button"
-                      className="rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-medium hover:bg-slate-100"
-                      onClick={() => {
-                        setActionId(v.publicId);
-                        setActionType("replace");
-                        setReason("");
-                      }}
-                    >
-                      Ganti Bidan
-                    </button>
-                    <button
-                      type="button"
-                      className="rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-medium hover:bg-slate-100"
-                      onClick={() => {
-                        setActionId(v.publicId);
-                        setActionType("complete");
-                        setReason("");
-                      }}
-                    >
-                      Selesai
-                    </button>
-                    <button
-                      type="button"
-                      className="rounded-lg border border-slate-300 px-2.5 py-1 text-xs font-medium text-rose-600 hover:bg-rose-50"
-                      onClick={() => {
-                        setActionId(v.publicId);
-                        setActionType("cancel");
-                        setReason("");
-                      }}
-                    >
-                      Batal
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
-            {actionId === v.publicId && actionType && (
-              <form onSubmit={handleAction} className="mt-3 grid gap-3 rounded-xl bg-slate-50 p-4">
-                <div className="font-semibold text-sm">
-                  {actionType === "replace"
-                    ? "Ganti Bidan Pendamping"
-                    : actionType === "complete"
-                      ? "Selesaikan Penugasan"
-                      : "Batalkan Penugasan"}
+
+        <div className="divide-y divide-slate-100">
+          {list.data?.items.map((v) => {
+            const { label: statusLabel, variant: statusVariant } =
+              formatAssignmentStatus(v.status);
+
+            return (
+              <div className="py-4" key={v.publicId}>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-base font-bold text-slate-900">
+                        {v.mother.fullName}
+                      </span>
+                      <StatusBadge variant={statusVariant}>
+                        {statusLabel}
+                      </StatusBadge>
+                    </div>
+                    <p className="text-xs text-slate-600">
+                      Bidan Pembina: <b>{v.midwife.fullName}</b> · {v.facility.name}
+                    </p>
+                    <p className="text-[11px] text-slate-400">
+                      Mulai Penugasan:{" "}
+                      {new Date(v.startedAt).toLocaleDateString("id-ID", {
+                        dateStyle: "medium",
+                      })}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    {v.status === "ACTIVE" && (
+                      <>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setActionId(v.publicId);
+                            setActionType("replace");
+                            setReason("");
+                          }}
+                        >
+                          Ganti Bidan
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setActionId(v.publicId);
+                            setActionType("complete");
+                            setReason("");
+                          }}
+                        >
+                          Selesai
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-rose-600 hover:bg-rose-50"
+                          onClick={() => {
+                            setActionId(v.publicId);
+                            setActionType("cancel");
+                            setReason("");
+                          }}
+                        >
+                          Batal
+                        </Button>
+                      </>
+                    )}
+                  </div>
                 </div>
-                {actionType === "replace" && (
-                  <label className="grid gap-1 text-sm font-medium">
-                    <span>Bidan Pengganti</span>
-                    <select
-                      className="min-h-11 rounded-xl border border-slate-300 bg-white px-3 text-slate-900"
-                      value={replacementMidwifeId}
-                      onChange={(e) => setReplacementMidwifeId(e.target.value)}
-                      required
-                    >
-                      <option value="">-- Pilih Bidan Pengganti --</option>
-                      {midwives.map((m) => (
-                        <option key={m.publicId} value={m.publicId}>
-                          {m.fullName}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                )}
-                <Input
-                  label={actionType === "replace" ? "Alasan Pergantian (wajib)" : "Alasan (opsional)"}
-                  value={reason}
-                  onChange={(e) => setReason(e.target.value)}
-                  placeholder={actionType === "replace" ? "Contoh: Bidan berpindah tugas" : "Catatan penyelesaian"}
-                  required={actionType === "replace"}
-                />
-                <div className="flex gap-2">
-                  <Button type="submit" className="min-h-9 text-xs">
-                    Simpan
-                  </Button>
-                  <button
-                    type="button"
-                    className="rounded-xl border border-slate-300 px-3 py-1 text-xs"
-                    onClick={() => {
-                      setActionId(null);
-                      setActionType(null);
-                    }}
+
+                {actionId === v.publicId && actionType && (
+                  <form
+                    onSubmit={handleAction}
+                    className="mt-4 grid gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4"
                   >
-                    Batal
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
-        ))}
+                    <div className="text-sm font-bold text-slate-900">
+                      {actionType === "replace"
+                        ? "Pengalihan / Pergantian Bidan Pembina"
+                        : actionType === "complete"
+                          ? "Selesaikan Penugasan Bidan"
+                          : "Batalkan Penugasan Bidan"}
+                    </div>
+                    {actionType === "replace" && (
+                      <label className="grid gap-1.5 text-sm font-medium text-slate-800">
+                        <span>Pilih Bidan Pengganti</span>
+                        <select
+                          className="min-h-11 rounded-xl border border-slate-300 bg-white px-3 text-slate-900 shadow-sm focus:border-pfram-primary focus:outline-none focus:ring-2 focus:ring-pfram-primary/20"
+                          value={replacementMidwifeId}
+                          onChange={(e) => setReplacementMidwifeId(e.target.value)}
+                          required
+                        >
+                          <option value="">-- Pilih Bidan Pengganti --</option>
+                          {midwives.map((m) => (
+                            <option key={m.publicId} value={m.publicId}>
+                              {m.fullName}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                    )}
+                    <Input
+                      label={
+                        actionType === "replace"
+                          ? "Alasan Pergantian (Wajib Diisi)"
+                          : "Catatan Tindakan (Opsional)"
+                      }
+                      value={reason}
+                      onChange={(e) => setReason(e.target.value)}
+                      placeholder={
+                        actionType === "replace"
+                          ? "Contoh: Bidan berpindah wilayah tugas / cuti melahirkan"
+                          : "Catatan penutupan penugasan"
+                      }
+                      required={actionType === "replace"}
+                    />
+                    <div className="flex gap-2 pt-1">
+                      <Button type="submit" size="sm">
+                        Simpan Perubahan
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setActionId(null);
+                          setActionType(null);
+                        }}
+                      >
+                        Batal
+                      </Button>
+                    </div>
+                  </form>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </Card>
-    </>
+    </div>
   );
 }
+
+/* =========================================================================
+   MIDWIFE PROFILE PAGE
+   ========================================================================= */
+
 export function MidwifeProfilePage() {
   const { request } = useAuth();
   const [data, setData] = useState<{
@@ -884,7 +1092,7 @@ export function MidwifeProfilePage() {
           setWhatsappNumber(res.whatsappNumber ?? "");
         }
       })
-      .catch((e) => setError(e instanceof Error ? e.message : "Gagal memuat"));
+      .catch((e) => setError(e instanceof Error ? e.message : "Gagal memuat profil"));
   }, [request]);
 
   useEffect(load, [load]);
@@ -901,49 +1109,67 @@ export function MidwifeProfilePage() {
           whatsappNumber: whatsappNumber || undefined,
         }),
       });
-      setSuccess("Profil berhasil diperbarui.");
+      setSuccess("Profil bidan berhasil diperbarui.");
       load();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Gagal menyimpan");
+      setError(err instanceof Error ? err.message : "Gagal menyimpan perubahan");
     }
   };
 
   return (
-    <>
+    <div className="max-w-2xl space-y-6">
       <PageHeader
         title="Profil Bidan"
-        description="Informasi layanan dan penugasan Anda."
+        description="Informasi kontak klinis dan fasilitas penugasan Anda."
       />
+
       {error && <ErrorState message={error} />}
-      {success && <div className="rounded-xl bg-emerald-50 p-3 text-sm text-emerald-800 font-medium">{success}</div>}
+      {success && (
+        <div className="rounded-xl bg-emerald-50 p-3.5 text-sm font-medium text-emerald-800 ring-1 ring-emerald-200">
+          {success}
+        </div>
+      )}
+
       {!data ? (
         <LoadingSkeleton />
       ) : (
-        <Card>
-          <div className="mb-4">
-            <h2 className="text-xl font-bold">{data.fullName}</h2>
-            <p className="text-sm text-slate-600">Fasilitas Utama: {data.primaryFacility?.name ?? "Belum ada"}</p>
-            <p className="text-xs text-slate-500 mt-1">Status: {data.active ? "Aktif" : "Nonaktif"}</p>
+        <Card className="p-6">
+          <div className="flex items-center gap-4 border-b border-slate-100 pb-5">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-pfram-primary text-xl font-bold text-white shadow-sm">
+              👩‍⚕️
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-slate-900">{data.fullName}</h2>
+              <div className="mt-1 flex items-center gap-2">
+                <span className="text-xs text-slate-600">
+                  Fasilitas: <b>{data.primaryFacility?.name ?? "Belum ditautkan"}</b>
+                </span>
+                <StatusBadge variant={data.active ? "success" : "neutral"}>
+                  {data.active ? "Aktif" : "Nonaktif"}
+                </StatusBadge>
+              </div>
+            </div>
           </div>
-          <form onSubmit={save} className="grid gap-4 border-t pt-4">
+
+          <form onSubmit={save} className="mt-6 grid gap-4">
             <Input
-              label="Nama Panggilan"
+              label="Nama Panggilan / Sapaan Pasien"
               value={preferredName}
               onChange={(e) => setPreferredName(e.target.value)}
-              placeholder="Nama sapaan"
+              placeholder="Contoh: Bidan Siti"
             />
             <Input
-              label="Nomor WhatsApp"
+              label="Nomor WhatsApp Klinis"
               value={whatsappNumber}
               onChange={(e) => setWhatsappNumber(e.target.value)}
-              placeholder="08..."
+              placeholder="Contoh: 081234567890"
             />
-            <div>
+            <div className="pt-2">
               <Button type="submit">Simpan Perubahan</Button>
             </div>
           </form>
         </Card>
       )}
-    </>
+    </div>
   );
 }

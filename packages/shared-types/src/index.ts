@@ -932,3 +932,55 @@ export interface MidwifeEnrichedMotherItem {
   unreadMessagesCount: number;
   hasMissedAnc: boolean;
 }
+
+// ==========================================
+// TAHAP 12 — ADMIN USER ACCOUNT MANAGEMENT
+// ==========================================
+
+export interface AdminUserListItem {
+  publicId: string;
+  phoneNumber: string;
+  role: UserRole;
+  status: UserStatus;
+  displayName: string;
+  fullName: string | null;
+  lastLoginAt: string | null;
+  failedLoginCount: number;
+  lockedUntil: string | null;
+  isLocked: boolean;
+  createdAt: string;
+  deactivatedAt: string | null;
+}
+
+export interface AdminUserDetail extends AdminUserListItem {
+  midwifeProfile?: {
+    fullName: string;
+    professionalRegistrationNumber: string | null;
+    primaryFacility: { publicId: string; name: string } | null;
+  } | undefined;
+  motherProfile?: {
+    fullName: string;
+    primaryFacility: { publicId: string; name: string } | null;
+  } | undefined;
+}
+
+export interface AdminUserCreateInput {
+  phoneNumber: string;
+  password: string;
+  role: "ADMIN" | "MIDWIFE";
+  fullName: string;
+  primaryFacilityPublicId?: string | undefined;
+  professionalRegistrationNumber?: string | undefined;
+}
+
+export interface AdminUserPasswordResetInput {
+  newPassword: string;
+}
+
+export interface AdminUserFilterQuery {
+  page?: number | undefined;
+  limit?: number | undefined;
+  search?: string | undefined;
+  role?: UserRole | undefined;
+  status?: UserStatus | undefined;
+}

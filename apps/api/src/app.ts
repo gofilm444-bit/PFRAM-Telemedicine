@@ -160,6 +160,7 @@ export function buildApp(
   app.register(healthRoutes, { prefix: "/api/health" });
   app.register(authRoutes, { prefix: "/api/auth" });
   app.register(userRoutes, { prefix: "/api/users" });
+  app.register(userRoutes, { prefix: "/api/admin/users" });
   app.register(referenceRoutes, { prefix: "/api/reference" });
   app.register(adminStage3Routes, { prefix: "/api/admin" });
   app.register(motherStage3Routes, { prefix: "/api/mother" });

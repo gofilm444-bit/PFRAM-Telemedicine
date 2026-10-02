@@ -909,3 +909,30 @@ export const midwifeMotherQuerySchema = z.object({
     .transform((val) => (typeof val === "number" ? val : parseInt(val, 10)))
     .optional(),
 });
+
+export const adminUserCreateSchema = z.object({
+  phoneNumber: phoneSchema,
+  password: passwordSchema,
+  role: z.enum(["ADMIN", "MIDWIFE"]),
+  fullName: nameSchema,
+  primaryFacilityPublicId: publicIdSchema.optional(),
+  professionalRegistrationNumber: z.string().trim().max(50).optional(),
+});
+
+export const adminUserPasswordResetSchema = z.object({
+  newPassword: passwordSchema,
+});
+
+export const adminUserFilterSchema = z.object({
+  page: z
+    .union([z.number(), z.string()])
+    .transform((val) => (typeof val === "number" ? val : parseInt(val, 10)))
+    .optional(),
+  limit: z
+    .union([z.number(), z.string()])
+    .transform((val) => (typeof val === "number" ? val : parseInt(val, 10)))
+    .optional(),
+  search: z.string().trim().optional(),
+  role: z.enum(["ADMIN", "MIDWIFE", "MOTHER"]).optional(),
+  status: z.enum(["ACTIVE", "DISABLED", "PENDING", "BLOCKED", "ARCHIVED"]).optional(),
+});
