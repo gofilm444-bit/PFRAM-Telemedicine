@@ -44,6 +44,7 @@ import { MidwifeAttentionListPage } from "./MidwifeAttentionListPage";
 import { MidwifeMissedAncPage } from "./MidwifeMissedAncPage";
 import { MidwifeConsultationPage } from "./MidwifeConsultationPage";
 import { AdminEducationListPage } from "./AdminEducationListPage";
+import { AdminUsersPage } from "./AdminUsersPage";
 
 /* =========================================================================
    LOGIN SCREEN
@@ -156,6 +157,14 @@ function Layout() {
         <Route path="profile" element={<Profile />} />
 
         {/* ADMIN ROUTES */}
+        <Route
+          path="users"
+          element={
+            <RoleGuard roles={["ADMIN"]}>
+              <AdminUsersPage />
+            </RoleGuard>
+          }
+        />
         <Route
           path="regions"
           element={
