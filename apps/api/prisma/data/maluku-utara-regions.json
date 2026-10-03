@@ -1,0 +1,7886 @@
+[
+  {
+    "code": "82",
+    "name": "Maluku Utara",
+    "level": "PROVINCE",
+    "parentCode": null
+  },
+  {
+    "code": "82.01",
+    "name": "Kabupaten Halmahera Barat",
+    "level": "REGENCY",
+    "parentCode": "82"
+  },
+  {
+    "code": "82.01.01",
+    "name": "Jailolo",
+    "level": "DISTRICT",
+    "parentCode": "82.01"
+  },
+  {
+    "code": "82.01.01.2001",
+    "name": "Gufasa",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2002",
+    "name": "Guaimaadu",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2003",
+    "name": "Jalan Baru",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2004",
+    "name": "Gam Lamo",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2005",
+    "name": "Soakonora",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2006",
+    "name": "Galala",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2007",
+    "name": "Bobanehena",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2008",
+    "name": "Payo",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2009",
+    "name": "Bobo",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2010",
+    "name": "Saria",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2011",
+    "name": "Idam Dehe",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2012",
+    "name": "Idamdehe Gamsungi",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2013",
+    "name": "Marmabati",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2014",
+    "name": "Gamtala",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2015",
+    "name": "Lolory",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2016",
+    "name": "Toboso",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2017",
+    "name": "Huku-Huku Kie",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2018",
+    "name": "Acango",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2019",
+    "name": "Tedeng",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2020",
+    "name": "Akediri",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2021",
+    "name": "Pornity",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2022",
+    "name": "Buku Matiti",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2023",
+    "name": "Todowongi",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2024",
+    "name": "Tuada",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2025",
+    "name": "Matui",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2026",
+    "name": "Buku Bualawa",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2027",
+    "name": "Tauro",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2034",
+    "name": "Hate Bicara",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2035",
+    "name": "Guaria",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2036",
+    "name": "Pateng",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2037",
+    "name": "Bobo Jiko",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2038",
+    "name": "Ulo",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2039",
+    "name": "Kuripasai",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.01.2040",
+    "name": "Buku Maadu",
+    "level": "VILLAGE",
+    "parentCode": "82.01.01"
+  },
+  {
+    "code": "82.01.02",
+    "name": "Loloda",
+    "level": "DISTRICT",
+    "parentCode": "82.01"
+  },
+  {
+    "code": "82.01.02.2001",
+    "name": "Kedi",
+    "level": "VILLAGE",
+    "parentCode": "82.01.02"
+  },
+  {
+    "code": "82.01.02.2002",
+    "name": "Soasio",
+    "level": "VILLAGE",
+    "parentCode": "82.01.02"
+  },
+  {
+    "code": "82.01.02.2003",
+    "name": "Totala",
+    "level": "VILLAGE",
+    "parentCode": "82.01.02"
+  },
+  {
+    "code": "82.01.02.2004",
+    "name": "Tolofuo",
+    "level": "VILLAGE",
+    "parentCode": "82.01.02"
+  },
+  {
+    "code": "82.01.02.2005",
+    "name": "Tuguis",
+    "level": "VILLAGE",
+    "parentCode": "82.01.02"
+  },
+  {
+    "code": "82.01.02.2006",
+    "name": "Tasye",
+    "level": "VILLAGE",
+    "parentCode": "82.01.02"
+  },
+  {
+    "code": "82.01.02.2007",
+    "name": "Laba Besar",
+    "level": "VILLAGE",
+    "parentCode": "82.01.02"
+  },
+  {
+    "code": "82.01.02.2008",
+    "name": "Laba Kecil",
+    "level": "VILLAGE",
+    "parentCode": "82.01.02"
+  },
+  {
+    "code": "82.01.02.2010",
+    "name": "Bakun",
+    "level": "VILLAGE",
+    "parentCode": "82.01.02"
+  },
+  {
+    "code": "82.01.02.2011",
+    "name": "Buo",
+    "level": "VILLAGE",
+    "parentCode": "82.01.02"
+  },
+  {
+    "code": "82.01.02.2018",
+    "name": "Kahatola",
+    "level": "VILLAGE",
+    "parentCode": "82.01.02"
+  },
+  {
+    "code": "82.01.02.2019",
+    "name": "Bosala",
+    "level": "VILLAGE",
+    "parentCode": "82.01.02"
+  },
+  {
+    "code": "82.01.02.2020",
+    "name": "Salu",
+    "level": "VILLAGE",
+    "parentCode": "82.01.02"
+  },
+  {
+    "code": "82.01.02.2023",
+    "name": "Bantoli",
+    "level": "VILLAGE",
+    "parentCode": "82.01.02"
+  },
+  {
+    "code": "82.01.02.2024",
+    "name": "Linggua",
+    "level": "VILLAGE",
+    "parentCode": "82.01.02"
+  },
+  {
+    "code": "82.01.02.2025",
+    "name": "Tomodo",
+    "level": "VILLAGE",
+    "parentCode": "82.01.02"
+  },
+  {
+    "code": "82.01.02.2026",
+    "name": "Totala Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.01.02"
+  },
+  {
+    "code": "82.01.03",
+    "name": "Ibu",
+    "level": "DISTRICT",
+    "parentCode": "82.01"
+  },
+  {
+    "code": "82.01.03.2012",
+    "name": "Togola Wayoli",
+    "level": "VILLAGE",
+    "parentCode": "82.01.03"
+  },
+  {
+    "code": "82.01.03.2013",
+    "name": "Togola Sangir",
+    "level": "VILLAGE",
+    "parentCode": "82.01.03"
+  },
+  {
+    "code": "82.01.03.2014",
+    "name": "Tahafo",
+    "level": "VILLAGE",
+    "parentCode": "82.01.03"
+  },
+  {
+    "code": "82.01.03.2015",
+    "name": "Tongute Ternate",
+    "level": "VILLAGE",
+    "parentCode": "82.01.03"
+  },
+  {
+    "code": "82.01.03.2016",
+    "name": "Akesibu",
+    "level": "VILLAGE",
+    "parentCode": "82.01.03"
+  },
+  {
+    "code": "82.01.03.2017",
+    "name": "Maritango",
+    "level": "VILLAGE",
+    "parentCode": "82.01.03"
+  },
+  {
+    "code": "82.01.03.2018",
+    "name": "Kie Ici",
+    "level": "VILLAGE",
+    "parentCode": "82.01.03"
+  },
+  {
+    "code": "82.01.03.2019",
+    "name": "Tongute Goin",
+    "level": "VILLAGE",
+    "parentCode": "82.01.03"
+  },
+  {
+    "code": "82.01.03.2020",
+    "name": "Tungute Sungi",
+    "level": "VILLAGE",
+    "parentCode": "82.01.03"
+  },
+  {
+    "code": "82.01.03.2021",
+    "name": "Gam Ici",
+    "level": "VILLAGE",
+    "parentCode": "82.01.03"
+  },
+  {
+    "code": "82.01.03.2022",
+    "name": "Tobaol",
+    "level": "VILLAGE",
+    "parentCode": "82.01.03"
+  },
+  {
+    "code": "82.01.03.2023",
+    "name": "Gamlamo",
+    "level": "VILLAGE",
+    "parentCode": "82.01.03"
+  },
+  {
+    "code": "82.01.03.2037",
+    "name": "Naga",
+    "level": "VILLAGE",
+    "parentCode": "82.01.03"
+  },
+  {
+    "code": "82.01.03.2040",
+    "name": "Soana Masungi",
+    "level": "VILLAGE",
+    "parentCode": "82.01.03"
+  },
+  {
+    "code": "82.01.03.2041",
+    "name": "Tongute Ternate Selatan",
+    "level": "VILLAGE",
+    "parentCode": "82.01.03"
+  },
+  {
+    "code": "82.01.03.2042",
+    "name": "Ake Boso",
+    "level": "VILLAGE",
+    "parentCode": "82.01.03"
+  },
+  {
+    "code": "82.01.03.2043",
+    "name": "Kampung Baru",
+    "level": "VILLAGE",
+    "parentCode": "82.01.03"
+  },
+  {
+    "code": "82.01.04",
+    "name": "Sahu",
+    "level": "DISTRICT",
+    "parentCode": "82.01"
+  },
+  {
+    "code": "82.01.04.2001",
+    "name": "Susupu",
+    "level": "VILLAGE",
+    "parentCode": "82.01.04"
+  },
+  {
+    "code": "82.01.04.2002",
+    "name": "Lako Akelamo",
+    "level": "VILLAGE",
+    "parentCode": "82.01.04"
+  },
+  {
+    "code": "82.01.04.2003",
+    "name": "Taruba",
+    "level": "VILLAGE",
+    "parentCode": "82.01.04"
+  },
+  {
+    "code": "82.01.04.2004",
+    "name": "Todahe",
+    "level": "VILLAGE",
+    "parentCode": "82.01.04"
+  },
+  {
+    "code": "82.01.04.2005",
+    "name": "Peot",
+    "level": "VILLAGE",
+    "parentCode": "82.01.04"
+  },
+  {
+    "code": "82.01.04.2006",
+    "name": "Sasur",
+    "level": "VILLAGE",
+    "parentCode": "82.01.04"
+  },
+  {
+    "code": "82.01.04.2007",
+    "name": "Goro goro",
+    "level": "VILLAGE",
+    "parentCode": "82.01.04"
+  },
+  {
+    "code": "82.01.04.2008",
+    "name": "Tacim",
+    "level": "VILLAGE",
+    "parentCode": "82.01.04"
+  },
+  {
+    "code": "82.01.04.2009",
+    "name": "Balisoang",
+    "level": "VILLAGE",
+    "parentCode": "82.01.04"
+  },
+  {
+    "code": "82.01.04.2010",
+    "name": "Worat-worat",
+    "level": "VILLAGE",
+    "parentCode": "82.01.04"
+  },
+  {
+    "code": "82.01.04.2011",
+    "name": "Tacici",
+    "level": "VILLAGE",
+    "parentCode": "82.01.04"
+  },
+  {
+    "code": "82.01.04.2012",
+    "name": "Taraudu",
+    "level": "VILLAGE",
+    "parentCode": "82.01.04"
+  },
+  {
+    "code": "82.01.04.2013",
+    "name": "Golo",
+    "level": "VILLAGE",
+    "parentCode": "82.01.04"
+  },
+  {
+    "code": "82.01.04.2028",
+    "name": "Lako Akederi",
+    "level": "VILLAGE",
+    "parentCode": "82.01.04"
+  },
+  {
+    "code": "82.01.04.2029",
+    "name": "Jara Kore",
+    "level": "VILLAGE",
+    "parentCode": "82.01.04"
+  },
+  {
+    "code": "82.01.04.2030",
+    "name": "Ropu Tengah Balu",
+    "level": "VILLAGE",
+    "parentCode": "82.01.04"
+  },
+  {
+    "code": "82.01.04.2033",
+    "name": "Dere",
+    "level": "VILLAGE",
+    "parentCode": "82.01.04"
+  },
+  {
+    "code": "82.01.04.2034",
+    "name": "Balisoan Utara",
+    "level": "VILLAGE",
+    "parentCode": "82.01.04"
+  },
+  {
+    "code": "82.01.04.2035",
+    "name": "Sasur Pantai",
+    "level": "VILLAGE",
+    "parentCode": "82.01.04"
+  },
+  {
+    "code": "82.01.05",
+    "name": "Jailolo Selatan",
+    "level": "DISTRICT",
+    "parentCode": "82.01"
+  },
+  {
+    "code": "82.01.05.2001",
+    "name": "Sidangoli Gam",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2002",
+    "name": "Sidongoli Dehe",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2003",
+    "name": "Domato",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2004",
+    "name": "Tataleka",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2005",
+    "name": "Gamlenge",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2006",
+    "name": "Akejailolo",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2007",
+    "name": "Biamaahi",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2008",
+    "name": "Tuguraci",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2009",
+    "name": "Akeara",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2010",
+    "name": "Akelaha",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2011",
+    "name": "Dodinga",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2012",
+    "name": "Tewe",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2013",
+    "name": "Toniku",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2014",
+    "name": "Rioribati",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2021",
+    "name": "Taba Damai (DB)",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2022",
+    "name": "Moiso",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2023",
+    "name": "Braha",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2024",
+    "name": "Bangkit Rahmat",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2025",
+    "name": "Bobane Dano",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2026",
+    "name": "Suka Damai",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2027",
+    "name": "Hijrah",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2028",
+    "name": "Ratem",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2029",
+    "name": "Bobaneigo Madihutu",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2030",
+    "name": "Tetewang Joronga",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2031",
+    "name": "Akelamo Cinga-Cinga",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.05.2032",
+    "name": "Akesahu Madutu",
+    "level": "VILLAGE",
+    "parentCode": "82.01.05"
+  },
+  {
+    "code": "82.01.07",
+    "name": "Ibu Utara",
+    "level": "DISTRICT",
+    "parentCode": "82.01"
+  },
+  {
+    "code": "82.01.07.2001",
+    "name": "Podol",
+    "level": "VILLAGE",
+    "parentCode": "82.01.07"
+  },
+  {
+    "code": "82.01.07.2002",
+    "name": "Tengowango",
+    "level": "VILLAGE",
+    "parentCode": "82.01.07"
+  },
+  {
+    "code": "82.01.07.2003",
+    "name": "Togowo",
+    "level": "VILLAGE",
+    "parentCode": "82.01.07"
+  },
+  {
+    "code": "82.01.07.2004",
+    "name": "Duono",
+    "level": "VILLAGE",
+    "parentCode": "82.01.07"
+  },
+  {
+    "code": "82.01.07.2005",
+    "name": "Goin",
+    "level": "VILLAGE",
+    "parentCode": "82.01.07"
+  },
+  {
+    "code": "82.01.07.2006",
+    "name": "Sangaji Nyeku",
+    "level": "VILLAGE",
+    "parentCode": "82.01.07"
+  },
+  {
+    "code": "82.01.07.2007",
+    "name": "Tuguis",
+    "level": "VILLAGE",
+    "parentCode": "82.01.07"
+  },
+  {
+    "code": "82.01.07.2008",
+    "name": "Togoreba Sungi",
+    "level": "VILLAGE",
+    "parentCode": "82.01.07"
+  },
+  {
+    "code": "82.01.07.2009",
+    "name": "Barona",
+    "level": "VILLAGE",
+    "parentCode": "82.01.07"
+  },
+  {
+    "code": "82.01.07.2010",
+    "name": "Todoke",
+    "level": "VILLAGE",
+    "parentCode": "82.01.07"
+  },
+  {
+    "code": "82.01.07.2011",
+    "name": "Tolisaor",
+    "level": "VILLAGE",
+    "parentCode": "82.01.07"
+  },
+  {
+    "code": "82.01.07.2012",
+    "name": "Pasalulu",
+    "level": "VILLAGE",
+    "parentCode": "82.01.07"
+  },
+  {
+    "code": "82.01.07.2013",
+    "name": "Togoreba Tua",
+    "level": "VILLAGE",
+    "parentCode": "82.01.07"
+  },
+  {
+    "code": "82.01.07.2014",
+    "name": "Tukuoku",
+    "level": "VILLAGE",
+    "parentCode": "82.01.07"
+  },
+  {
+    "code": "82.01.07.2015",
+    "name": "Soasangaji",
+    "level": "VILLAGE",
+    "parentCode": "82.01.07"
+  },
+  {
+    "code": "82.01.07.2016",
+    "name": "Aru Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.01.07"
+  },
+  {
+    "code": "82.01.08",
+    "name": "Ibu Selatan",
+    "level": "DISTRICT",
+    "parentCode": "82.01"
+  },
+  {
+    "code": "82.01.08.2001",
+    "name": "Tosoa",
+    "level": "VILLAGE",
+    "parentCode": "82.01.08"
+  },
+  {
+    "code": "82.01.08.2002",
+    "name": "Tobobol",
+    "level": "VILLAGE",
+    "parentCode": "82.01.08"
+  },
+  {
+    "code": "82.01.08.2003",
+    "name": "Baru",
+    "level": "VILLAGE",
+    "parentCode": "82.01.08"
+  },
+  {
+    "code": "82.01.08.2004",
+    "name": "Nanas",
+    "level": "VILLAGE",
+    "parentCode": "82.01.08"
+  },
+  {
+    "code": "82.01.08.2005",
+    "name": "Jere",
+    "level": "VILLAGE",
+    "parentCode": "82.01.08"
+  },
+  {
+    "code": "82.01.08.2006",
+    "name": "Gamsungi",
+    "level": "VILLAGE",
+    "parentCode": "82.01.08"
+  },
+  {
+    "code": "82.01.08.2007",
+    "name": "Bataka",
+    "level": "VILLAGE",
+    "parentCode": "82.01.08"
+  },
+  {
+    "code": "82.01.08.2008",
+    "name": "Talaga",
+    "level": "VILLAGE",
+    "parentCode": "82.01.08"
+  },
+  {
+    "code": "82.01.08.2009",
+    "name": "Tobelos",
+    "level": "VILLAGE",
+    "parentCode": "82.01.08"
+  },
+  {
+    "code": "82.01.08.2010",
+    "name": "Gamkonora",
+    "level": "VILLAGE",
+    "parentCode": "82.01.08"
+  },
+  {
+    "code": "82.01.08.2011",
+    "name": "Sarau",
+    "level": "VILLAGE",
+    "parentCode": "82.01.08"
+  },
+  {
+    "code": "82.01.08.2012",
+    "name": "Ngawet",
+    "level": "VILLAGE",
+    "parentCode": "82.01.08"
+  },
+  {
+    "code": "82.01.08.2013",
+    "name": "Adu",
+    "level": "VILLAGE",
+    "parentCode": "82.01.08"
+  },
+  {
+    "code": "82.01.08.2014",
+    "name": "Gamsida",
+    "level": "VILLAGE",
+    "parentCode": "82.01.08"
+  },
+  {
+    "code": "82.01.08.2015",
+    "name": "Ngalo Ngalo",
+    "level": "VILLAGE",
+    "parentCode": "82.01.08"
+  },
+  {
+    "code": "82.01.08.2016",
+    "name": "Tuguaer",
+    "level": "VILLAGE",
+    "parentCode": "82.01.08"
+  },
+  {
+    "code": "82.01.09",
+    "name": "Sahu Timur",
+    "level": "DISTRICT",
+    "parentCode": "82.01"
+  },
+  {
+    "code": "82.01.09.2001",
+    "name": "Loce",
+    "level": "VILLAGE",
+    "parentCode": "82.01.09"
+  },
+  {
+    "code": "82.01.09.2002",
+    "name": "Idam Gamlamo",
+    "level": "VILLAGE",
+    "parentCode": "82.01.09"
+  },
+  {
+    "code": "82.01.09.2003",
+    "name": "Gamomeng",
+    "level": "VILLAGE",
+    "parentCode": "82.01.09"
+  },
+  {
+    "code": "82.01.09.2004",
+    "name": "Akelamo",
+    "level": "VILLAGE",
+    "parentCode": "82.01.09"
+  },
+  {
+    "code": "82.01.09.2005",
+    "name": "Taraudu Kusu",
+    "level": "VILLAGE",
+    "parentCode": "82.01.09"
+  },
+  {
+    "code": "82.01.09.2006",
+    "name": "Awer",
+    "level": "VILLAGE",
+    "parentCode": "82.01.09"
+  },
+  {
+    "code": "82.01.09.2007",
+    "name": "Aketola",
+    "level": "VILLAGE",
+    "parentCode": "82.01.09"
+  },
+  {
+    "code": "82.01.09.2008",
+    "name": "Tibobo",
+    "level": "VILLAGE",
+    "parentCode": "82.01.09"
+  },
+  {
+    "code": "82.01.09.2009",
+    "name": "Hoku- hoku Gam",
+    "level": "VILLAGE",
+    "parentCode": "82.01.09"
+  },
+  {
+    "code": "82.01.09.2010",
+    "name": "Gamiyel",
+    "level": "VILLAGE",
+    "parentCode": "82.01.09"
+  },
+  {
+    "code": "82.01.09.2011",
+    "name": "Golago Kusuma",
+    "level": "VILLAGE",
+    "parentCode": "82.01.09"
+  },
+  {
+    "code": "82.01.09.2012",
+    "name": "Ngaon",
+    "level": "VILLAGE",
+    "parentCode": "82.01.09"
+  },
+  {
+    "code": "82.01.09.2013",
+    "name": "Gamsugi",
+    "level": "VILLAGE",
+    "parentCode": "82.01.09"
+  },
+  {
+    "code": "82.01.09.2014",
+    "name": "Taba Campaka",
+    "level": "VILLAGE",
+    "parentCode": "82.01.09"
+  },
+  {
+    "code": "82.01.09.2015",
+    "name": "Campaka",
+    "level": "VILLAGE",
+    "parentCode": "82.01.09"
+  },
+  {
+    "code": "82.01.09.2016",
+    "name": "Goal",
+    "level": "VILLAGE",
+    "parentCode": "82.01.09"
+  },
+  {
+    "code": "82.01.09.2017",
+    "name": "Sidodadi",
+    "level": "VILLAGE",
+    "parentCode": "82.01.09"
+  },
+  {
+    "code": "82.01.09.2018",
+    "name": "Air Panas",
+    "level": "VILLAGE",
+    "parentCode": "82.01.09"
+  },
+  {
+    "code": "82.01.10",
+    "name": "Loloda Tengah",
+    "level": "DISTRICT",
+    "parentCode": "82.01"
+  },
+  {
+    "code": "82.01.10.2001",
+    "name": "Jano",
+    "level": "VILLAGE",
+    "parentCode": "82.01.10"
+  },
+  {
+    "code": "82.01.10.2002",
+    "name": "Jangailulu",
+    "level": "VILLAGE",
+    "parentCode": "82.01.10"
+  },
+  {
+    "code": "82.01.10.2003",
+    "name": "Baja",
+    "level": "VILLAGE",
+    "parentCode": "82.01.10"
+  },
+  {
+    "code": "82.01.10.2004",
+    "name": "Gam Kahe",
+    "level": "VILLAGE",
+    "parentCode": "82.01.10"
+  },
+  {
+    "code": "82.01.10.2005",
+    "name": "Barataku",
+    "level": "VILLAGE",
+    "parentCode": "82.01.10"
+  },
+  {
+    "code": "82.01.10.2006",
+    "name": "Pumadada",
+    "level": "VILLAGE",
+    "parentCode": "82.01.10"
+  },
+  {
+    "code": "82.01.10.2007",
+    "name": "Tosomolo",
+    "level": "VILLAGE",
+    "parentCode": "82.01.10"
+  },
+  {
+    "code": "82.01.10.2008",
+    "name": "Bilote",
+    "level": "VILLAGE",
+    "parentCode": "82.01.10"
+  },
+  {
+    "code": "82.01.10.2009",
+    "name": "Bakun Pantai",
+    "level": "VILLAGE",
+    "parentCode": "82.01.10"
+  },
+  {
+    "code": "82.01.10.2010",
+    "name": "Aruku",
+    "level": "VILLAGE",
+    "parentCode": "82.01.10"
+  },
+  {
+    "code": "82.02",
+    "name": "Kabupaten Halmahera Tengah",
+    "level": "REGENCY",
+    "parentCode": "82"
+  },
+  {
+    "code": "82.02.01",
+    "name": "Weda",
+    "level": "DISTRICT",
+    "parentCode": "82.02"
+  },
+  {
+    "code": "82.02.01.2004",
+    "name": "Nusliko",
+    "level": "VILLAGE",
+    "parentCode": "82.02.01"
+  },
+  {
+    "code": "82.02.01.2005",
+    "name": "Were",
+    "level": "VILLAGE",
+    "parentCode": "82.02.01"
+  },
+  {
+    "code": "82.02.01.2020",
+    "name": "Fidy Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.02.01"
+  },
+  {
+    "code": "82.02.01.2021",
+    "name": "Sidanga",
+    "level": "VILLAGE",
+    "parentCode": "82.02.01"
+  },
+  {
+    "code": "82.02.01.2022",
+    "name": "Nurweda",
+    "level": "VILLAGE",
+    "parentCode": "82.02.01"
+  },
+  {
+    "code": "82.02.01.2023",
+    "name": "Wedana",
+    "level": "VILLAGE",
+    "parentCode": "82.02.01"
+  },
+  {
+    "code": "82.02.01.2024",
+    "name": "Goeng",
+    "level": "VILLAGE",
+    "parentCode": "82.02.01"
+  },
+  {
+    "code": "82.02.02",
+    "name": "Patani",
+    "level": "DISTRICT",
+    "parentCode": "82.02"
+  },
+  {
+    "code": "82.02.02.2004",
+    "name": "Wailegi",
+    "level": "VILLAGE",
+    "parentCode": "82.02.02"
+  },
+  {
+    "code": "82.02.02.2005",
+    "name": "Kipai",
+    "level": "VILLAGE",
+    "parentCode": "82.02.02"
+  },
+  {
+    "code": "82.02.02.2006",
+    "name": "Yeisowo",
+    "level": "VILLAGE",
+    "parentCode": "82.02.02"
+  },
+  {
+    "code": "82.02.02.2012",
+    "name": "Yondeliu",
+    "level": "VILLAGE",
+    "parentCode": "82.02.02"
+  },
+  {
+    "code": "82.02.02.2013",
+    "name": "Baka Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.02.02"
+  },
+  {
+    "code": "82.02.03",
+    "name": "Pulau Gebe",
+    "level": "DISTRICT",
+    "parentCode": "82.02"
+  },
+  {
+    "code": "82.02.03.2001",
+    "name": "Kapaleo",
+    "level": "VILLAGE",
+    "parentCode": "82.02.03"
+  },
+  {
+    "code": "82.02.03.2002",
+    "name": "Kacepi",
+    "level": "VILLAGE",
+    "parentCode": "82.02.03"
+  },
+  {
+    "code": "82.02.03.2003",
+    "name": "Sanafi",
+    "level": "VILLAGE",
+    "parentCode": "82.02.03"
+  },
+  {
+    "code": "82.02.03.2004",
+    "name": "Umera",
+    "level": "VILLAGE",
+    "parentCode": "82.02.03"
+  },
+  {
+    "code": "82.02.03.2005",
+    "name": "Umiyal",
+    "level": "VILLAGE",
+    "parentCode": "82.02.03"
+  },
+  {
+    "code": "82.02.03.2006",
+    "name": "Sonof Kacepo",
+    "level": "VILLAGE",
+    "parentCode": "82.02.03"
+  },
+  {
+    "code": "82.02.03.2007",
+    "name": "Elfanun",
+    "level": "VILLAGE",
+    "parentCode": "82.02.03"
+  },
+  {
+    "code": "82.02.03.2008",
+    "name": "Yang",
+    "level": "VILLAGE",
+    "parentCode": "82.02.03"
+  },
+  {
+    "code": "82.02.04",
+    "name": "Weda Utara",
+    "level": "DISTRICT",
+    "parentCode": "82.02"
+  },
+  {
+    "code": "82.02.04.2001",
+    "name": "Gemaf",
+    "level": "VILLAGE",
+    "parentCode": "82.02.04"
+  },
+  {
+    "code": "82.02.04.2002",
+    "name": "Sagea",
+    "level": "VILLAGE",
+    "parentCode": "82.02.04"
+  },
+  {
+    "code": "82.02.04.2003",
+    "name": "Fritu",
+    "level": "VILLAGE",
+    "parentCode": "82.02.04"
+  },
+  {
+    "code": "82.02.04.2004",
+    "name": "Waleh",
+    "level": "VILLAGE",
+    "parentCode": "82.02.04"
+  },
+  {
+    "code": "82.02.04.2008",
+    "name": "Kiya",
+    "level": "VILLAGE",
+    "parentCode": "82.02.04"
+  },
+  {
+    "code": "82.02.05",
+    "name": "Weda Selatan",
+    "level": "DISTRICT",
+    "parentCode": "82.02"
+  },
+  {
+    "code": "82.02.05.2001",
+    "name": "Tilope",
+    "level": "VILLAGE",
+    "parentCode": "82.02.05"
+  },
+  {
+    "code": "82.02.05.2002",
+    "name": "Sosowomo",
+    "level": "VILLAGE",
+    "parentCode": "82.02.05"
+  },
+  {
+    "code": "82.02.05.2003",
+    "name": "Loleo",
+    "level": "VILLAGE",
+    "parentCode": "82.02.05"
+  },
+  {
+    "code": "82.02.05.2004",
+    "name": "Wairoro Indah",
+    "level": "VILLAGE",
+    "parentCode": "82.02.05"
+  },
+  {
+    "code": "82.02.05.2005",
+    "name": "Kluting Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.02.05"
+  },
+  {
+    "code": "82.02.05.2006",
+    "name": "Lembah Asri",
+    "level": "VILLAGE",
+    "parentCode": "82.02.05"
+  },
+  {
+    "code": "82.02.05.2007",
+    "name": "Sumber Sari",
+    "level": "VILLAGE",
+    "parentCode": "82.02.05"
+  },
+  {
+    "code": "82.02.05.2008",
+    "name": "Air Salobar",
+    "level": "VILLAGE",
+    "parentCode": "82.02.05"
+  },
+  {
+    "code": "82.02.06",
+    "name": "Patani Utara",
+    "level": "DISTRICT",
+    "parentCode": "82.02"
+  },
+  {
+    "code": "82.02.06.2001",
+    "name": "Gemia",
+    "level": "VILLAGE",
+    "parentCode": "82.02.06"
+  },
+  {
+    "code": "82.02.06.2002",
+    "name": "Tepeleo",
+    "level": "VILLAGE",
+    "parentCode": "82.02.06"
+  },
+  {
+    "code": "82.02.06.2006",
+    "name": "Bilifitu",
+    "level": "VILLAGE",
+    "parentCode": "82.02.06"
+  },
+  {
+    "code": "82.02.06.2007",
+    "name": "Tepeleo Batudua",
+    "level": "VILLAGE",
+    "parentCode": "82.02.06"
+  },
+  {
+    "code": "82.02.06.2008",
+    "name": "Pantura Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.02.06"
+  },
+  {
+    "code": "82.02.06.2011",
+    "name": "Maliforo",
+    "level": "VILLAGE",
+    "parentCode": "82.02.06"
+  },
+  {
+    "code": "82.02.07",
+    "name": "Weda Tengah",
+    "level": "DISTRICT",
+    "parentCode": "82.02"
+  },
+  {
+    "code": "82.02.07.2001",
+    "name": "Lililef Waibulan",
+    "level": "VILLAGE",
+    "parentCode": "82.02.07"
+  },
+  {
+    "code": "82.02.07.2002",
+    "name": "Lililef Sawai",
+    "level": "VILLAGE",
+    "parentCode": "82.02.07"
+  },
+  {
+    "code": "82.02.07.2003",
+    "name": "Sawai Itepo",
+    "level": "VILLAGE",
+    "parentCode": "82.02.07"
+  },
+  {
+    "code": "82.02.07.2004",
+    "name": "Kobe",
+    "level": "VILLAGE",
+    "parentCode": "82.02.07"
+  },
+  {
+    "code": "82.02.07.2005",
+    "name": "Woekob",
+    "level": "VILLAGE",
+    "parentCode": "82.02.07"
+  },
+  {
+    "code": "82.02.07.2006",
+    "name": "Woejerana",
+    "level": "VILLAGE",
+    "parentCode": "82.02.07"
+  },
+  {
+    "code": "82.02.07.2007",
+    "name": "Kulo Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.02.07"
+  },
+  {
+    "code": "82.02.08",
+    "name": "Patani Barat",
+    "level": "DISTRICT",
+    "parentCode": "82.02"
+  },
+  {
+    "code": "82.02.08.2001",
+    "name": "Banemo",
+    "level": "VILLAGE",
+    "parentCode": "82.02.08"
+  },
+  {
+    "code": "82.02.08.2002",
+    "name": "Bobane Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.02.08"
+  },
+  {
+    "code": "82.02.08.2003",
+    "name": "Bobane Indah",
+    "level": "VILLAGE",
+    "parentCode": "82.02.08"
+  },
+  {
+    "code": "82.02.08.2004",
+    "name": "Mareala",
+    "level": "VILLAGE",
+    "parentCode": "82.02.08"
+  },
+  {
+    "code": "82.02.08.2005",
+    "name": "Sibenpope",
+    "level": "VILLAGE",
+    "parentCode": "82.02.08"
+  },
+  {
+    "code": "82.02.09",
+    "name": "Weda Timur",
+    "level": "DISTRICT",
+    "parentCode": "82.02"
+  },
+  {
+    "code": "82.02.09.2001",
+    "name": "Dotte",
+    "level": "VILLAGE",
+    "parentCode": "82.02.09"
+  },
+  {
+    "code": "82.02.09.2002",
+    "name": "Messa",
+    "level": "VILLAGE",
+    "parentCode": "82.02.09"
+  },
+  {
+    "code": "82.02.09.2003",
+    "name": "Kotalo",
+    "level": "VILLAGE",
+    "parentCode": "82.02.09"
+  },
+  {
+    "code": "82.02.09.2004",
+    "name": "Yeke",
+    "level": "VILLAGE",
+    "parentCode": "82.02.09"
+  },
+  {
+    "code": "82.02.10",
+    "name": "Patani Timur",
+    "level": "DISTRICT",
+    "parentCode": "82.02"
+  },
+  {
+    "code": "82.02.10.2001",
+    "name": "Sakam",
+    "level": "VILLAGE",
+    "parentCode": "82.02.10"
+  },
+  {
+    "code": "82.02.10.2002",
+    "name": "Nursifa",
+    "level": "VILLAGE",
+    "parentCode": "82.02.10"
+  },
+  {
+    "code": "82.02.10.2003",
+    "name": "Damuli",
+    "level": "VILLAGE",
+    "parentCode": "82.02.10"
+  },
+  {
+    "code": "82.02.10.2004",
+    "name": "Peniti",
+    "level": "VILLAGE",
+    "parentCode": "82.02.10"
+  },
+  {
+    "code": "82.02.10.2005",
+    "name": "Masure",
+    "level": "VILLAGE",
+    "parentCode": "82.02.10"
+  },
+  {
+    "code": "82.02.10.2006",
+    "name": "Palo",
+    "level": "VILLAGE",
+    "parentCode": "82.02.10"
+  },
+  {
+    "code": "82.03",
+    "name": "Kabupaten Halmahera Utara",
+    "level": "REGENCY",
+    "parentCode": "82"
+  },
+  {
+    "code": "82.03.04",
+    "name": "Galela",
+    "level": "DISTRICT",
+    "parentCode": "82.03"
+  },
+  {
+    "code": "82.03.04.2001",
+    "name": "Soa-Sio",
+    "level": "VILLAGE",
+    "parentCode": "82.03.04"
+  },
+  {
+    "code": "82.03.04.2002",
+    "name": "Pune",
+    "level": "VILLAGE",
+    "parentCode": "82.03.04"
+  },
+  {
+    "code": "82.03.04.2003",
+    "name": "Mamuya",
+    "level": "VILLAGE",
+    "parentCode": "82.03.04"
+  },
+  {
+    "code": "82.03.04.2016",
+    "name": "Toweka",
+    "level": "VILLAGE",
+    "parentCode": "82.03.04"
+  },
+  {
+    "code": "82.03.04.2024",
+    "name": "Simau",
+    "level": "VILLAGE",
+    "parentCode": "82.03.04"
+  },
+  {
+    "code": "82.03.04.2031",
+    "name": "Barataku",
+    "level": "VILLAGE",
+    "parentCode": "82.03.04"
+  },
+  {
+    "code": "82.03.04.2032",
+    "name": "Towara",
+    "level": "VILLAGE",
+    "parentCode": "82.03.04"
+  },
+  {
+    "code": "82.03.05",
+    "name": "Tobelo",
+    "level": "DISTRICT",
+    "parentCode": "82.03"
+  },
+  {
+    "code": "82.03.05.2004",
+    "name": "Gamsungi",
+    "level": "VILLAGE",
+    "parentCode": "82.03.05"
+  },
+  {
+    "code": "82.03.05.2005",
+    "name": "Gura",
+    "level": "VILLAGE",
+    "parentCode": "82.03.05"
+  },
+  {
+    "code": "82.03.05.2006",
+    "name": "Wari",
+    "level": "VILLAGE",
+    "parentCode": "82.03.05"
+  },
+  {
+    "code": "82.03.05.2012",
+    "name": "Kakara",
+    "level": "VILLAGE",
+    "parentCode": "82.03.05"
+  },
+  {
+    "code": "82.03.05.2013",
+    "name": "Kumo",
+    "level": "VILLAGE",
+    "parentCode": "82.03.05"
+  },
+  {
+    "code": "82.03.05.2014",
+    "name": "Gosoma",
+    "level": "VILLAGE",
+    "parentCode": "82.03.05"
+  },
+  {
+    "code": "82.03.05.2015",
+    "name": "Rawajaya",
+    "level": "VILLAGE",
+    "parentCode": "82.03.05"
+  },
+  {
+    "code": "82.03.05.2018",
+    "name": "MKCM",
+    "level": "VILLAGE",
+    "parentCode": "82.03.05"
+  },
+  {
+    "code": "82.03.05.2024",
+    "name": "Tagalaya",
+    "level": "VILLAGE",
+    "parentCode": "82.03.05"
+  },
+  {
+    "code": "82.03.05.2025",
+    "name": "Wari Ino",
+    "level": "VILLAGE",
+    "parentCode": "82.03.05"
+  },
+  {
+    "code": "82.03.06",
+    "name": "Tobelo Selatan",
+    "level": "DISTRICT",
+    "parentCode": "82.03"
+  },
+  {
+    "code": "82.03.06.2001",
+    "name": "Kupa Kupa",
+    "level": "VILLAGE",
+    "parentCode": "82.03.06"
+  },
+  {
+    "code": "82.03.06.2002",
+    "name": "Gamhoku",
+    "level": "VILLAGE",
+    "parentCode": "82.03.06"
+  },
+  {
+    "code": "82.03.06.2003",
+    "name": "Efi Efi",
+    "level": "VILLAGE",
+    "parentCode": "82.03.06"
+  },
+  {
+    "code": "82.03.06.2004",
+    "name": "Tomahalu",
+    "level": "VILLAGE",
+    "parentCode": "82.03.06"
+  },
+  {
+    "code": "82.03.06.2005",
+    "name": "Paca",
+    "level": "VILLAGE",
+    "parentCode": "82.03.06"
+  },
+  {
+    "code": "82.03.06.2006",
+    "name": "Leleoto",
+    "level": "VILLAGE",
+    "parentCode": "82.03.06"
+  },
+  {
+    "code": "82.03.06.2009",
+    "name": "Tobe",
+    "level": "VILLAGE",
+    "parentCode": "82.03.06"
+  },
+  {
+    "code": "82.03.06.2015",
+    "name": "Kakara B",
+    "level": "VILLAGE",
+    "parentCode": "82.03.06"
+  },
+  {
+    "code": "82.03.06.2018",
+    "name": "Talaga Paca",
+    "level": "VILLAGE",
+    "parentCode": "82.03.06"
+  },
+  {
+    "code": "82.03.06.2020",
+    "name": "Tioua",
+    "level": "VILLAGE",
+    "parentCode": "82.03.06"
+  },
+  {
+    "code": "82.03.06.2021",
+    "name": "Pale",
+    "level": "VILLAGE",
+    "parentCode": "82.03.06"
+  },
+  {
+    "code": "82.03.06.2022",
+    "name": "Kupa-kupa Selatan (Halehe)",
+    "level": "VILLAGE",
+    "parentCode": "82.03.06"
+  },
+  {
+    "code": "82.03.06.2024",
+    "name": "Lemah Ino",
+    "level": "VILLAGE",
+    "parentCode": "82.03.06"
+  },
+  {
+    "code": "82.03.07",
+    "name": "Kao",
+    "level": "DISTRICT",
+    "parentCode": "82.03"
+  },
+  {
+    "code": "82.03.07.2001",
+    "name": "Kao",
+    "level": "VILLAGE",
+    "parentCode": "82.03.07"
+  },
+  {
+    "code": "82.03.07.2002",
+    "name": "Jati",
+    "level": "VILLAGE",
+    "parentCode": "82.03.07"
+  },
+  {
+    "code": "82.03.07.2003",
+    "name": "Kusu",
+    "level": "VILLAGE",
+    "parentCode": "82.03.07"
+  },
+  {
+    "code": "82.03.07.2009",
+    "name": "Waringin Lelewi",
+    "level": "VILLAGE",
+    "parentCode": "82.03.07"
+  },
+  {
+    "code": "82.03.07.2010",
+    "name": "Soa Sangaji Dim-Dim",
+    "level": "VILLAGE",
+    "parentCode": "82.03.07"
+  },
+  {
+    "code": "82.03.07.2011",
+    "name": "Sasur",
+    "level": "VILLAGE",
+    "parentCode": "82.03.07"
+  },
+  {
+    "code": "82.03.07.2012",
+    "name": "Popon",
+    "level": "VILLAGE",
+    "parentCode": "82.03.07"
+  },
+  {
+    "code": "82.03.07.2036",
+    "name": "Biang",
+    "level": "VILLAGE",
+    "parentCode": "82.03.07"
+  },
+  {
+    "code": "82.03.07.2037",
+    "name": "Patang",
+    "level": "VILLAGE",
+    "parentCode": "82.03.07"
+  },
+  {
+    "code": "82.03.07.2038",
+    "name": "Kukumutuk",
+    "level": "VILLAGE",
+    "parentCode": "82.03.07"
+  },
+  {
+    "code": "82.03.07.2039",
+    "name": "Waringin Lamo",
+    "level": "VILLAGE",
+    "parentCode": "82.03.07"
+  },
+  {
+    "code": "82.03.07.2050",
+    "name": "Goruang",
+    "level": "VILLAGE",
+    "parentCode": "82.03.07"
+  },
+  {
+    "code": "82.03.07.2051",
+    "name": "Kusu Lofra",
+    "level": "VILLAGE",
+    "parentCode": "82.03.07"
+  },
+  {
+    "code": "82.03.07.2052",
+    "name": "Sumber Agung",
+    "level": "VILLAGE",
+    "parentCode": "82.03.07"
+  },
+  {
+    "code": "82.03.08",
+    "name": "Malifut",
+    "level": "DISTRICT",
+    "parentCode": "82.03"
+  },
+  {
+    "code": "82.03.08.2001",
+    "name": "Ngofa Kiaha",
+    "level": "VILLAGE",
+    "parentCode": "82.03.08"
+  },
+  {
+    "code": "82.03.08.2002",
+    "name": "Ngofa Gita",
+    "level": "VILLAGE",
+    "parentCode": "82.03.08"
+  },
+  {
+    "code": "82.03.08.2003",
+    "name": "Samsuma",
+    "level": "VILLAGE",
+    "parentCode": "82.03.08"
+  },
+  {
+    "code": "82.03.08.2004",
+    "name": "Tahane",
+    "level": "VILLAGE",
+    "parentCode": "82.03.08"
+  },
+  {
+    "code": "82.03.08.2005",
+    "name": "Matsa",
+    "level": "VILLAGE",
+    "parentCode": "82.03.08"
+  },
+  {
+    "code": "82.03.08.2007",
+    "name": "Bobawa",
+    "level": "VILLAGE",
+    "parentCode": "82.03.08"
+  },
+  {
+    "code": "82.03.08.2008",
+    "name": "Talapao",
+    "level": "VILLAGE",
+    "parentCode": "82.03.08"
+  },
+  {
+    "code": "82.03.08.2009",
+    "name": "Tafasoho",
+    "level": "VILLAGE",
+    "parentCode": "82.03.08"
+  },
+  {
+    "code": "82.03.08.2010",
+    "name": "Sabaleh",
+    "level": "VILLAGE",
+    "parentCode": "82.03.08"
+  },
+  {
+    "code": "82.03.08.2011",
+    "name": "Tagono",
+    "level": "VILLAGE",
+    "parentCode": "82.03.08"
+  },
+  {
+    "code": "82.03.08.2012",
+    "name": "Soma",
+    "level": "VILLAGE",
+    "parentCode": "82.03.08"
+  },
+  {
+    "code": "82.03.08.2013",
+    "name": "Ngofa Bobawa",
+    "level": "VILLAGE",
+    "parentCode": "82.03.08"
+  },
+  {
+    "code": "82.03.08.2014",
+    "name": "Malapa",
+    "level": "VILLAGE",
+    "parentCode": "82.03.08"
+  },
+  {
+    "code": "82.03.08.2015",
+    "name": "Mailoa",
+    "level": "VILLAGE",
+    "parentCode": "82.03.08"
+  },
+  {
+    "code": "82.03.08.2016",
+    "name": "Peleri",
+    "level": "VILLAGE",
+    "parentCode": "82.03.08"
+  },
+  {
+    "code": "82.03.08.2019",
+    "name": "Bukit Tinggi",
+    "level": "VILLAGE",
+    "parentCode": "82.03.08"
+  },
+  {
+    "code": "82.03.08.2022",
+    "name": "Terpadu",
+    "level": "VILLAGE",
+    "parentCode": "82.03.08"
+  },
+  {
+    "code": "82.03.08.2023",
+    "name": "Tabobo",
+    "level": "VILLAGE",
+    "parentCode": "82.03.08"
+  },
+  {
+    "code": "82.03.08.2024",
+    "name": "Balisosang",
+    "level": "VILLAGE",
+    "parentCode": "82.03.08"
+  },
+  {
+    "code": "82.03.08.2025",
+    "name": "Sosol/Malifut",
+    "level": "VILLAGE",
+    "parentCode": "82.03.08"
+  },
+  {
+    "code": "82.03.08.2026",
+    "name": "Wangeotek",
+    "level": "VILLAGE",
+    "parentCode": "82.03.08"
+  },
+  {
+    "code": "82.03.08.2027",
+    "name": "Gayok",
+    "level": "VILLAGE",
+    "parentCode": "82.03.08"
+  },
+  {
+    "code": "82.03.09",
+    "name": "Loloda Utara",
+    "level": "DISTRICT",
+    "parentCode": "82.03"
+  },
+  {
+    "code": "82.03.09.2001",
+    "name": "Dorume",
+    "level": "VILLAGE",
+    "parentCode": "82.03.09"
+  },
+  {
+    "code": "82.03.09.2002",
+    "name": "Apule",
+    "level": "VILLAGE",
+    "parentCode": "82.03.09"
+  },
+  {
+    "code": "82.03.09.2003",
+    "name": "Asimiro",
+    "level": "VILLAGE",
+    "parentCode": "82.03.09"
+  },
+  {
+    "code": "82.03.09.2004",
+    "name": "Doitia",
+    "level": "VILLAGE",
+    "parentCode": "82.03.09"
+  },
+  {
+    "code": "82.03.09.2005",
+    "name": "Ngajam",
+    "level": "VILLAGE",
+    "parentCode": "82.03.09"
+  },
+  {
+    "code": "82.03.09.2006",
+    "name": "Kailupa",
+    "level": "VILLAGE",
+    "parentCode": "82.03.09"
+  },
+  {
+    "code": "82.03.09.2007",
+    "name": "Gisik",
+    "level": "VILLAGE",
+    "parentCode": "82.03.09"
+  },
+  {
+    "code": "82.03.09.2008",
+    "name": "Kapa Kapa",
+    "level": "VILLAGE",
+    "parentCode": "82.03.09"
+  },
+  {
+    "code": "82.03.09.2009",
+    "name": "Pacao",
+    "level": "VILLAGE",
+    "parentCode": "82.03.09"
+  },
+  {
+    "code": "82.03.09.2010",
+    "name": "Tate",
+    "level": "VILLAGE",
+    "parentCode": "82.03.09"
+  },
+  {
+    "code": "82.03.09.2011",
+    "name": "Posi- Posi",
+    "level": "VILLAGE",
+    "parentCode": "82.03.09"
+  },
+  {
+    "code": "82.03.09.2012",
+    "name": "Supu",
+    "level": "VILLAGE",
+    "parentCode": "82.03.09"
+  },
+  {
+    "code": "82.03.09.2022",
+    "name": "Igo",
+    "level": "VILLAGE",
+    "parentCode": "82.03.09"
+  },
+  {
+    "code": "82.03.09.2023",
+    "name": "Galao",
+    "level": "VILLAGE",
+    "parentCode": "82.03.09"
+  },
+  {
+    "code": "82.03.09.2024",
+    "name": "Teru-Teru",
+    "level": "VILLAGE",
+    "parentCode": "82.03.09"
+  },
+  {
+    "code": "82.03.09.2026",
+    "name": "Wori Moi",
+    "level": "VILLAGE",
+    "parentCode": "82.03.09"
+  },
+  {
+    "code": "82.03.09.2027",
+    "name": "Podol",
+    "level": "VILLAGE",
+    "parentCode": "82.03.09"
+  },
+  {
+    "code": "82.03.09.2028",
+    "name": "Momojiu",
+    "level": "VILLAGE",
+    "parentCode": "82.03.09"
+  },
+  {
+    "code": "82.03.10",
+    "name": "Tobelo Utara",
+    "level": "DISTRICT",
+    "parentCode": "82.03"
+  },
+  {
+    "code": "82.03.10.2001",
+    "name": "Gorua",
+    "level": "VILLAGE",
+    "parentCode": "82.03.10"
+  },
+  {
+    "code": "82.03.10.2002",
+    "name": "Popilo",
+    "level": "VILLAGE",
+    "parentCode": "82.03.10"
+  },
+  {
+    "code": "82.03.10.2003",
+    "name": "Luari",
+    "level": "VILLAGE",
+    "parentCode": "82.03.10"
+  },
+  {
+    "code": "82.03.10.2004",
+    "name": "Popilo Utara",
+    "level": "VILLAGE",
+    "parentCode": "82.03.10"
+  },
+  {
+    "code": "82.03.10.2005",
+    "name": "Tolonuo",
+    "level": "VILLAGE",
+    "parentCode": "82.03.10"
+  },
+  {
+    "code": "82.03.10.2006",
+    "name": "Gorua Selatan",
+    "level": "VILLAGE",
+    "parentCode": "82.03.10"
+  },
+  {
+    "code": "82.03.10.2007",
+    "name": "Gorua Utara",
+    "level": "VILLAGE",
+    "parentCode": "82.03.10"
+  },
+  {
+    "code": "82.03.10.2008",
+    "name": "Kokota Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.03.10"
+  },
+  {
+    "code": "82.03.10.2009",
+    "name": "Ruko",
+    "level": "VILLAGE",
+    "parentCode": "82.03.10"
+  },
+  {
+    "code": "82.03.10.2010",
+    "name": "Tolonua Selatan",
+    "level": "VILLAGE",
+    "parentCode": "82.03.10"
+  },
+  {
+    "code": "82.03.11",
+    "name": "Tobelo Tengah",
+    "level": "DISTRICT",
+    "parentCode": "82.03"
+  },
+  {
+    "code": "82.03.11.2001",
+    "name": "Upa",
+    "level": "VILLAGE",
+    "parentCode": "82.03.11"
+  },
+  {
+    "code": "82.03.11.2002",
+    "name": "Pitu",
+    "level": "VILLAGE",
+    "parentCode": "82.03.11"
+  },
+  {
+    "code": "82.03.11.2003",
+    "name": "Wosia",
+    "level": "VILLAGE",
+    "parentCode": "82.03.11"
+  },
+  {
+    "code": "82.03.11.2004",
+    "name": "WKO",
+    "level": "VILLAGE",
+    "parentCode": "82.03.11"
+  },
+  {
+    "code": "82.03.11.2005",
+    "name": "Kalipitu",
+    "level": "VILLAGE",
+    "parentCode": "82.03.11"
+  },
+  {
+    "code": "82.03.11.2006",
+    "name": "Kali Upa",
+    "level": "VILLAGE",
+    "parentCode": "82.03.11"
+  },
+  {
+    "code": "82.03.11.2007",
+    "name": "Lina Ino",
+    "level": "VILLAGE",
+    "parentCode": "82.03.11"
+  },
+  {
+    "code": "82.03.11.2008",
+    "name": "Mahia (Wosia Tengah)",
+    "level": "VILLAGE",
+    "parentCode": "82.03.11"
+  },
+  {
+    "code": "82.03.11.2009",
+    "name": "Tanjung Niara (Wosia Selatan)",
+    "level": "VILLAGE",
+    "parentCode": "82.03.11"
+  },
+  {
+    "code": "82.03.12",
+    "name": "Tobelo Timur",
+    "level": "DISTRICT",
+    "parentCode": "82.03"
+  },
+  {
+    "code": "82.03.12.2001",
+    "name": "Yaro",
+    "level": "VILLAGE",
+    "parentCode": "82.03.12"
+  },
+  {
+    "code": "82.03.12.2002",
+    "name": "Mawea",
+    "level": "VILLAGE",
+    "parentCode": "82.03.12"
+  },
+  {
+    "code": "82.03.12.2003",
+    "name": "Meti",
+    "level": "VILLAGE",
+    "parentCode": "82.03.12"
+  },
+  {
+    "code": "82.03.12.2004",
+    "name": "Katana",
+    "level": "VILLAGE",
+    "parentCode": "82.03.12"
+  },
+  {
+    "code": "82.03.12.2005",
+    "name": "Gonga",
+    "level": "VILLAGE",
+    "parentCode": "82.03.12"
+  },
+  {
+    "code": "82.03.12.2006",
+    "name": "Todokuiha",
+    "level": "VILLAGE",
+    "parentCode": "82.03.12"
+  },
+  {
+    "code": "82.03.13",
+    "name": "Tobelo Barat",
+    "level": "DISTRICT",
+    "parentCode": "82.03"
+  },
+  {
+    "code": "82.03.13.2001",
+    "name": "Kusuri",
+    "level": "VILLAGE",
+    "parentCode": "82.03.13"
+  },
+  {
+    "code": "82.03.13.2002",
+    "name": "Sukamaju",
+    "level": "VILLAGE",
+    "parentCode": "82.03.13"
+  },
+  {
+    "code": "82.03.13.2003",
+    "name": "Togoliua",
+    "level": "VILLAGE",
+    "parentCode": "82.03.13"
+  },
+  {
+    "code": "82.03.13.2004",
+    "name": "Birinoa",
+    "level": "VILLAGE",
+    "parentCode": "82.03.13"
+  },
+  {
+    "code": "82.03.13.2005",
+    "name": "Wangongira",
+    "level": "VILLAGE",
+    "parentCode": "82.03.13"
+  },
+  {
+    "code": "82.03.14",
+    "name": "Galela Barat",
+    "level": "DISTRICT",
+    "parentCode": "82.03"
+  },
+  {
+    "code": "82.03.14.2001",
+    "name": "Soatobaru",
+    "level": "VILLAGE",
+    "parentCode": "82.03.14"
+  },
+  {
+    "code": "82.03.14.2002",
+    "name": "Dokulamo",
+    "level": "VILLAGE",
+    "parentCode": "82.03.14"
+  },
+  {
+    "code": "82.03.14.2003",
+    "name": "Duma",
+    "level": "VILLAGE",
+    "parentCode": "82.03.14"
+  },
+  {
+    "code": "82.03.14.2004",
+    "name": "Gotalamo",
+    "level": "VILLAGE",
+    "parentCode": "82.03.14"
+  },
+  {
+    "code": "82.03.14.2005",
+    "name": "Makete",
+    "level": "VILLAGE",
+    "parentCode": "82.03.14"
+  },
+  {
+    "code": "82.03.14.2006",
+    "name": "Ngidiho",
+    "level": "VILLAGE",
+    "parentCode": "82.03.14"
+  },
+  {
+    "code": "82.03.14.2007",
+    "name": "Roko",
+    "level": "VILLAGE",
+    "parentCode": "82.03.14"
+  },
+  {
+    "code": "82.03.14.2008",
+    "name": "Samuda",
+    "level": "VILLAGE",
+    "parentCode": "82.03.14"
+  },
+  {
+    "code": "82.03.14.2009",
+    "name": "Kira",
+    "level": "VILLAGE",
+    "parentCode": "82.03.14"
+  },
+  {
+    "code": "82.03.15",
+    "name": "Galela Utara",
+    "level": "DISTRICT",
+    "parentCode": "82.03"
+  },
+  {
+    "code": "82.03.15.2001",
+    "name": "Limau",
+    "level": "VILLAGE",
+    "parentCode": "82.03.15"
+  },
+  {
+    "code": "82.03.15.2002",
+    "name": "Lalonga",
+    "level": "VILLAGE",
+    "parentCode": "82.03.15"
+  },
+  {
+    "code": "82.03.15.2003",
+    "name": "Bobisingo",
+    "level": "VILLAGE",
+    "parentCode": "82.03.15"
+  },
+  {
+    "code": "82.03.15.2004",
+    "name": "Salimuli",
+    "level": "VILLAGE",
+    "parentCode": "82.03.15"
+  },
+  {
+    "code": "82.03.15.2005",
+    "name": "Tutumaloleo",
+    "level": "VILLAGE",
+    "parentCode": "82.03.15"
+  },
+  {
+    "code": "82.03.15.2006",
+    "name": "Saluta",
+    "level": "VILLAGE",
+    "parentCode": "82.03.15"
+  },
+  {
+    "code": "82.03.15.2007",
+    "name": "Jere",
+    "level": "VILLAGE",
+    "parentCode": "82.03.15"
+  },
+  {
+    "code": "82.03.15.2008",
+    "name": "Dodowo",
+    "level": "VILLAGE",
+    "parentCode": "82.03.15"
+  },
+  {
+    "code": "82.03.15.2009",
+    "name": "Togasa",
+    "level": "VILLAGE",
+    "parentCode": "82.03.15"
+  },
+  {
+    "code": "82.03.15.2010",
+    "name": "Beringin Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.03.15"
+  },
+  {
+    "code": "82.03.15.2011",
+    "name": "Pelita",
+    "level": "VILLAGE",
+    "parentCode": "82.03.15"
+  },
+  {
+    "code": "82.03.15.2012",
+    "name": "Jere Tua",
+    "level": "VILLAGE",
+    "parentCode": "82.03.15"
+  },
+  {
+    "code": "82.03.16",
+    "name": "Galela Selatan",
+    "level": "DISTRICT",
+    "parentCode": "82.03"
+  },
+  {
+    "code": "82.03.16.2001",
+    "name": "Seki",
+    "level": "VILLAGE",
+    "parentCode": "82.03.16"
+  },
+  {
+    "code": "82.03.16.2002",
+    "name": "Togawa",
+    "level": "VILLAGE",
+    "parentCode": "82.03.16"
+  },
+  {
+    "code": "82.03.16.2003",
+    "name": "Soakonora",
+    "level": "VILLAGE",
+    "parentCode": "82.03.16"
+  },
+  {
+    "code": "82.03.16.2004",
+    "name": "Igobula",
+    "level": "VILLAGE",
+    "parentCode": "82.03.16"
+  },
+  {
+    "code": "82.03.16.2005",
+    "name": "Bale",
+    "level": "VILLAGE",
+    "parentCode": "82.03.16"
+  },
+  {
+    "code": "82.03.16.2006",
+    "name": "Togawabesi",
+    "level": "VILLAGE",
+    "parentCode": "82.03.16"
+  },
+  {
+    "code": "82.03.16.2007",
+    "name": "Ori",
+    "level": "VILLAGE",
+    "parentCode": "82.03.16"
+  },
+  {
+    "code": "82.03.19",
+    "name": "Loloda Kepulauan",
+    "level": "DISTRICT",
+    "parentCode": "82.03"
+  },
+  {
+    "code": "82.03.19.2001",
+    "name": "Salube",
+    "level": "VILLAGE",
+    "parentCode": "82.03.19"
+  },
+  {
+    "code": "82.03.19.2002",
+    "name": "Dama",
+    "level": "VILLAGE",
+    "parentCode": "82.03.19"
+  },
+  {
+    "code": "82.03.19.2003",
+    "name": "Dowonggila",
+    "level": "VILLAGE",
+    "parentCode": "82.03.19"
+  },
+  {
+    "code": "82.03.19.2004",
+    "name": "Tuakara",
+    "level": "VILLAGE",
+    "parentCode": "82.03.19"
+  },
+  {
+    "code": "82.03.19.2005",
+    "name": "Jikolamo",
+    "level": "VILLAGE",
+    "parentCode": "82.03.19"
+  },
+  {
+    "code": "82.03.19.2006",
+    "name": "Dagasuli",
+    "level": "VILLAGE",
+    "parentCode": "82.03.19"
+  },
+  {
+    "code": "82.03.19.2007",
+    "name": "Dedeta",
+    "level": "VILLAGE",
+    "parentCode": "82.03.19"
+  },
+  {
+    "code": "82.03.19.2008",
+    "name": "Fitako",
+    "level": "VILLAGE",
+    "parentCode": "82.03.19"
+  },
+  {
+    "code": "82.03.19.2009",
+    "name": "Tobo Tobo",
+    "level": "VILLAGE",
+    "parentCode": "82.03.19"
+  },
+  {
+    "code": "82.03.19.2010",
+    "name": "Cera",
+    "level": "VILLAGE",
+    "parentCode": "82.03.19"
+  },
+  {
+    "code": "82.03.20",
+    "name": "Kao Utara",
+    "level": "DISTRICT",
+    "parentCode": "82.03"
+  },
+  {
+    "code": "82.03.20.2001",
+    "name": "Wateto",
+    "level": "VILLAGE",
+    "parentCode": "82.03.20"
+  },
+  {
+    "code": "82.03.20.2002",
+    "name": "Gulo",
+    "level": "VILLAGE",
+    "parentCode": "82.03.20"
+  },
+  {
+    "code": "82.03.20.2003",
+    "name": "Tunuo",
+    "level": "VILLAGE",
+    "parentCode": "82.03.20"
+  },
+  {
+    "code": "82.03.20.2004",
+    "name": "Pediwang",
+    "level": "VILLAGE",
+    "parentCode": "82.03.20"
+  },
+  {
+    "code": "82.03.20.2005",
+    "name": "Bori",
+    "level": "VILLAGE",
+    "parentCode": "82.03.20"
+  },
+  {
+    "code": "82.03.20.2006",
+    "name": "Doro",
+    "level": "VILLAGE",
+    "parentCode": "82.03.20"
+  },
+  {
+    "code": "82.03.20.2007",
+    "name": "Daru",
+    "level": "VILLAGE",
+    "parentCode": "82.03.20"
+  },
+  {
+    "code": "82.03.20.2008",
+    "name": "Bobale",
+    "level": "VILLAGE",
+    "parentCode": "82.03.20"
+  },
+  {
+    "code": "82.03.20.2009",
+    "name": "Gamlaha",
+    "level": "VILLAGE",
+    "parentCode": "82.03.20"
+  },
+  {
+    "code": "82.03.20.2010",
+    "name": "Boulamo",
+    "level": "VILLAGE",
+    "parentCode": "82.03.20"
+  },
+  {
+    "code": "82.03.20.2011",
+    "name": "Warudu",
+    "level": "VILLAGE",
+    "parentCode": "82.03.20"
+  },
+  {
+    "code": "82.03.20.2012",
+    "name": "Dowongimaiti",
+    "level": "VILLAGE",
+    "parentCode": "82.03.20"
+  },
+  {
+    "code": "82.03.21",
+    "name": "Kao Barat",
+    "level": "DISTRICT",
+    "parentCode": "82.03"
+  },
+  {
+    "code": "82.03.21.2001",
+    "name": "Gaga Apok",
+    "level": "VILLAGE",
+    "parentCode": "82.03.21"
+  },
+  {
+    "code": "82.03.21.2002",
+    "name": "Ngoali",
+    "level": "VILLAGE",
+    "parentCode": "82.03.21"
+  },
+  {
+    "code": "82.03.21.2003",
+    "name": "Momoda",
+    "level": "VILLAGE",
+    "parentCode": "82.03.21"
+  },
+  {
+    "code": "82.03.21.2004",
+    "name": "Toliwang",
+    "level": "VILLAGE",
+    "parentCode": "82.03.21"
+  },
+  {
+    "code": "82.03.21.2005",
+    "name": "Tolabit",
+    "level": "VILLAGE",
+    "parentCode": "82.03.21"
+  },
+  {
+    "code": "82.03.21.2006",
+    "name": "Leleseng",
+    "level": "VILLAGE",
+    "parentCode": "82.03.21"
+  },
+  {
+    "code": "82.03.21.2007",
+    "name": "Soa Hukum",
+    "level": "VILLAGE",
+    "parentCode": "82.03.21"
+  },
+  {
+    "code": "82.03.21.2008",
+    "name": "Soa Maetek",
+    "level": "VILLAGE",
+    "parentCode": "82.03.21"
+  },
+  {
+    "code": "82.03.21.2009",
+    "name": "Bailengit",
+    "level": "VILLAGE",
+    "parentCode": "82.03.21"
+  },
+  {
+    "code": "82.03.21.2010",
+    "name": "Tuguis",
+    "level": "VILLAGE",
+    "parentCode": "82.03.21"
+  },
+  {
+    "code": "82.03.21.2011",
+    "name": "Parseba",
+    "level": "VILLAGE",
+    "parentCode": "82.03.21"
+  },
+  {
+    "code": "82.03.21.2012",
+    "name": "Pitago",
+    "level": "VILLAGE",
+    "parentCode": "82.03.21"
+  },
+  {
+    "code": "82.03.21.2013",
+    "name": "Kai",
+    "level": "VILLAGE",
+    "parentCode": "82.03.21"
+  },
+  {
+    "code": "82.03.21.2014",
+    "name": "Toboulamo",
+    "level": "VILLAGE",
+    "parentCode": "82.03.21"
+  },
+  {
+    "code": "82.03.21.2015",
+    "name": "Makarti",
+    "level": "VILLAGE",
+    "parentCode": "82.03.21"
+  },
+  {
+    "code": "82.03.21.2016",
+    "name": "Sangaji Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.03.21"
+  },
+  {
+    "code": "82.03.21.2017",
+    "name": "Takimo",
+    "level": "VILLAGE",
+    "parentCode": "82.03.21"
+  },
+  {
+    "code": "82.03.21.2018",
+    "name": "Torawat",
+    "level": "VILLAGE",
+    "parentCode": "82.03.21"
+  },
+  {
+    "code": "82.03.21.2019",
+    "name": "Wonosari",
+    "level": "VILLAGE",
+    "parentCode": "82.03.21"
+  },
+  {
+    "code": "82.03.21.2020",
+    "name": "Beringin Agung",
+    "level": "VILLAGE",
+    "parentCode": "82.03.21"
+  },
+  {
+    "code": "82.03.21.2021",
+    "name": "Margomolyo",
+    "level": "VILLAGE",
+    "parentCode": "82.03.21"
+  },
+  {
+    "code": "82.03.22",
+    "name": "Kao Teluk",
+    "level": "DISTRICT",
+    "parentCode": "82.03"
+  },
+  {
+    "code": "82.03.22.2001",
+    "name": "Tiowor",
+    "level": "VILLAGE",
+    "parentCode": "82.03.22"
+  },
+  {
+    "code": "82.03.22.2002",
+    "name": "Makaeling",
+    "level": "VILLAGE",
+    "parentCode": "82.03.22"
+  },
+  {
+    "code": "82.03.22.2003",
+    "name": "Tobanoma",
+    "level": "VILLAGE",
+    "parentCode": "82.03.22"
+  },
+  {
+    "code": "82.03.22.2004",
+    "name": "Barumadehe",
+    "level": "VILLAGE",
+    "parentCode": "82.03.22"
+  },
+  {
+    "code": "82.03.22.2005",
+    "name": "Kuntum Mekar",
+    "level": "VILLAGE",
+    "parentCode": "82.03.22"
+  },
+  {
+    "code": "82.03.22.2006",
+    "name": "Pasir Putih",
+    "level": "VILLAGE",
+    "parentCode": "82.03.22"
+  },
+  {
+    "code": "82.03.22.2007",
+    "name": "Bobaneigo",
+    "level": "VILLAGE",
+    "parentCode": "82.03.22"
+  },
+  {
+    "code": "82.03.22.2008",
+    "name": "Tetewang",
+    "level": "VILLAGE",
+    "parentCode": "82.03.22"
+  },
+  {
+    "code": "82.03.22.2009",
+    "name": "Akelamo Kao",
+    "level": "VILLAGE",
+    "parentCode": "82.03.22"
+  },
+  {
+    "code": "82.03.22.2010",
+    "name": "Gamsungi",
+    "level": "VILLAGE",
+    "parentCode": "82.03.22"
+  },
+  {
+    "code": "82.03.22.2011",
+    "name": "Dum-Dum",
+    "level": "VILLAGE",
+    "parentCode": "82.03.22"
+  },
+  {
+    "code": "82.04",
+    "name": "Kabupaten Halmahera Selatan",
+    "level": "REGENCY",
+    "parentCode": "82"
+  },
+  {
+    "code": "82.04.01",
+    "name": "Pulau Makian",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.01.2001",
+    "name": "Rabutdaiyo",
+    "level": "VILLAGE",
+    "parentCode": "82.04.01"
+  },
+  {
+    "code": "82.04.01.2002",
+    "name": "Waykion",
+    "level": "VILLAGE",
+    "parentCode": "82.04.01"
+  },
+  {
+    "code": "82.04.01.2003",
+    "name": "Gorup",
+    "level": "VILLAGE",
+    "parentCode": "82.04.01"
+  },
+  {
+    "code": "82.04.01.2004",
+    "name": "Walo",
+    "level": "VILLAGE",
+    "parentCode": "82.04.01"
+  },
+  {
+    "code": "82.04.01.2005",
+    "name": "Dalam",
+    "level": "VILLAGE",
+    "parentCode": "82.04.01"
+  },
+  {
+    "code": "82.04.01.2006",
+    "name": "Gitang",
+    "level": "VILLAGE",
+    "parentCode": "82.04.01"
+  },
+  {
+    "code": "82.04.01.2007",
+    "name": "Kyowor",
+    "level": "VILLAGE",
+    "parentCode": "82.04.01"
+  },
+  {
+    "code": "82.04.01.2008",
+    "name": "Matentengin",
+    "level": "VILLAGE",
+    "parentCode": "82.04.01"
+  },
+  {
+    "code": "82.04.01.2009",
+    "name": "Sangapati",
+    "level": "VILLAGE",
+    "parentCode": "82.04.01"
+  },
+  {
+    "code": "82.04.01.2010",
+    "name": "Suma",
+    "level": "VILLAGE",
+    "parentCode": "82.04.01"
+  },
+  {
+    "code": "82.04.01.2011",
+    "name": "Ploili",
+    "level": "VILLAGE",
+    "parentCode": "82.04.01"
+  },
+  {
+    "code": "82.04.01.2012",
+    "name": "Dauri",
+    "level": "VILLAGE",
+    "parentCode": "82.04.01"
+  },
+  {
+    "code": "82.04.01.2013",
+    "name": "Gurua",
+    "level": "VILLAGE",
+    "parentCode": "82.04.01"
+  },
+  {
+    "code": "82.04.01.2014",
+    "name": "Wailoa",
+    "level": "VILLAGE",
+    "parentCode": "82.04.01"
+  },
+  {
+    "code": "82.04.01.2022",
+    "name": "Waigitang",
+    "level": "VILLAGE",
+    "parentCode": "82.04.01"
+  },
+  {
+    "code": "82.04.02",
+    "name": "Kayoa",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.02.2004",
+    "name": "Siko",
+    "level": "VILLAGE",
+    "parentCode": "82.04.02"
+  },
+  {
+    "code": "82.04.02.2005",
+    "name": "Gafi",
+    "level": "VILLAGE",
+    "parentCode": "82.04.02"
+  },
+  {
+    "code": "82.04.02.2006",
+    "name": "Laigoma",
+    "level": "VILLAGE",
+    "parentCode": "82.04.02"
+  },
+  {
+    "code": "82.04.02.2016",
+    "name": "Ligua",
+    "level": "VILLAGE",
+    "parentCode": "82.04.02"
+  },
+  {
+    "code": "82.04.02.2017",
+    "name": "Kida",
+    "level": "VILLAGE",
+    "parentCode": "82.04.02"
+  },
+  {
+    "code": "82.04.02.2018",
+    "name": "Buli",
+    "level": "VILLAGE",
+    "parentCode": "82.04.02"
+  },
+  {
+    "code": "82.04.02.2019",
+    "name": "Talimau",
+    "level": "VILLAGE",
+    "parentCode": "82.04.02"
+  },
+  {
+    "code": "82.04.02.2020",
+    "name": "Gunange",
+    "level": "VILLAGE",
+    "parentCode": "82.04.02"
+  },
+  {
+    "code": "82.04.02.2021",
+    "name": "Lelei",
+    "level": "VILLAGE",
+    "parentCode": "82.04.02"
+  },
+  {
+    "code": "82.04.02.2022",
+    "name": "Bajo",
+    "level": "VILLAGE",
+    "parentCode": "82.04.02"
+  },
+  {
+    "code": "82.04.02.2023",
+    "name": "Guruapin",
+    "level": "VILLAGE",
+    "parentCode": "82.04.02"
+  },
+  {
+    "code": "82.04.02.2024",
+    "name": "Karamat",
+    "level": "VILLAGE",
+    "parentCode": "82.04.02"
+  },
+  {
+    "code": "82.04.02.2029",
+    "name": "Tawabi",
+    "level": "VILLAGE",
+    "parentCode": "82.04.02"
+  },
+  {
+    "code": "82.04.02.2030",
+    "name": "Dorolamo",
+    "level": "VILLAGE",
+    "parentCode": "82.04.02"
+  },
+  {
+    "code": "82.04.03",
+    "name": "Gane Timur",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.03.2001",
+    "name": "Maffa",
+    "level": "VILLAGE",
+    "parentCode": "82.04.03"
+  },
+  {
+    "code": "82.04.03.2002",
+    "name": "Foya",
+    "level": "VILLAGE",
+    "parentCode": "82.04.03"
+  },
+  {
+    "code": "82.04.03.2003",
+    "name": "Tobaru",
+    "level": "VILLAGE",
+    "parentCode": "82.04.03"
+  },
+  {
+    "code": "82.04.03.2004",
+    "name": "Foya Tobaru",
+    "level": "VILLAGE",
+    "parentCode": "82.04.03"
+  },
+  {
+    "code": "82.04.03.2005",
+    "name": "Lalubi",
+    "level": "VILLAGE",
+    "parentCode": "82.04.03"
+  },
+  {
+    "code": "82.04.03.2006",
+    "name": "Akelamo",
+    "level": "VILLAGE",
+    "parentCode": "82.04.03"
+  },
+  {
+    "code": "82.04.03.2007",
+    "name": "Batonam",
+    "level": "VILLAGE",
+    "parentCode": "82.04.03"
+  },
+  {
+    "code": "82.04.03.2008",
+    "name": "Wosi",
+    "level": "VILLAGE",
+    "parentCode": "82.04.03"
+  },
+  {
+    "code": "82.04.03.2014",
+    "name": "Sumber Makmur",
+    "level": "VILLAGE",
+    "parentCode": "82.04.03"
+  },
+  {
+    "code": "82.04.03.2020",
+    "name": "Kotalow",
+    "level": "VILLAGE",
+    "parentCode": "82.04.03"
+  },
+  {
+    "code": "82.04.03.2022",
+    "name": "Kebun Raja",
+    "level": "VILLAGE",
+    "parentCode": "82.04.03"
+  },
+  {
+    "code": "82.04.03.2025",
+    "name": "Tanjung Jere",
+    "level": "VILLAGE",
+    "parentCode": "82.04.03"
+  },
+  {
+    "code": "82.04.04",
+    "name": "Gane Barat",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.04.2016",
+    "name": "Doro",
+    "level": "VILLAGE",
+    "parentCode": "82.04.04"
+  },
+  {
+    "code": "82.04.04.2017",
+    "name": "Koititi",
+    "level": "VILLAGE",
+    "parentCode": "82.04.04"
+  },
+  {
+    "code": "82.04.04.2018",
+    "name": "Cango",
+    "level": "VILLAGE",
+    "parentCode": "82.04.04"
+  },
+  {
+    "code": "82.04.04.2019",
+    "name": "Saketa",
+    "level": "VILLAGE",
+    "parentCode": "82.04.04"
+  },
+  {
+    "code": "82.04.04.2020",
+    "name": "Balitata",
+    "level": "VILLAGE",
+    "parentCode": "82.04.04"
+  },
+  {
+    "code": "82.04.04.2021",
+    "name": "Oha",
+    "level": "VILLAGE",
+    "parentCode": "82.04.04"
+  },
+  {
+    "code": "82.04.04.2022",
+    "name": "Papaceda",
+    "level": "VILLAGE",
+    "parentCode": "82.04.04"
+  },
+  {
+    "code": "82.04.04.2023",
+    "name": "Lemo Lemo",
+    "level": "VILLAGE",
+    "parentCode": "82.04.04"
+  },
+  {
+    "code": "82.04.04.2029",
+    "name": "Bumi Rahmat",
+    "level": "VILLAGE",
+    "parentCode": "82.04.04"
+  },
+  {
+    "code": "82.04.04.2036",
+    "name": "Tabamasa",
+    "level": "VILLAGE",
+    "parentCode": "82.04.04"
+  },
+  {
+    "code": "82.04.05",
+    "name": "Obi Selatan",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.05.2001",
+    "name": "Wayaloar",
+    "level": "VILLAGE",
+    "parentCode": "82.04.05"
+  },
+  {
+    "code": "82.04.05.2002",
+    "name": "Fluk",
+    "level": "VILLAGE",
+    "parentCode": "82.04.05"
+  },
+  {
+    "code": "82.04.05.2003",
+    "name": "Bobo",
+    "level": "VILLAGE",
+    "parentCode": "82.04.05"
+  },
+  {
+    "code": "82.04.05.2004",
+    "name": "Mano",
+    "level": "VILLAGE",
+    "parentCode": "82.04.05"
+  },
+  {
+    "code": "82.04.05.2005",
+    "name": "Loleo",
+    "level": "VILLAGE",
+    "parentCode": "82.04.05"
+  },
+  {
+    "code": "82.04.05.2007",
+    "name": "Soligi",
+    "level": "VILLAGE",
+    "parentCode": "82.04.05"
+  },
+  {
+    "code": "82.04.05.2008",
+    "name": "Gambaru",
+    "level": "VILLAGE",
+    "parentCode": "82.04.05"
+  },
+  {
+    "code": "82.04.05.2009",
+    "name": "Ocimaloleo",
+    "level": "VILLAGE",
+    "parentCode": "82.04.05"
+  },
+  {
+    "code": "82.04.06",
+    "name": "Obi",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.06.2001",
+    "name": "Laiwui",
+    "level": "VILLAGE",
+    "parentCode": "82.04.06"
+  },
+  {
+    "code": "82.04.06.2002",
+    "name": "Baru",
+    "level": "VILLAGE",
+    "parentCode": "82.04.06"
+  },
+  {
+    "code": "82.04.06.2003",
+    "name": "Buton",
+    "level": "VILLAGE",
+    "parentCode": "82.04.06"
+  },
+  {
+    "code": "82.04.06.2004",
+    "name": "Jikotamo",
+    "level": "VILLAGE",
+    "parentCode": "82.04.06"
+  },
+  {
+    "code": "82.04.06.2005",
+    "name": "Sambiki",
+    "level": "VILLAGE",
+    "parentCode": "82.04.06"
+  },
+  {
+    "code": "82.04.06.2006",
+    "name": "Anggai",
+    "level": "VILLAGE",
+    "parentCode": "82.04.06"
+  },
+  {
+    "code": "82.04.06.2014",
+    "name": "Air Mangga Indah",
+    "level": "VILLAGE",
+    "parentCode": "82.04.06"
+  },
+  {
+    "code": "82.04.06.2020",
+    "name": "Akegula",
+    "level": "VILLAGE",
+    "parentCode": "82.04.06"
+  },
+  {
+    "code": "82.04.06.2021",
+    "name": "Kawasi",
+    "level": "VILLAGE",
+    "parentCode": "82.04.06"
+  },
+  {
+    "code": "82.04.07",
+    "name": "Bacan Timur",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.07.2001",
+    "name": "Babang",
+    "level": "VILLAGE",
+    "parentCode": "82.04.07"
+  },
+  {
+    "code": "82.04.07.2013",
+    "name": "Bori",
+    "level": "VILLAGE",
+    "parentCode": "82.04.07"
+  },
+  {
+    "code": "82.04.07.2014",
+    "name": "Nyonyifi",
+    "level": "VILLAGE",
+    "parentCode": "82.04.07"
+  },
+  {
+    "code": "82.04.07.2015",
+    "name": "Sabatang",
+    "level": "VILLAGE",
+    "parentCode": "82.04.07"
+  },
+  {
+    "code": "82.04.07.2016",
+    "name": "Goro-Goro",
+    "level": "VILLAGE",
+    "parentCode": "82.04.07"
+  },
+  {
+    "code": "82.04.07.2017",
+    "name": "Sali Kecil",
+    "level": "VILLAGE",
+    "parentCode": "82.04.07"
+  },
+  {
+    "code": "82.04.07.2018",
+    "name": "Timlonga",
+    "level": "VILLAGE",
+    "parentCode": "82.04.07"
+  },
+  {
+    "code": "82.04.07.2021",
+    "name": "Sayoang",
+    "level": "VILLAGE",
+    "parentCode": "82.04.07"
+  },
+  {
+    "code": "82.04.07.2022",
+    "name": "Wayamiga",
+    "level": "VILLAGE",
+    "parentCode": "82.04.07"
+  },
+  {
+    "code": "82.04.07.2023",
+    "name": "Kaireu",
+    "level": "VILLAGE",
+    "parentCode": "82.04.07"
+  },
+  {
+    "code": "82.04.08",
+    "name": "Bacan",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.08.2001",
+    "name": "Labuha",
+    "level": "VILLAGE",
+    "parentCode": "82.04.08"
+  },
+  {
+    "code": "82.04.08.2002",
+    "name": "Amasing Kota",
+    "level": "VILLAGE",
+    "parentCode": "82.04.08"
+  },
+  {
+    "code": "82.04.08.2003",
+    "name": "Amasing Kali",
+    "level": "VILLAGE",
+    "parentCode": "82.04.08"
+  },
+  {
+    "code": "82.04.08.2004",
+    "name": "Tomori",
+    "level": "VILLAGE",
+    "parentCode": "82.04.08"
+  },
+  {
+    "code": "82.04.08.2009",
+    "name": "Indomut",
+    "level": "VILLAGE",
+    "parentCode": "82.04.08"
+  },
+  {
+    "code": "82.04.08.2010",
+    "name": "Belang Belang",
+    "level": "VILLAGE",
+    "parentCode": "82.04.08"
+  },
+  {
+    "code": "82.04.08.2026",
+    "name": "Sumae",
+    "level": "VILLAGE",
+    "parentCode": "82.04.08"
+  },
+  {
+    "code": "82.04.08.2027",
+    "name": "Kaputusan",
+    "level": "VILLAGE",
+    "parentCode": "82.04.08"
+  },
+  {
+    "code": "82.04.08.2030",
+    "name": "Amasing Kota Barat",
+    "level": "VILLAGE",
+    "parentCode": "82.04.08"
+  },
+  {
+    "code": "82.04.08.2031",
+    "name": "Amasing Kota Utara",
+    "level": "VILLAGE",
+    "parentCode": "82.04.08"
+  },
+  {
+    "code": "82.04.08.2032",
+    "name": "Awanggoa",
+    "level": "VILLAGE",
+    "parentCode": "82.04.08"
+  },
+  {
+    "code": "82.04.08.2036",
+    "name": "Suma Tinggi",
+    "level": "VILLAGE",
+    "parentCode": "82.04.08"
+  },
+  {
+    "code": "82.04.08.2040",
+    "name": "Hidayat",
+    "level": "VILLAGE",
+    "parentCode": "82.04.08"
+  },
+  {
+    "code": "82.04.08.2041",
+    "name": "Marabose",
+    "level": "VILLAGE",
+    "parentCode": "82.04.08"
+  },
+  {
+    "code": "82.04.09",
+    "name": "Bacan Barat",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.09.2001",
+    "name": "Indari",
+    "level": "VILLAGE",
+    "parentCode": "82.04.09"
+  },
+  {
+    "code": "82.04.09.2014",
+    "name": "Tawabi",
+    "level": "VILLAGE",
+    "parentCode": "82.04.09"
+  },
+  {
+    "code": "82.04.09.2015",
+    "name": "Wiring",
+    "level": "VILLAGE",
+    "parentCode": "82.04.09"
+  },
+  {
+    "code": "82.04.09.2016",
+    "name": "Nondang",
+    "level": "VILLAGE",
+    "parentCode": "82.04.09"
+  },
+  {
+    "code": "82.04.09.2017",
+    "name": "Kusubibi",
+    "level": "VILLAGE",
+    "parentCode": "82.04.09"
+  },
+  {
+    "code": "82.04.09.2018",
+    "name": "Nang",
+    "level": "VILLAGE",
+    "parentCode": "82.04.09"
+  },
+  {
+    "code": "82.04.09.2030",
+    "name": "Kokotu",
+    "level": "VILLAGE",
+    "parentCode": "82.04.09"
+  },
+  {
+    "code": "82.04.10",
+    "name": "Makian Barat",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.10.2001",
+    "name": "Malapat",
+    "level": "VILLAGE",
+    "parentCode": "82.04.10"
+  },
+  {
+    "code": "82.04.10.2002",
+    "name": "Bobawae",
+    "level": "VILLAGE",
+    "parentCode": "82.04.10"
+  },
+  {
+    "code": "82.04.10.2003",
+    "name": "Ombawa",
+    "level": "VILLAGE",
+    "parentCode": "82.04.10"
+  },
+  {
+    "code": "82.04.10.2004",
+    "name": "Tegono",
+    "level": "VILLAGE",
+    "parentCode": "82.04.10"
+  },
+  {
+    "code": "82.04.10.2005",
+    "name": "Mateketen",
+    "level": "VILLAGE",
+    "parentCode": "82.04.10"
+  },
+  {
+    "code": "82.04.10.2006",
+    "name": "Talapaon",
+    "level": "VILLAGE",
+    "parentCode": "82.04.10"
+  },
+  {
+    "code": "82.04.10.2007",
+    "name": "Sebelei",
+    "level": "VILLAGE",
+    "parentCode": "82.04.10"
+  },
+  {
+    "code": "82.04.11",
+    "name": "Kayoa Barat",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.11.2001",
+    "name": "Bokimiake",
+    "level": "VILLAGE",
+    "parentCode": "82.04.11"
+  },
+  {
+    "code": "82.04.11.2002",
+    "name": "Hatejawa",
+    "level": "VILLAGE",
+    "parentCode": "82.04.11"
+  },
+  {
+    "code": "82.04.11.2003",
+    "name": "Busua",
+    "level": "VILLAGE",
+    "parentCode": "82.04.11"
+  },
+  {
+    "code": "82.04.11.2004",
+    "name": "Fofao",
+    "level": "VILLAGE",
+    "parentCode": "82.04.11"
+  },
+  {
+    "code": "82.04.12",
+    "name": "Kayoa Selatan",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.12.2001",
+    "name": "Ngute-Ngute",
+    "level": "VILLAGE",
+    "parentCode": "82.04.12"
+  },
+  {
+    "code": "82.04.12.2002",
+    "name": "Laluin",
+    "level": "VILLAGE",
+    "parentCode": "82.04.12"
+  },
+  {
+    "code": "82.04.12.2003",
+    "name": "Posi-Posi",
+    "level": "VILLAGE",
+    "parentCode": "82.04.12"
+  },
+  {
+    "code": "82.04.12.2004",
+    "name": "Sagawele",
+    "level": "VILLAGE",
+    "parentCode": "82.04.12"
+  },
+  {
+    "code": "82.04.12.2005",
+    "name": "Orimakurunga",
+    "level": "VILLAGE",
+    "parentCode": "82.04.12"
+  },
+  {
+    "code": "82.04.12.2006",
+    "name": "Pasir Putih",
+    "level": "VILLAGE",
+    "parentCode": "82.04.12"
+  },
+  {
+    "code": "82.04.13",
+    "name": "Kayoa Utara",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.13.2001",
+    "name": "Modayama",
+    "level": "VILLAGE",
+    "parentCode": "82.04.13"
+  },
+  {
+    "code": "82.04.13.2002",
+    "name": "Laromabati",
+    "level": "VILLAGE",
+    "parentCode": "82.04.13"
+  },
+  {
+    "code": "82.04.13.2003",
+    "name": "Gayap",
+    "level": "VILLAGE",
+    "parentCode": "82.04.13"
+  },
+  {
+    "code": "82.04.13.2004",
+    "name": "Ake Jailolo",
+    "level": "VILLAGE",
+    "parentCode": "82.04.13"
+  },
+  {
+    "code": "82.04.13.2005",
+    "name": "Wayasipang",
+    "level": "VILLAGE",
+    "parentCode": "82.04.13"
+  },
+  {
+    "code": "82.04.13.2006",
+    "name": "Ngokomalako",
+    "level": "VILLAGE",
+    "parentCode": "82.04.13"
+  },
+  {
+    "code": "82.04.14",
+    "name": "Bacan Barat Utara",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.14.2001",
+    "name": "Sidopo",
+    "level": "VILLAGE",
+    "parentCode": "82.04.14"
+  },
+  {
+    "code": "82.04.14.2002",
+    "name": "Lolarogurua",
+    "level": "VILLAGE",
+    "parentCode": "82.04.14"
+  },
+  {
+    "code": "82.04.14.2003",
+    "name": "Nusa Babullah",
+    "level": "VILLAGE",
+    "parentCode": "82.04.14"
+  },
+  {
+    "code": "82.04.14.2004",
+    "name": "Jojame",
+    "level": "VILLAGE",
+    "parentCode": "82.04.14"
+  },
+  {
+    "code": "82.04.14.2005",
+    "name": "Yaba",
+    "level": "VILLAGE",
+    "parentCode": "82.04.14"
+  },
+  {
+    "code": "82.04.14.2006",
+    "name": "Geti Lama",
+    "level": "VILLAGE",
+    "parentCode": "82.04.14"
+  },
+  {
+    "code": "82.04.14.2007",
+    "name": "Geti Baru",
+    "level": "VILLAGE",
+    "parentCode": "82.04.14"
+  },
+  {
+    "code": "82.04.14.2008",
+    "name": "Gilalang",
+    "level": "VILLAGE",
+    "parentCode": "82.04.14"
+  },
+  {
+    "code": "82.04.15",
+    "name": "Kasiruta Barat",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.15.2001",
+    "name": "Sidanga",
+    "level": "VILLAGE",
+    "parentCode": "82.04.15"
+  },
+  {
+    "code": "82.04.15.2002",
+    "name": "Lata Lata",
+    "level": "VILLAGE",
+    "parentCode": "82.04.15"
+  },
+  {
+    "code": "82.04.15.2003",
+    "name": "Sengga Baru",
+    "level": "VILLAGE",
+    "parentCode": "82.04.15"
+  },
+  {
+    "code": "82.04.15.2004",
+    "name": "Arumamang",
+    "level": "VILLAGE",
+    "parentCode": "82.04.15"
+  },
+  {
+    "code": "82.04.15.2005",
+    "name": "Palamea",
+    "level": "VILLAGE",
+    "parentCode": "82.04.15"
+  },
+  {
+    "code": "82.04.15.2006",
+    "name": "Doko",
+    "level": "VILLAGE",
+    "parentCode": "82.04.15"
+  },
+  {
+    "code": "82.04.15.2007",
+    "name": "Bisori",
+    "level": "VILLAGE",
+    "parentCode": "82.04.15"
+  },
+  {
+    "code": "82.04.15.2008",
+    "name": "Marikapal",
+    "level": "VILLAGE",
+    "parentCode": "82.04.15"
+  },
+  {
+    "code": "82.04.15.2009",
+    "name": "Kukupang",
+    "level": "VILLAGE",
+    "parentCode": "82.04.15"
+  },
+  {
+    "code": "82.04.15.2010",
+    "name": "Imbu Imbu",
+    "level": "VILLAGE",
+    "parentCode": "82.04.15"
+  },
+  {
+    "code": "82.04.16",
+    "name": "Kasiruta Timur",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.16.2001",
+    "name": "Loleo Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.04.16"
+  },
+  {
+    "code": "82.04.16.2002",
+    "name": "Tawa",
+    "level": "VILLAGE",
+    "parentCode": "82.04.16"
+  },
+  {
+    "code": "82.04.16.2003",
+    "name": "Marituso",
+    "level": "VILLAGE",
+    "parentCode": "82.04.16"
+  },
+  {
+    "code": "82.04.16.2004",
+    "name": "Kou Balabala",
+    "level": "VILLAGE",
+    "parentCode": "82.04.16"
+  },
+  {
+    "code": "82.04.16.2005",
+    "name": "Loleo Mekar",
+    "level": "VILLAGE",
+    "parentCode": "82.04.16"
+  },
+  {
+    "code": "82.04.16.2006",
+    "name": "Tutuhu",
+    "level": "VILLAGE",
+    "parentCode": "82.04.16"
+  },
+  {
+    "code": "82.04.16.2007",
+    "name": "Jeret",
+    "level": "VILLAGE",
+    "parentCode": "82.04.16"
+  },
+  {
+    "code": "82.04.16.2008",
+    "name": "Kasiruta Dalam",
+    "level": "VILLAGE",
+    "parentCode": "82.04.16"
+  },
+  {
+    "code": "82.04.17",
+    "name": "Bacan Selatan",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.17.2001",
+    "name": "Kampung Makian",
+    "level": "VILLAGE",
+    "parentCode": "82.04.17"
+  },
+  {
+    "code": "82.04.17.2002",
+    "name": "Mandaong",
+    "level": "VILLAGE",
+    "parentCode": "82.04.17"
+  },
+  {
+    "code": "82.04.17.2003",
+    "name": "Kupal",
+    "level": "VILLAGE",
+    "parentCode": "82.04.17"
+  },
+  {
+    "code": "82.04.17.2004",
+    "name": "Gandasuli",
+    "level": "VILLAGE",
+    "parentCode": "82.04.17"
+  },
+  {
+    "code": "82.04.17.2005",
+    "name": "Sawadai",
+    "level": "VILLAGE",
+    "parentCode": "82.04.17"
+  },
+  {
+    "code": "82.04.17.2006",
+    "name": "Tuokona",
+    "level": "VILLAGE",
+    "parentCode": "82.04.17"
+  },
+  {
+    "code": "82.04.17.2007",
+    "name": "Papaloang",
+    "level": "VILLAGE",
+    "parentCode": "82.04.17"
+  },
+  {
+    "code": "82.04.17.2008",
+    "name": "Tembal",
+    "level": "VILLAGE",
+    "parentCode": "82.04.17"
+  },
+  {
+    "code": "82.04.17.2009",
+    "name": "Kubung",
+    "level": "VILLAGE",
+    "parentCode": "82.04.17"
+  },
+  {
+    "code": "82.04.17.2010",
+    "name": "Panamboang",
+    "level": "VILLAGE",
+    "parentCode": "82.04.17"
+  },
+  {
+    "code": "82.04.18",
+    "name": "Kepulauan Botanglomang",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.18.2001",
+    "name": "Sawangakar",
+    "level": "VILLAGE",
+    "parentCode": "82.04.18"
+  },
+  {
+    "code": "82.04.18.2002",
+    "name": "Bajo",
+    "level": "VILLAGE",
+    "parentCode": "82.04.18"
+  },
+  {
+    "code": "82.04.18.2003",
+    "name": "Tanjung Obit",
+    "level": "VILLAGE",
+    "parentCode": "82.04.18"
+  },
+  {
+    "code": "82.04.18.2004",
+    "name": "Prapakanda",
+    "level": "VILLAGE",
+    "parentCode": "82.04.18"
+  },
+  {
+    "code": "82.04.18.2005",
+    "name": "Toin",
+    "level": "VILLAGE",
+    "parentCode": "82.04.18"
+  },
+  {
+    "code": "82.04.18.2006",
+    "name": "Kampung Baru",
+    "level": "VILLAGE",
+    "parentCode": "82.04.18"
+  },
+  {
+    "code": "82.04.18.2007",
+    "name": "Batutaga",
+    "level": "VILLAGE",
+    "parentCode": "82.04.18"
+  },
+  {
+    "code": "82.04.18.2008",
+    "name": "Paisumbaos",
+    "level": "VILLAGE",
+    "parentCode": "82.04.18"
+  },
+  {
+    "code": "82.04.19",
+    "name": "Mandioli Selatan",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.19.2001",
+    "name": "Lele",
+    "level": "VILLAGE",
+    "parentCode": "82.04.19"
+  },
+  {
+    "code": "82.04.19.2002",
+    "name": "Bahu",
+    "level": "VILLAGE",
+    "parentCode": "82.04.19"
+  },
+  {
+    "code": "82.04.19.2003",
+    "name": "Jiko",
+    "level": "VILLAGE",
+    "parentCode": "82.04.19"
+  },
+  {
+    "code": "82.04.19.2004",
+    "name": "Galala",
+    "level": "VILLAGE",
+    "parentCode": "82.04.19"
+  },
+  {
+    "code": "82.04.19.2005",
+    "name": "Tabalema",
+    "level": "VILLAGE",
+    "parentCode": "82.04.19"
+  },
+  {
+    "code": "82.04.19.2006",
+    "name": "Yoyok",
+    "level": "VILLAGE",
+    "parentCode": "82.04.19"
+  },
+  {
+    "code": "82.04.20",
+    "name": "Mandioli Utara",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.20.2001",
+    "name": "Pelita",
+    "level": "VILLAGE",
+    "parentCode": "82.04.20"
+  },
+  {
+    "code": "82.04.20.2002",
+    "name": "Indong",
+    "level": "VILLAGE",
+    "parentCode": "82.04.20"
+  },
+  {
+    "code": "82.04.20.2003",
+    "name": "Waya",
+    "level": "VILLAGE",
+    "parentCode": "82.04.20"
+  },
+  {
+    "code": "82.04.20.2004",
+    "name": "Leleongusu",
+    "level": "VILLAGE",
+    "parentCode": "82.04.20"
+  },
+  {
+    "code": "82.04.20.2005",
+    "name": "Akedabo",
+    "level": "VILLAGE",
+    "parentCode": "82.04.20"
+  },
+  {
+    "code": "82.04.20.2006",
+    "name": "Bobo",
+    "level": "VILLAGE",
+    "parentCode": "82.04.20"
+  },
+  {
+    "code": "82.04.21",
+    "name": "Bacan Timur Selatan",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.21.2001",
+    "name": "Wayaua",
+    "level": "VILLAGE",
+    "parentCode": "82.04.21"
+  },
+  {
+    "code": "82.04.21.2002",
+    "name": "Silang",
+    "level": "VILLAGE",
+    "parentCode": "82.04.21"
+  },
+  {
+    "code": "82.04.21.2003",
+    "name": "Liaro",
+    "level": "VILLAGE",
+    "parentCode": "82.04.21"
+  },
+  {
+    "code": "82.04.21.2004",
+    "name": "Pigaraja",
+    "level": "VILLAGE",
+    "parentCode": "82.04.21"
+  },
+  {
+    "code": "82.04.21.2005",
+    "name": "Wayakuba",
+    "level": "VILLAGE",
+    "parentCode": "82.04.21"
+  },
+  {
+    "code": "82.04.21.2006",
+    "name": "Tabangame",
+    "level": "VILLAGE",
+    "parentCode": "82.04.21"
+  },
+  {
+    "code": "82.04.21.2007",
+    "name": "Tabajaya",
+    "level": "VILLAGE",
+    "parentCode": "82.04.21"
+  },
+  {
+    "code": "82.04.22",
+    "name": "Bacan Timur Tengah",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.22.2001",
+    "name": "Wayatim",
+    "level": "VILLAGE",
+    "parentCode": "82.04.22"
+  },
+  {
+    "code": "82.04.22.2002",
+    "name": "Tomara",
+    "level": "VILLAGE",
+    "parentCode": "82.04.22"
+  },
+  {
+    "code": "82.04.22.2003",
+    "name": "Tutupa",
+    "level": "VILLAGE",
+    "parentCode": "82.04.22"
+  },
+  {
+    "code": "82.04.22.2004",
+    "name": "Tabapoma",
+    "level": "VILLAGE",
+    "parentCode": "82.04.22"
+  },
+  {
+    "code": "82.04.22.2005",
+    "name": "Bibinoi",
+    "level": "VILLAGE",
+    "parentCode": "82.04.22"
+  },
+  {
+    "code": "82.04.22.2006",
+    "name": "Songa",
+    "level": "VILLAGE",
+    "parentCode": "82.04.22"
+  },
+  {
+    "code": "82.04.22.2007",
+    "name": "Tawa",
+    "level": "VILLAGE",
+    "parentCode": "82.04.22"
+  },
+  {
+    "code": "82.04.23",
+    "name": "Gane Barat Selatan",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.23.2001",
+    "name": "Awis",
+    "level": "VILLAGE",
+    "parentCode": "82.04.23"
+  },
+  {
+    "code": "82.04.23.2002",
+    "name": "Dowora",
+    "level": "VILLAGE",
+    "parentCode": "82.04.23"
+  },
+  {
+    "code": "82.04.23.2003",
+    "name": "Gane Dalam",
+    "level": "VILLAGE",
+    "parentCode": "82.04.23"
+  },
+  {
+    "code": "82.04.23.2004",
+    "name": "Jibubu",
+    "level": "VILLAGE",
+    "parentCode": "82.04.23"
+  },
+  {
+    "code": "82.04.23.2005",
+    "name": "Pasipalele",
+    "level": "VILLAGE",
+    "parentCode": "82.04.23"
+  },
+  {
+    "code": "82.04.23.2006",
+    "name": "Sekely",
+    "level": "VILLAGE",
+    "parentCode": "82.04.23"
+  },
+  {
+    "code": "82.04.23.2007",
+    "name": "Tawa",
+    "level": "VILLAGE",
+    "parentCode": "82.04.23"
+  },
+  {
+    "code": "82.04.23.2008",
+    "name": "Yamli",
+    "level": "VILLAGE",
+    "parentCode": "82.04.23"
+  },
+  {
+    "code": "82.04.24",
+    "name": "Gane Barat Utara",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.24.2001",
+    "name": "Batulak",
+    "level": "VILLAGE",
+    "parentCode": "82.04.24"
+  },
+  {
+    "code": "82.04.24.2002",
+    "name": "Boso",
+    "level": "VILLAGE",
+    "parentCode": "82.04.24"
+  },
+  {
+    "code": "82.04.24.2003",
+    "name": "Dolik",
+    "level": "VILLAGE",
+    "parentCode": "82.04.24"
+  },
+  {
+    "code": "82.04.24.2004",
+    "name": "Fulai",
+    "level": "VILLAGE",
+    "parentCode": "82.04.24"
+  },
+  {
+    "code": "82.04.24.2005",
+    "name": "Gumira",
+    "level": "VILLAGE",
+    "parentCode": "82.04.24"
+  },
+  {
+    "code": "82.04.24.2006",
+    "name": "Moloku",
+    "level": "VILLAGE",
+    "parentCode": "82.04.24"
+  },
+  {
+    "code": "82.04.24.2007",
+    "name": "Nurjihat",
+    "level": "VILLAGE",
+    "parentCode": "82.04.24"
+  },
+  {
+    "code": "82.04.24.2008",
+    "name": "Posi Posi",
+    "level": "VILLAGE",
+    "parentCode": "82.04.24"
+  },
+  {
+    "code": "82.04.24.2009",
+    "name": "Samat",
+    "level": "VILLAGE",
+    "parentCode": "82.04.24"
+  },
+  {
+    "code": "82.04.24.2010",
+    "name": "Samo",
+    "level": "VILLAGE",
+    "parentCode": "82.04.24"
+  },
+  {
+    "code": "82.04.24.2011",
+    "name": "Suka Damai",
+    "level": "VILLAGE",
+    "parentCode": "82.04.24"
+  },
+  {
+    "code": "82.04.24.2012",
+    "name": "Tokaka",
+    "level": "VILLAGE",
+    "parentCode": "82.04.24"
+  },
+  {
+    "code": "82.04.25",
+    "name": "Kepulauan Joronga",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.25.2001",
+    "name": "Gonone",
+    "level": "VILLAGE",
+    "parentCode": "82.04.25"
+  },
+  {
+    "code": "82.04.25.2002",
+    "name": "Kakupang",
+    "level": "VILLAGE",
+    "parentCode": "82.04.25"
+  },
+  {
+    "code": "82.04.25.2003",
+    "name": "Kurunga",
+    "level": "VILLAGE",
+    "parentCode": "82.04.25"
+  },
+  {
+    "code": "82.04.25.2004",
+    "name": "Liboba Hijrah",
+    "level": "VILLAGE",
+    "parentCode": "82.04.25"
+  },
+  {
+    "code": "82.04.25.2005",
+    "name": "Pulau Gala",
+    "level": "VILLAGE",
+    "parentCode": "82.04.25"
+  },
+  {
+    "code": "82.04.25.2006",
+    "name": "Tawabi",
+    "level": "VILLAGE",
+    "parentCode": "82.04.25"
+  },
+  {
+    "code": "82.04.25.2007",
+    "name": "Yomen",
+    "level": "VILLAGE",
+    "parentCode": "82.04.25"
+  },
+  {
+    "code": "82.04.26",
+    "name": "Gane Timur Selatan",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.26.2001",
+    "name": "Gaimu",
+    "level": "VILLAGE",
+    "parentCode": "82.04.26"
+  },
+  {
+    "code": "82.04.26.2002",
+    "name": "Gane Luar",
+    "level": "VILLAGE",
+    "parentCode": "82.04.26"
+  },
+  {
+    "code": "82.04.26.2003",
+    "name": "Kuwo",
+    "level": "VILLAGE",
+    "parentCode": "82.04.26"
+  },
+  {
+    "code": "82.04.26.2004",
+    "name": "Ranga Ranga",
+    "level": "VILLAGE",
+    "parentCode": "82.04.26"
+  },
+  {
+    "code": "82.04.26.2005",
+    "name": "Sawat",
+    "level": "VILLAGE",
+    "parentCode": "82.04.26"
+  },
+  {
+    "code": "82.04.27",
+    "name": "Gane Timur Tengah",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.27.2001",
+    "name": "Bisui",
+    "level": "VILLAGE",
+    "parentCode": "82.04.27"
+  },
+  {
+    "code": "82.04.27.2002",
+    "name": "Lelewi",
+    "level": "VILLAGE",
+    "parentCode": "82.04.27"
+  },
+  {
+    "code": "82.04.27.2003",
+    "name": "Luim",
+    "level": "VILLAGE",
+    "parentCode": "82.04.27"
+  },
+  {
+    "code": "82.04.27.2004",
+    "name": "Matuting",
+    "level": "VILLAGE",
+    "parentCode": "82.04.27"
+  },
+  {
+    "code": "82.04.27.2005",
+    "name": "Matuting Tanjung",
+    "level": "VILLAGE",
+    "parentCode": "82.04.27"
+  },
+  {
+    "code": "82.04.27.2006",
+    "name": "Tabahidayah",
+    "level": "VILLAGE",
+    "parentCode": "82.04.27"
+  },
+  {
+    "code": "82.04.27.2007",
+    "name": "Tabahijrah",
+    "level": "VILLAGE",
+    "parentCode": "82.04.27"
+  },
+  {
+    "code": "82.04.27.2008",
+    "name": "Tagia",
+    "level": "VILLAGE",
+    "parentCode": "82.04.27"
+  },
+  {
+    "code": "82.04.28",
+    "name": "Obi Barat",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.28.2001",
+    "name": "Alam Kenanga",
+    "level": "VILLAGE",
+    "parentCode": "82.04.28"
+  },
+  {
+    "code": "82.04.28.2002",
+    "name": "Alam Pelita",
+    "level": "VILLAGE",
+    "parentCode": "82.04.28"
+  },
+  {
+    "code": "82.04.28.2003",
+    "name": "Jikohai",
+    "level": "VILLAGE",
+    "parentCode": "82.04.28"
+  },
+  {
+    "code": "82.04.28.2004",
+    "name": "Manatahan",
+    "level": "VILLAGE",
+    "parentCode": "82.04.28"
+  },
+  {
+    "code": "82.04.28.2005",
+    "name": "Soa Sangaji",
+    "level": "VILLAGE",
+    "parentCode": "82.04.28"
+  },
+  {
+    "code": "82.04.28.2006",
+    "name": "Tapa",
+    "level": "VILLAGE",
+    "parentCode": "82.04.28"
+  },
+  {
+    "code": "82.04.29",
+    "name": "Obi Timur",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.29.2001",
+    "name": "Kelo",
+    "level": "VILLAGE",
+    "parentCode": "82.04.29"
+  },
+  {
+    "code": "82.04.29.2002",
+    "name": "Sum",
+    "level": "VILLAGE",
+    "parentCode": "82.04.29"
+  },
+  {
+    "code": "82.04.29.2003",
+    "name": "Susepe",
+    "level": "VILLAGE",
+    "parentCode": "82.04.29"
+  },
+  {
+    "code": "82.04.29.2004",
+    "name": "Wooi",
+    "level": "VILLAGE",
+    "parentCode": "82.04.29"
+  },
+  {
+    "code": "82.04.30",
+    "name": "Obi Utara",
+    "level": "DISTRICT",
+    "parentCode": "82.04"
+  },
+  {
+    "code": "82.04.30.2001",
+    "name": "Cap",
+    "level": "VILLAGE",
+    "parentCode": "82.04.30"
+  },
+  {
+    "code": "82.04.30.2002",
+    "name": "Madopolo",
+    "level": "VILLAGE",
+    "parentCode": "82.04.30"
+  },
+  {
+    "code": "82.04.30.2003",
+    "name": "Galala",
+    "level": "VILLAGE",
+    "parentCode": "82.04.30"
+  },
+  {
+    "code": "82.04.30.2004",
+    "name": "Madopolo Barat",
+    "level": "VILLAGE",
+    "parentCode": "82.04.30"
+  },
+  {
+    "code": "82.04.30.2005",
+    "name": "Waringi",
+    "level": "VILLAGE",
+    "parentCode": "82.04.30"
+  },
+  {
+    "code": "82.04.30.2006",
+    "name": "Pasir Putih",
+    "level": "VILLAGE",
+    "parentCode": "82.04.30"
+  },
+  {
+    "code": "82.04.30.2007",
+    "name": "Madopolo Timur",
+    "level": "VILLAGE",
+    "parentCode": "82.04.30"
+  },
+  {
+    "code": "82.05",
+    "name": "Kabupaten Kepulauan Sula",
+    "level": "REGENCY",
+    "parentCode": "82"
+  },
+  {
+    "code": "82.05.01",
+    "name": "Mangoli Timur",
+    "level": "DISTRICT",
+    "parentCode": "82.05"
+  },
+  {
+    "code": "82.05.01.2001",
+    "name": "Waitina",
+    "level": "VILLAGE",
+    "parentCode": "82.05.01"
+  },
+  {
+    "code": "82.05.01.2006",
+    "name": "Kau",
+    "level": "VILLAGE",
+    "parentCode": "82.05.01"
+  },
+  {
+    "code": "82.05.01.2007",
+    "name": "Waitamela",
+    "level": "VILLAGE",
+    "parentCode": "82.05.01"
+  },
+  {
+    "code": "82.05.01.2013",
+    "name": "Karamat Titdoy",
+    "level": "VILLAGE",
+    "parentCode": "82.05.01"
+  },
+  {
+    "code": "82.05.01.2016",
+    "name": "Naflo",
+    "level": "VILLAGE",
+    "parentCode": "82.05.01"
+  },
+  {
+    "code": "82.05.02",
+    "name": "Sanana",
+    "level": "DISTRICT",
+    "parentCode": "82.05"
+  },
+  {
+    "code": "82.05.02.2001",
+    "name": "Mangon",
+    "level": "VILLAGE",
+    "parentCode": "82.05.02"
+  },
+  {
+    "code": "82.05.02.2002",
+    "name": "Fagudu",
+    "level": "VILLAGE",
+    "parentCode": "82.05.02"
+  },
+  {
+    "code": "82.05.02.2003",
+    "name": "Waibau",
+    "level": "VILLAGE",
+    "parentCode": "82.05.02"
+  },
+  {
+    "code": "82.05.02.2004",
+    "name": "Falahu",
+    "level": "VILLAGE",
+    "parentCode": "82.05.02"
+  },
+  {
+    "code": "82.05.02.2005",
+    "name": "Fatcei",
+    "level": "VILLAGE",
+    "parentCode": "82.05.02"
+  },
+  {
+    "code": "82.05.02.2006",
+    "name": "Fogi",
+    "level": "VILLAGE",
+    "parentCode": "82.05.02"
+  },
+  {
+    "code": "82.05.02.2007",
+    "name": "Waihama",
+    "level": "VILLAGE",
+    "parentCode": "82.05.02"
+  },
+  {
+    "code": "82.05.02.2008",
+    "name": "Wai Ipa",
+    "level": "VILLAGE",
+    "parentCode": "82.05.02"
+  },
+  {
+    "code": "82.05.02.2009",
+    "name": "Umaloya",
+    "level": "VILLAGE",
+    "parentCode": "82.05.02"
+  },
+  {
+    "code": "82.05.02.2010",
+    "name": "Pastina",
+    "level": "VILLAGE",
+    "parentCode": "82.05.02"
+  },
+  {
+    "code": "82.05.02.2011",
+    "name": "Wailau",
+    "level": "VILLAGE",
+    "parentCode": "82.05.02"
+  },
+  {
+    "code": "82.05.03",
+    "name": "Sulabesi Barat",
+    "level": "DISTRICT",
+    "parentCode": "82.05"
+  },
+  {
+    "code": "82.05.03.2005",
+    "name": "Wai Ina",
+    "level": "VILLAGE",
+    "parentCode": "82.05.03"
+  },
+  {
+    "code": "82.05.03.2006",
+    "name": "Kabau Pantai",
+    "level": "VILLAGE",
+    "parentCode": "82.05.03"
+  },
+  {
+    "code": "82.05.03.2007",
+    "name": "Ona",
+    "level": "VILLAGE",
+    "parentCode": "82.05.03"
+  },
+  {
+    "code": "82.05.03.2008",
+    "name": "Kabau Darat",
+    "level": "VILLAGE",
+    "parentCode": "82.05.03"
+  },
+  {
+    "code": "82.05.03.2009",
+    "name": "Nahi",
+    "level": "VILLAGE",
+    "parentCode": "82.05.03"
+  },
+  {
+    "code": "82.05.03.2010",
+    "name": "Paratina",
+    "level": "VILLAGE",
+    "parentCode": "82.05.03"
+  },
+  {
+    "code": "82.05.06",
+    "name": "Mangoli Barat",
+    "level": "DISTRICT",
+    "parentCode": "82.05"
+  },
+  {
+    "code": "82.05.06.2001",
+    "name": "Dofa",
+    "level": "VILLAGE",
+    "parentCode": "82.05.06"
+  },
+  {
+    "code": "82.05.06.2002",
+    "name": "Lekokadai",
+    "level": "VILLAGE",
+    "parentCode": "82.05.06"
+  },
+  {
+    "code": "82.05.06.2003",
+    "name": "Lekosula",
+    "level": "VILLAGE",
+    "parentCode": "82.05.06"
+  },
+  {
+    "code": "82.05.06.2009",
+    "name": "Pas Ipa",
+    "level": "VILLAGE",
+    "parentCode": "82.05.06"
+  },
+  {
+    "code": "82.05.06.2014",
+    "name": "Pelita",
+    "level": "VILLAGE",
+    "parentCode": "82.05.06"
+  },
+  {
+    "code": "82.05.06.2017",
+    "name": "Johor",
+    "level": "VILLAGE",
+    "parentCode": "82.05.06"
+  },
+  {
+    "code": "82.05.06.2018",
+    "name": "Lelyaba",
+    "level": "VILLAGE",
+    "parentCode": "82.05.06"
+  },
+  {
+    "code": "82.05.07",
+    "name": "Sulabesi Tengah",
+    "level": "DISTRICT",
+    "parentCode": "82.05"
+  },
+  {
+    "code": "82.05.07.2001",
+    "name": "Waiboga",
+    "level": "VILLAGE",
+    "parentCode": "82.05.07"
+  },
+  {
+    "code": "82.05.07.2002",
+    "name": "Soamole",
+    "level": "VILLAGE",
+    "parentCode": "82.05.07"
+  },
+  {
+    "code": "82.05.07.2003",
+    "name": "Waiman",
+    "level": "VILLAGE",
+    "parentCode": "82.05.07"
+  },
+  {
+    "code": "82.05.07.2004",
+    "name": "Fat Iba",
+    "level": "VILLAGE",
+    "parentCode": "82.05.07"
+  },
+  {
+    "code": "82.05.07.2005",
+    "name": "Bega",
+    "level": "VILLAGE",
+    "parentCode": "82.05.07"
+  },
+  {
+    "code": "82.05.07.2006",
+    "name": "Manaf",
+    "level": "VILLAGE",
+    "parentCode": "82.05.07"
+  },
+  {
+    "code": "82.05.08",
+    "name": "Sulabesi Timur",
+    "level": "DISTRICT",
+    "parentCode": "82.05"
+  },
+  {
+    "code": "82.05.08.2001",
+    "name": "Waigoiyofa",
+    "level": "VILLAGE",
+    "parentCode": "82.05.08"
+  },
+  {
+    "code": "82.05.08.2002",
+    "name": "Baleha",
+    "level": "VILLAGE",
+    "parentCode": "82.05.08"
+  },
+  {
+    "code": "82.05.08.2003",
+    "name": "Fatkauyon",
+    "level": "VILLAGE",
+    "parentCode": "82.05.08"
+  },
+  {
+    "code": "82.05.08.2004",
+    "name": "Wailia",
+    "level": "VILLAGE",
+    "parentCode": "82.05.08"
+  },
+  {
+    "code": "82.05.08.2005",
+    "name": "Sama",
+    "level": "VILLAGE",
+    "parentCode": "82.05.08"
+  },
+  {
+    "code": "82.05.08.2006",
+    "name": "Waisepa",
+    "level": "VILLAGE",
+    "parentCode": "82.05.08"
+  },
+  {
+    "code": "82.05.09",
+    "name": "Sulabesi Selatan",
+    "level": "DISTRICT",
+    "parentCode": "82.05"
+  },
+  {
+    "code": "82.05.09.2001",
+    "name": "Waigai",
+    "level": "VILLAGE",
+    "parentCode": "82.05.09"
+  },
+  {
+    "code": "82.05.09.2002",
+    "name": "Fuata",
+    "level": "VILLAGE",
+    "parentCode": "82.05.09"
+  },
+  {
+    "code": "82.05.09.2003",
+    "name": "Wainib",
+    "level": "VILLAGE",
+    "parentCode": "82.05.09"
+  },
+  {
+    "code": "82.05.09.2004",
+    "name": "Skom",
+    "level": "VILLAGE",
+    "parentCode": "82.05.09"
+  },
+  {
+    "code": "82.05.09.2005",
+    "name": "Wai Tamua",
+    "level": "VILLAGE",
+    "parentCode": "82.05.09"
+  },
+  {
+    "code": "82.05.10",
+    "name": "Mangoli Utara Timur",
+    "level": "DISTRICT",
+    "parentCode": "82.05"
+  },
+  {
+    "code": "82.05.10.2001",
+    "name": "Kawata",
+    "level": "VILLAGE",
+    "parentCode": "82.05.10"
+  },
+  {
+    "code": "82.05.10.2002",
+    "name": "Waisakai",
+    "level": "VILLAGE",
+    "parentCode": "82.05.10"
+  },
+  {
+    "code": "82.05.10.2003",
+    "name": "Pelita Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.05.10"
+  },
+  {
+    "code": "82.05.10.2004",
+    "name": "Waisum",
+    "level": "VILLAGE",
+    "parentCode": "82.05.10"
+  },
+  {
+    "code": "82.05.11",
+    "name": "Mangoli Tengah",
+    "level": "DISTRICT",
+    "parentCode": "82.05"
+  },
+  {
+    "code": "82.05.11.2001",
+    "name": "Buruakol",
+    "level": "VILLAGE",
+    "parentCode": "82.05.11"
+  },
+  {
+    "code": "82.05.11.2002",
+    "name": "Capalulu",
+    "level": "VILLAGE",
+    "parentCode": "82.05.11"
+  },
+  {
+    "code": "82.05.11.2003",
+    "name": "Urifola",
+    "level": "VILLAGE",
+    "parentCode": "82.05.11"
+  },
+  {
+    "code": "82.05.11.2004",
+    "name": "Mangoli",
+    "level": "VILLAGE",
+    "parentCode": "82.05.11"
+  },
+  {
+    "code": "82.05.11.2005",
+    "name": "Wailoba",
+    "level": "VILLAGE",
+    "parentCode": "82.05.11"
+  },
+  {
+    "code": "82.05.11.2006",
+    "name": "Paslal",
+    "level": "VILLAGE",
+    "parentCode": "82.05.11"
+  },
+  {
+    "code": "82.05.11.2007",
+    "name": "Waitulia",
+    "level": "VILLAGE",
+    "parentCode": "82.05.11"
+  },
+  {
+    "code": "82.05.11.2008",
+    "name": "Wai U",
+    "level": "VILLAGE",
+    "parentCode": "82.05.11"
+  },
+  {
+    "code": "82.05.11.2009",
+    "name": "Jere",
+    "level": "VILLAGE",
+    "parentCode": "82.05.11"
+  },
+  {
+    "code": "82.05.12",
+    "name": "Mangoli Selatan",
+    "level": "DISTRICT",
+    "parentCode": "82.05"
+  },
+  {
+    "code": "82.05.12.2001",
+    "name": "Kaporo",
+    "level": "VILLAGE",
+    "parentCode": "82.05.12"
+  },
+  {
+    "code": "82.05.12.2002",
+    "name": "Waikafia",
+    "level": "VILLAGE",
+    "parentCode": "82.05.12"
+  },
+  {
+    "code": "82.05.12.2003",
+    "name": "Buya",
+    "level": "VILLAGE",
+    "parentCode": "82.05.12"
+  },
+  {
+    "code": "82.05.12.2004",
+    "name": "Auponhia",
+    "level": "VILLAGE",
+    "parentCode": "82.05.12"
+  },
+  {
+    "code": "82.05.12.2005",
+    "name": "Wailab",
+    "level": "VILLAGE",
+    "parentCode": "82.05.12"
+  },
+  {
+    "code": "82.05.13",
+    "name": "Mangoli Utara",
+    "level": "DISTRICT",
+    "parentCode": "82.05"
+  },
+  {
+    "code": "82.05.13.2001",
+    "name": "Falabisahaya",
+    "level": "VILLAGE",
+    "parentCode": "82.05.13"
+  },
+  {
+    "code": "82.05.13.2002",
+    "name": "Modapia",
+    "level": "VILLAGE",
+    "parentCode": "82.05.13"
+  },
+  {
+    "code": "82.05.13.2003",
+    "name": "Modapuhi",
+    "level": "VILLAGE",
+    "parentCode": "82.05.13"
+  },
+  {
+    "code": "82.05.13.2004",
+    "name": "Pastabulu",
+    "level": "VILLAGE",
+    "parentCode": "82.05.13"
+  },
+  {
+    "code": "82.05.13.2005",
+    "name": "Saniahaya",
+    "level": "VILLAGE",
+    "parentCode": "82.05.13"
+  },
+  {
+    "code": "82.05.13.2006",
+    "name": "Minaluli",
+    "level": "VILLAGE",
+    "parentCode": "82.05.13"
+  },
+  {
+    "code": "82.05.13.2007",
+    "name": "Modapuhi Trans",
+    "level": "VILLAGE",
+    "parentCode": "82.05.13"
+  },
+  {
+    "code": "82.05.18",
+    "name": "Sanana Utara",
+    "level": "DISTRICT",
+    "parentCode": "82.05"
+  },
+  {
+    "code": "82.05.18.2001",
+    "name": "Man-Gega",
+    "level": "VILLAGE",
+    "parentCode": "82.05.18"
+  },
+  {
+    "code": "82.05.18.2002",
+    "name": "Bajo",
+    "level": "VILLAGE",
+    "parentCode": "82.05.18"
+  },
+  {
+    "code": "82.05.18.2003",
+    "name": "Pohea",
+    "level": "VILLAGE",
+    "parentCode": "82.05.18"
+  },
+  {
+    "code": "82.05.18.2004",
+    "name": "Fukweu",
+    "level": "VILLAGE",
+    "parentCode": "82.05.18"
+  },
+  {
+    "code": "82.05.18.2005",
+    "name": "Wainin",
+    "level": "VILLAGE",
+    "parentCode": "82.05.18"
+  },
+  {
+    "code": "82.05.18.2006",
+    "name": "Malbufa",
+    "level": "VILLAGE",
+    "parentCode": "82.05.18"
+  },
+  {
+    "code": "82.05.18.2007",
+    "name": "Fokalik",
+    "level": "VILLAGE",
+    "parentCode": "82.05.18"
+  },
+  {
+    "code": "82.06",
+    "name": "Kabupaten Halmahera Timur",
+    "level": "REGENCY",
+    "parentCode": "82"
+  },
+  {
+    "code": "82.06.01",
+    "name": "Wasile",
+    "level": "DISTRICT",
+    "parentCode": "82.06"
+  },
+  {
+    "code": "82.06.01.2006",
+    "name": "Subaim",
+    "level": "VILLAGE",
+    "parentCode": "82.06.01"
+  },
+  {
+    "code": "82.06.01.2008",
+    "name": "Cemara Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.06.01"
+  },
+  {
+    "code": "82.06.01.2009",
+    "name": "Bumi Restu",
+    "level": "VILLAGE",
+    "parentCode": "82.06.01"
+  },
+  {
+    "code": "82.06.01.2014",
+    "name": "Batu Raja",
+    "level": "VILLAGE",
+    "parentCode": "82.06.01"
+  },
+  {
+    "code": "82.06.01.2015",
+    "name": "Mekar Sari",
+    "level": "VILLAGE",
+    "parentCode": "82.06.01"
+  },
+  {
+    "code": "82.06.01.2016",
+    "name": "Gulapapo",
+    "level": "VILLAGE",
+    "parentCode": "82.06.01"
+  },
+  {
+    "code": "82.06.01.2027",
+    "name": "Waisuba",
+    "level": "VILLAGE",
+    "parentCode": "82.06.01"
+  },
+  {
+    "code": "82.06.02",
+    "name": "Maba",
+    "level": "DISTRICT",
+    "parentCode": "82.06"
+  },
+  {
+    "code": "82.06.02.2001",
+    "name": "Buli",
+    "level": "VILLAGE",
+    "parentCode": "82.06.02"
+  },
+  {
+    "code": "82.06.02.2002",
+    "name": "Buli Asal",
+    "level": "VILLAGE",
+    "parentCode": "82.06.02"
+  },
+  {
+    "code": "82.06.02.2003",
+    "name": "Buli Karya",
+    "level": "VILLAGE",
+    "parentCode": "82.06.02"
+  },
+  {
+    "code": "82.06.02.2011",
+    "name": "Wayafli",
+    "level": "VILLAGE",
+    "parentCode": "82.06.02"
+  },
+  {
+    "code": "82.06.02.2012",
+    "name": "Sailal",
+    "level": "VILLAGE",
+    "parentCode": "82.06.02"
+  },
+  {
+    "code": "82.06.02.2013",
+    "name": "Geltoli",
+    "level": "VILLAGE",
+    "parentCode": "82.06.02"
+  },
+  {
+    "code": "82.06.02.2014",
+    "name": "Pekaulang",
+    "level": "VILLAGE",
+    "parentCode": "82.06.02"
+  },
+  {
+    "code": "82.06.02.2023",
+    "name": "Teluk Buli",
+    "level": "VILLAGE",
+    "parentCode": "82.06.02"
+  },
+  {
+    "code": "82.06.02.2024",
+    "name": "Gamesan",
+    "level": "VILLAGE",
+    "parentCode": "82.06.02"
+  },
+  {
+    "code": "82.06.02.2025",
+    "name": "Baburino",
+    "level": "VILLAGE",
+    "parentCode": "82.06.02"
+  },
+  {
+    "code": "82.06.03",
+    "name": "Maba Selatan",
+    "level": "DISTRICT",
+    "parentCode": "82.06"
+  },
+  {
+    "code": "82.06.03.2001",
+    "name": "Bicoli",
+    "level": "VILLAGE",
+    "parentCode": "82.06.03"
+  },
+  {
+    "code": "82.06.03.2002",
+    "name": "Waci",
+    "level": "VILLAGE",
+    "parentCode": "82.06.03"
+  },
+  {
+    "code": "82.06.03.2003",
+    "name": "Peteley",
+    "level": "VILLAGE",
+    "parentCode": "82.06.03"
+  },
+  {
+    "code": "82.06.03.2004",
+    "name": "Loleolamo",
+    "level": "VILLAGE",
+    "parentCode": "82.06.03"
+  },
+  {
+    "code": "82.06.03.2005",
+    "name": "Gotowasi",
+    "level": "VILLAGE",
+    "parentCode": "82.06.03"
+  },
+  {
+    "code": "82.06.03.2010",
+    "name": "Kasuba",
+    "level": "VILLAGE",
+    "parentCode": "82.06.03"
+  },
+  {
+    "code": "82.06.03.2012",
+    "name": "Momole",
+    "level": "VILLAGE",
+    "parentCode": "82.06.03"
+  },
+  {
+    "code": "82.06.03.2013",
+    "name": "Sil",
+    "level": "VILLAGE",
+    "parentCode": "82.06.03"
+  },
+  {
+    "code": "82.06.03.2014",
+    "name": "Sowoli",
+    "level": "VILLAGE",
+    "parentCode": "82.06.03"
+  },
+  {
+    "code": "82.06.04",
+    "name": "Wasile Selatan",
+    "level": "DISTRICT",
+    "parentCode": "82.06"
+  },
+  {
+    "code": "82.06.04.2001",
+    "name": "Nusa Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.04.2002",
+    "name": "Nusa Ambo",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.04.2003",
+    "name": "Loleba",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.04.2004",
+    "name": "Waijoi",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.04.2005",
+    "name": "Pintatu",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.04.2006",
+    "name": "Minamin",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.04.2007",
+    "name": "Saramaake",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.04.2008",
+    "name": "Fayaul",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.04.2009",
+    "name": "Binagara",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.04.2010",
+    "name": "Wasile",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.04.2011",
+    "name": "Tomares",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.04.2012",
+    "name": "Tabanalou",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.04.2013",
+    "name": "Saolat",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.04.2014",
+    "name": "Nanas",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.04.2015",
+    "name": "Talaga Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.04.2016",
+    "name": "Sondo-Sondo",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.04.2017",
+    "name": "Ino Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.04.2018",
+    "name": "Ake Jawi",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.04.2019",
+    "name": "Ekor",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.04.2020",
+    "name": "Ekorino",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.04.2021",
+    "name": "Jiko Moi",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.04.2022",
+    "name": "Tanure",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.04.2023",
+    "name": "Yawal",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.04.2024",
+    "name": "Bukutio",
+    "level": "VILLAGE",
+    "parentCode": "82.06.04"
+  },
+  {
+    "code": "82.06.05",
+    "name": "Wasile Tengah",
+    "level": "DISTRICT",
+    "parentCode": "82.06"
+  },
+  {
+    "code": "82.06.05.2001",
+    "name": "Hate Tabako",
+    "level": "VILLAGE",
+    "parentCode": "82.06.05"
+  },
+  {
+    "code": "82.06.05.2002",
+    "name": "Lolobata",
+    "level": "VILLAGE",
+    "parentCode": "82.06.05"
+  },
+  {
+    "code": "82.06.05.2003",
+    "name": "Puao",
+    "level": "VILLAGE",
+    "parentCode": "82.06.05"
+  },
+  {
+    "code": "82.06.05.2004",
+    "name": "Foli",
+    "level": "VILLAGE",
+    "parentCode": "82.06.05"
+  },
+  {
+    "code": "82.06.05.2005",
+    "name": "Nyaolako",
+    "level": "VILLAGE",
+    "parentCode": "82.06.05"
+  },
+  {
+    "code": "82.06.05.2006",
+    "name": "Bokimaake",
+    "level": "VILLAGE",
+    "parentCode": "82.06.05"
+  },
+  {
+    "code": "82.06.05.2007",
+    "name": "Silalayang",
+    "level": "VILLAGE",
+    "parentCode": "82.06.05"
+  },
+  {
+    "code": "82.06.05.2008",
+    "name": "Kakaraino",
+    "level": "VILLAGE",
+    "parentCode": "82.06.05"
+  },
+  {
+    "code": "82.06.06",
+    "name": "Wasile Utara",
+    "level": "DISTRICT",
+    "parentCode": "82.06"
+  },
+  {
+    "code": "82.06.06.2001",
+    "name": "Labi-Labi",
+    "level": "VILLAGE",
+    "parentCode": "82.06.06"
+  },
+  {
+    "code": "82.06.06.2002",
+    "name": "Iga",
+    "level": "VILLAGE",
+    "parentCode": "82.06.06"
+  },
+  {
+    "code": "82.06.06.2003",
+    "name": "Tatam",
+    "level": "VILLAGE",
+    "parentCode": "82.06.06"
+  },
+  {
+    "code": "82.06.06.2004",
+    "name": "Marimoi",
+    "level": "VILLAGE",
+    "parentCode": "82.06.06"
+  },
+  {
+    "code": "82.06.06.2005",
+    "name": "Bololo",
+    "level": "VILLAGE",
+    "parentCode": "82.06.06"
+  },
+  {
+    "code": "82.06.06.2006",
+    "name": "Hilaitetor",
+    "level": "VILLAGE",
+    "parentCode": "82.06.06"
+  },
+  {
+    "code": "82.06.06.2007",
+    "name": "Dowongi Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.06.06"
+  },
+  {
+    "code": "82.06.06.2008",
+    "name": "Majiko Tongone",
+    "level": "VILLAGE",
+    "parentCode": "82.06.06"
+  },
+  {
+    "code": "82.06.07",
+    "name": "Wasile Timur",
+    "level": "DISTRICT",
+    "parentCode": "82.06"
+  },
+  {
+    "code": "82.06.07.2001",
+    "name": "Dodaga",
+    "level": "VILLAGE",
+    "parentCode": "82.06.07"
+  },
+  {
+    "code": "82.06.07.2002",
+    "name": "Dakaino",
+    "level": "VILLAGE",
+    "parentCode": "82.06.07"
+  },
+  {
+    "code": "82.06.07.2003",
+    "name": "Akedaga",
+    "level": "VILLAGE",
+    "parentCode": "82.06.07"
+  },
+  {
+    "code": "82.06.07.2004",
+    "name": "Toboino",
+    "level": "VILLAGE",
+    "parentCode": "82.06.07"
+  },
+  {
+    "code": "82.06.07.2005",
+    "name": "Tutuling Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.06.07"
+  },
+  {
+    "code": "82.06.07.2006",
+    "name": "Woka Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.06.07"
+  },
+  {
+    "code": "82.06.07.2007",
+    "name": "Rawamangun",
+    "level": "VILLAGE",
+    "parentCode": "82.06.07"
+  },
+  {
+    "code": "82.06.07.2008",
+    "name": "Sidomulyo",
+    "level": "VILLAGE",
+    "parentCode": "82.06.07"
+  },
+  {
+    "code": "82.06.08",
+    "name": "Maba Tengah",
+    "level": "DISTRICT",
+    "parentCode": "82.06"
+  },
+  {
+    "code": "82.06.08.2001",
+    "name": "Wayamli",
+    "level": "VILLAGE",
+    "parentCode": "82.06.08"
+  },
+  {
+    "code": "82.06.08.2002",
+    "name": "Beringin Lamo",
+    "level": "VILLAGE",
+    "parentCode": "82.06.08"
+  },
+  {
+    "code": "82.06.08.2003",
+    "name": "Miaf",
+    "level": "VILLAGE",
+    "parentCode": "82.06.08"
+  },
+  {
+    "code": "82.06.08.2004",
+    "name": "Bangul",
+    "level": "VILLAGE",
+    "parentCode": "82.06.08"
+  },
+  {
+    "code": "82.06.08.2005",
+    "name": "Marasipno",
+    "level": "VILLAGE",
+    "parentCode": "82.06.08"
+  },
+  {
+    "code": "82.06.08.2006",
+    "name": "Dorolamo",
+    "level": "VILLAGE",
+    "parentCode": "82.06.08"
+  },
+  {
+    "code": "82.06.08.2007",
+    "name": "Maratana Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.06.08"
+  },
+  {
+    "code": "82.06.08.2008",
+    "name": "Bebsili",
+    "level": "VILLAGE",
+    "parentCode": "82.06.08"
+  },
+  {
+    "code": "82.06.08.2009",
+    "name": "Yawanli",
+    "level": "VILLAGE",
+    "parentCode": "82.06.08"
+  },
+  {
+    "code": "82.06.08.2010",
+    "name": "Gaifoli",
+    "level": "VILLAGE",
+    "parentCode": "82.06.08"
+  },
+  {
+    "code": "82.06.08.2011",
+    "name": "Babasaram",
+    "level": "VILLAGE",
+    "parentCode": "82.06.08"
+  },
+  {
+    "code": "82.06.08.2012",
+    "name": "Tatangapu",
+    "level": "VILLAGE",
+    "parentCode": "82.06.08"
+  },
+  {
+    "code": "82.06.09",
+    "name": "Maba Utara",
+    "level": "DISTRICT",
+    "parentCode": "82.06"
+  },
+  {
+    "code": "82.06.09.2001",
+    "name": "Sosolat",
+    "level": "VILLAGE",
+    "parentCode": "82.06.09"
+  },
+  {
+    "code": "82.06.09.2002",
+    "name": "Dorosago",
+    "level": "VILLAGE",
+    "parentCode": "82.06.09"
+  },
+  {
+    "code": "82.06.09.2003",
+    "name": "Patlean",
+    "level": "VILLAGE",
+    "parentCode": "82.06.09"
+  },
+  {
+    "code": "82.06.09.2004",
+    "name": "Lolasita",
+    "level": "VILLAGE",
+    "parentCode": "82.06.09"
+  },
+  {
+    "code": "82.06.09.2005",
+    "name": "Wasileo",
+    "level": "VILLAGE",
+    "parentCode": "82.06.09"
+  },
+  {
+    "code": "82.06.09.2006",
+    "name": "Pumlanga",
+    "level": "VILLAGE",
+    "parentCode": "82.06.09"
+  },
+  {
+    "code": "82.06.09.2007",
+    "name": "Jara-jara",
+    "level": "VILLAGE",
+    "parentCode": "82.06.09"
+  },
+  {
+    "code": "82.06.09.2008",
+    "name": "Doromoi",
+    "level": "VILLAGE",
+    "parentCode": "82.06.09"
+  },
+  {
+    "code": "82.06.09.2009",
+    "name": "Lili",
+    "level": "VILLAGE",
+    "parentCode": "82.06.09"
+  },
+  {
+    "code": "82.06.09.2010",
+    "name": "Patlean Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.06.09"
+  },
+  {
+    "code": "82.06.10",
+    "name": "Kota Maba",
+    "level": "DISTRICT",
+    "parentCode": "82.06"
+  },
+  {
+    "code": "82.06.10.2001",
+    "name": "Wailukum",
+    "level": "VILLAGE",
+    "parentCode": "82.06.10"
+  },
+  {
+    "code": "82.06.10.2002",
+    "name": "Soalaipoh",
+    "level": "VILLAGE",
+    "parentCode": "82.06.10"
+  },
+  {
+    "code": "82.06.10.2003",
+    "name": "Soasangaji",
+    "level": "VILLAGE",
+    "parentCode": "82.06.10"
+  },
+  {
+    "code": "82.06.10.2004",
+    "name": "Soagimalaha",
+    "level": "VILLAGE",
+    "parentCode": "82.06.10"
+  },
+  {
+    "code": "82.06.10.2005",
+    "name": "Maba Sangaji",
+    "level": "VILLAGE",
+    "parentCode": "82.06.10"
+  },
+  {
+    "code": "82.06.10.2006",
+    "name": "Tewil",
+    "level": "VILLAGE",
+    "parentCode": "82.06.10"
+  },
+  {
+    "code": "82.07",
+    "name": "Kabupaten Pulau Morotai",
+    "level": "REGENCY",
+    "parentCode": "82"
+  },
+  {
+    "code": "82.07.01",
+    "name": "Morotai Selatan",
+    "level": "DISTRICT",
+    "parentCode": "82.07"
+  },
+  {
+    "code": "82.07.01.2001",
+    "name": "Gotalamo",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2002",
+    "name": "Daruba",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2003",
+    "name": "Darame",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2004",
+    "name": "Wawama",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2005",
+    "name": "Pandanga",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2006",
+    "name": "Juanga",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2007",
+    "name": "Totodoku",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2008",
+    "name": "Momojiu",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2009",
+    "name": "Sabatai Baru",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2010",
+    "name": "Sabatai Tua",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2011",
+    "name": "Daeo",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2012",
+    "name": "Dehegila",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2013",
+    "name": "Pilowo",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2014",
+    "name": "Galo-Galo",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2015",
+    "name": "Koloray",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2016",
+    "name": "Yayasan",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2017",
+    "name": "Joubela",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2018",
+    "name": "Aha",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2019",
+    "name": "Muhajirin",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2020",
+    "name": "Mandiri",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2021",
+    "name": "Falila",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2022",
+    "name": "Sabala",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2023",
+    "name": "Daeo Majiko",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2024",
+    "name": "Morodadi",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.01.2025",
+    "name": "Nakamura",
+    "level": "VILLAGE",
+    "parentCode": "82.07.01"
+  },
+  {
+    "code": "82.07.02",
+    "name": "Morotai Selatan Barat",
+    "level": "DISTRICT",
+    "parentCode": "82.07"
+  },
+  {
+    "code": "82.07.02.2001",
+    "name": "Wayabula",
+    "level": "VILLAGE",
+    "parentCode": "82.07.02"
+  },
+  {
+    "code": "82.07.02.2002",
+    "name": "Tiley",
+    "level": "VILLAGE",
+    "parentCode": "82.07.02"
+  },
+  {
+    "code": "82.07.02.2003",
+    "name": "Ngele-Ngele Kecil",
+    "level": "VILLAGE",
+    "parentCode": "82.07.02"
+  },
+  {
+    "code": "82.07.02.2004",
+    "name": "Cucumare",
+    "level": "VILLAGE",
+    "parentCode": "82.07.02"
+  },
+  {
+    "code": "82.07.02.2005",
+    "name": "Aru Irian",
+    "level": "VILLAGE",
+    "parentCode": "82.07.02"
+  },
+  {
+    "code": "82.07.02.2006",
+    "name": "Waringin",
+    "level": "VILLAGE",
+    "parentCode": "82.07.02"
+  },
+  {
+    "code": "82.07.02.2007",
+    "name": "Tutuhu",
+    "level": "VILLAGE",
+    "parentCode": "82.07.02"
+  },
+  {
+    "code": "82.07.02.2008",
+    "name": "Cio Gerong",
+    "level": "VILLAGE",
+    "parentCode": "82.07.02"
+  },
+  {
+    "code": "82.07.02.2014",
+    "name": "Ngele-ngele Besar",
+    "level": "VILLAGE",
+    "parentCode": "82.07.02"
+  },
+  {
+    "code": "82.07.02.2015",
+    "name": "Raja",
+    "level": "VILLAGE",
+    "parentCode": "82.07.02"
+  },
+  {
+    "code": "82.07.02.2016",
+    "name": "Cio Dalam",
+    "level": "VILLAGE",
+    "parentCode": "82.07.02"
+  },
+  {
+    "code": "82.07.02.2017",
+    "name": "Usbar Pantai",
+    "level": "VILLAGE",
+    "parentCode": "82.07.02"
+  },
+  {
+    "code": "82.07.02.2018",
+    "name": "Tiley Pantai",
+    "level": "VILLAGE",
+    "parentCode": "82.07.02"
+  },
+  {
+    "code": "82.07.02.2019",
+    "name": "Cio Maloleo",
+    "level": "VILLAGE",
+    "parentCode": "82.07.02"
+  },
+  {
+    "code": "82.07.02.2020",
+    "name": "Bobula",
+    "level": "VILLAGE",
+    "parentCode": "82.07.02"
+  },
+  {
+    "code": "82.07.03",
+    "name": "Morotai Jaya",
+    "level": "DISTRICT",
+    "parentCode": "82.07"
+  },
+  {
+    "code": "82.07.03.2001",
+    "name": "Pangeo",
+    "level": "VILLAGE",
+    "parentCode": "82.07.03"
+  },
+  {
+    "code": "82.07.03.2002",
+    "name": "Sopi",
+    "level": "VILLAGE",
+    "parentCode": "82.07.03"
+  },
+  {
+    "code": "82.07.03.2003",
+    "name": "Bere Bere Kecil",
+    "level": "VILLAGE",
+    "parentCode": "82.07.03"
+  },
+  {
+    "code": "82.07.03.2004",
+    "name": "Titigogoli",
+    "level": "VILLAGE",
+    "parentCode": "82.07.03"
+  },
+  {
+    "code": "82.07.03.2005",
+    "name": "Hapo",
+    "level": "VILLAGE",
+    "parentCode": "82.07.03"
+  },
+  {
+    "code": "82.07.03.2006",
+    "name": "Libano",
+    "level": "VILLAGE",
+    "parentCode": "82.07.03"
+  },
+  {
+    "code": "82.07.03.2007",
+    "name": "Aru",
+    "level": "VILLAGE",
+    "parentCode": "82.07.03"
+  },
+  {
+    "code": "82.07.03.2008",
+    "name": "Towara",
+    "level": "VILLAGE",
+    "parentCode": "82.07.03"
+  },
+  {
+    "code": "82.07.03.2009",
+    "name": "Cendana",
+    "level": "VILLAGE",
+    "parentCode": "82.07.03"
+  },
+  {
+    "code": "82.07.03.2010",
+    "name": "Podimor Padange",
+    "level": "VILLAGE",
+    "parentCode": "82.07.03"
+  },
+  {
+    "code": "82.07.03.2011",
+    "name": "Sopi Majiko",
+    "level": "VILLAGE",
+    "parentCode": "82.07.03"
+  },
+  {
+    "code": "82.07.03.2012",
+    "name": "Gorugo",
+    "level": "VILLAGE",
+    "parentCode": "82.07.03"
+  },
+  {
+    "code": "82.07.03.2013",
+    "name": "Loleo",
+    "level": "VILLAGE",
+    "parentCode": "82.07.03"
+  },
+  {
+    "code": "82.07.03.2014",
+    "name": "Cempaka",
+    "level": "VILLAGE",
+    "parentCode": "82.07.03"
+  },
+  {
+    "code": "82.07.04",
+    "name": "Morotai Utara",
+    "level": "DISTRICT",
+    "parentCode": "82.07"
+  },
+  {
+    "code": "82.07.04.2001",
+    "name": "Bere-bere",
+    "level": "VILLAGE",
+    "parentCode": "82.07.04"
+  },
+  {
+    "code": "82.07.04.2002",
+    "name": "Sakita",
+    "level": "VILLAGE",
+    "parentCode": "82.07.04"
+  },
+  {
+    "code": "82.07.04.2003",
+    "name": "Tawakali",
+    "level": "VILLAGE",
+    "parentCode": "82.07.04"
+  },
+  {
+    "code": "82.07.04.2004",
+    "name": "Yao",
+    "level": "VILLAGE",
+    "parentCode": "82.07.04"
+  },
+  {
+    "code": "82.07.04.2005",
+    "name": "Bido",
+    "level": "VILLAGE",
+    "parentCode": "82.07.04"
+  },
+  {
+    "code": "82.07.04.2006",
+    "name": "Gorua",
+    "level": "VILLAGE",
+    "parentCode": "82.07.04"
+  },
+  {
+    "code": "82.07.04.2007",
+    "name": "Korago",
+    "level": "VILLAGE",
+    "parentCode": "82.07.04"
+  },
+  {
+    "code": "82.07.04.2008",
+    "name": "Lusuo",
+    "level": "VILLAGE",
+    "parentCode": "82.07.04"
+  },
+  {
+    "code": "82.07.04.2009",
+    "name": "Kenari",
+    "level": "VILLAGE",
+    "parentCode": "82.07.04"
+  },
+  {
+    "code": "82.07.04.2010",
+    "name": "Loleo Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.07.04"
+  },
+  {
+    "code": "82.07.04.2011",
+    "name": "Maba",
+    "level": "VILLAGE",
+    "parentCode": "82.07.04"
+  },
+  {
+    "code": "82.07.04.2012",
+    "name": "Tanjung Saleh",
+    "level": "VILLAGE",
+    "parentCode": "82.07.04"
+  },
+  {
+    "code": "82.07.04.2013",
+    "name": "Goa Hira",
+    "level": "VILLAGE",
+    "parentCode": "82.07.04"
+  },
+  {
+    "code": "82.07.04.2014",
+    "name": "Gorua Selatan",
+    "level": "VILLAGE",
+    "parentCode": "82.07.04"
+  },
+  {
+    "code": "82.07.05",
+    "name": "Morotai Timur",
+    "level": "DISTRICT",
+    "parentCode": "82.07"
+  },
+  {
+    "code": "82.07.05.2001",
+    "name": "Buho-Buho",
+    "level": "VILLAGE",
+    "parentCode": "82.07.05"
+  },
+  {
+    "code": "82.07.05.2002",
+    "name": "Wewemo",
+    "level": "VILLAGE",
+    "parentCode": "82.07.05"
+  },
+  {
+    "code": "82.07.05.2003",
+    "name": "Mira",
+    "level": "VILLAGE",
+    "parentCode": "82.07.05"
+  },
+  {
+    "code": "82.07.05.2004",
+    "name": "Lifao",
+    "level": "VILLAGE",
+    "parentCode": "82.07.05"
+  },
+  {
+    "code": "82.07.05.2005",
+    "name": "Rahmat",
+    "level": "VILLAGE",
+    "parentCode": "82.07.05"
+  },
+  {
+    "code": "82.07.05.2006",
+    "name": "Sambiki Tua",
+    "level": "VILLAGE",
+    "parentCode": "82.07.05"
+  },
+  {
+    "code": "82.07.05.2007",
+    "name": "Sangowo",
+    "level": "VILLAGE",
+    "parentCode": "82.07.05"
+  },
+  {
+    "code": "82.07.05.2008",
+    "name": "Sambiki Baru",
+    "level": "VILLAGE",
+    "parentCode": "82.07.05"
+  },
+  {
+    "code": "82.07.05.2009",
+    "name": "Sangowo Barat",
+    "level": "VILLAGE",
+    "parentCode": "82.07.05"
+  },
+  {
+    "code": "82.07.05.2010",
+    "name": "Sangowo Timur",
+    "level": "VILLAGE",
+    "parentCode": "82.07.05"
+  },
+  {
+    "code": "82.07.05.2011",
+    "name": "Seseli Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.07.05"
+  },
+  {
+    "code": "82.07.05.2012",
+    "name": "Hino",
+    "level": "VILLAGE",
+    "parentCode": "82.07.05"
+  },
+  {
+    "code": "82.07.05.2013",
+    "name": "Gosoma Maluku",
+    "level": "VILLAGE",
+    "parentCode": "82.07.05"
+  },
+  {
+    "code": "82.07.05.2014",
+    "name": "Gamlamo",
+    "level": "VILLAGE",
+    "parentCode": "82.07.05"
+  },
+  {
+    "code": "82.07.05.2015",
+    "name": "Doku Mira",
+    "level": "VILLAGE",
+    "parentCode": "82.07.05"
+  },
+  {
+    "code": "82.07.06",
+    "name": "Pulau Rao",
+    "level": "DISTRICT",
+    "parentCode": "82.07"
+  },
+  {
+    "code": "82.07.06.2001",
+    "name": "Posi-Posi",
+    "level": "VILLAGE",
+    "parentCode": "82.07.06"
+  },
+  {
+    "code": "82.07.06.2002",
+    "name": "Aru Burung",
+    "level": "VILLAGE",
+    "parentCode": "82.07.06"
+  },
+  {
+    "code": "82.07.06.2003",
+    "name": "Lou Madoro",
+    "level": "VILLAGE",
+    "parentCode": "82.07.06"
+  },
+  {
+    "code": "82.07.06.2004",
+    "name": "Leo-Leo",
+    "level": "VILLAGE",
+    "parentCode": "82.07.06"
+  },
+  {
+    "code": "82.07.06.2005",
+    "name": "Sami Nyamau",
+    "level": "VILLAGE",
+    "parentCode": "82.07.06"
+  },
+  {
+    "code": "82.08",
+    "name": "Kabupaten Pulau Taliabu",
+    "level": "REGENCY",
+    "parentCode": "82"
+  },
+  {
+    "code": "82.08.01",
+    "name": "Taliabu Barat",
+    "level": "DISTRICT",
+    "parentCode": "82.08"
+  },
+  {
+    "code": "82.08.01.2001",
+    "name": "Bobong",
+    "level": "VILLAGE",
+    "parentCode": "82.08.01"
+  },
+  {
+    "code": "82.08.01.2002",
+    "name": "Talo",
+    "level": "VILLAGE",
+    "parentCode": "82.08.01"
+  },
+  {
+    "code": "82.08.01.2003",
+    "name": "Kawalo",
+    "level": "VILLAGE",
+    "parentCode": "82.08.01"
+  },
+  {
+    "code": "82.08.01.2004",
+    "name": "Limbo",
+    "level": "VILLAGE",
+    "parentCode": "82.08.01"
+  },
+  {
+    "code": "82.08.01.2005",
+    "name": "Meranti Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.08.01"
+  },
+  {
+    "code": "82.08.01.2006",
+    "name": "Kramat",
+    "level": "VILLAGE",
+    "parentCode": "82.08.01"
+  },
+  {
+    "code": "82.08.01.2007",
+    "name": "Holbota",
+    "level": "VILLAGE",
+    "parentCode": "82.08.01"
+  },
+  {
+    "code": "82.08.01.2008",
+    "name": "Pancoran",
+    "level": "VILLAGE",
+    "parentCode": "82.08.01"
+  },
+  {
+    "code": "82.08.01.2009",
+    "name": "Wayo",
+    "level": "VILLAGE",
+    "parentCode": "82.08.01"
+  },
+  {
+    "code": "82.08.01.2010",
+    "name": "Loho Bubba",
+    "level": "VILLAGE",
+    "parentCode": "82.08.01"
+  },
+  {
+    "code": "82.08.01.2011",
+    "name": "Kilong",
+    "level": "VILLAGE",
+    "parentCode": "82.08.01"
+  },
+  {
+    "code": "82.08.01.2012",
+    "name": "Ratahaya",
+    "level": "VILLAGE",
+    "parentCode": "82.08.01"
+  },
+  {
+    "code": "82.08.01.2013",
+    "name": "Woyo",
+    "level": "VILLAGE",
+    "parentCode": "82.08.01"
+  },
+  {
+    "code": "82.08.02",
+    "name": "Taliabu Barat Laut",
+    "level": "DISTRICT",
+    "parentCode": "82.08"
+  },
+  {
+    "code": "82.08.02.2001",
+    "name": "Nggele",
+    "level": "VILLAGE",
+    "parentCode": "82.08.02"
+  },
+  {
+    "code": "82.08.02.2002",
+    "name": "Salati",
+    "level": "VILLAGE",
+    "parentCode": "82.08.02"
+  },
+  {
+    "code": "82.08.02.2003",
+    "name": "Beringin Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.08.02"
+  },
+  {
+    "code": "82.08.02.2004",
+    "name": "Kasango",
+    "level": "VILLAGE",
+    "parentCode": "82.08.02"
+  },
+  {
+    "code": "82.08.02.2005",
+    "name": "Onemay",
+    "level": "VILLAGE",
+    "parentCode": "82.08.02"
+  },
+  {
+    "code": "82.08.03",
+    "name": "Lede",
+    "level": "DISTRICT",
+    "parentCode": "82.08"
+  },
+  {
+    "code": "82.08.03.2001",
+    "name": "Lede",
+    "level": "VILLAGE",
+    "parentCode": "82.08.03"
+  },
+  {
+    "code": "82.08.03.2002",
+    "name": "Todoli",
+    "level": "VILLAGE",
+    "parentCode": "82.08.03"
+  },
+  {
+    "code": "82.08.03.2003",
+    "name": "Tolong",
+    "level": "VILLAGE",
+    "parentCode": "82.08.03"
+  },
+  {
+    "code": "82.08.03.2004",
+    "name": "Langganu",
+    "level": "VILLAGE",
+    "parentCode": "82.08.03"
+  },
+  {
+    "code": "82.08.03.2005",
+    "name": "Balohang",
+    "level": "VILLAGE",
+    "parentCode": "82.08.03"
+  },
+  {
+    "code": "82.08.04",
+    "name": "Taliabu Utara",
+    "level": "DISTRICT",
+    "parentCode": "82.08"
+  },
+  {
+    "code": "82.08.04.2001",
+    "name": "Mananga",
+    "level": "VILLAGE",
+    "parentCode": "82.08.04"
+  },
+  {
+    "code": "82.08.04.2002",
+    "name": "Tanjung Una",
+    "level": "VILLAGE",
+    "parentCode": "82.08.04"
+  },
+  {
+    "code": "82.08.04.2003",
+    "name": "Jorjoga",
+    "level": "VILLAGE",
+    "parentCode": "82.08.04"
+  },
+  {
+    "code": "82.08.04.2004",
+    "name": "Gela",
+    "level": "VILLAGE",
+    "parentCode": "82.08.04"
+  },
+  {
+    "code": "82.08.04.2005",
+    "name": "Minton",
+    "level": "VILLAGE",
+    "parentCode": "82.08.04"
+  },
+  {
+    "code": "82.08.04.2006",
+    "name": "Nunca",
+    "level": "VILLAGE",
+    "parentCode": "82.08.04"
+  },
+  {
+    "code": "82.08.04.2007",
+    "name": "Sahu",
+    "level": "VILLAGE",
+    "parentCode": "82.08.04"
+  },
+  {
+    "code": "82.08.04.2008",
+    "name": "Bua Mbono",
+    "level": "VILLAGE",
+    "parentCode": "82.08.04"
+  },
+  {
+    "code": "82.08.04.2009",
+    "name": "Hai",
+    "level": "VILLAGE",
+    "parentCode": "82.08.04"
+  },
+  {
+    "code": "82.08.04.2010",
+    "name": "Tikong",
+    "level": "VILLAGE",
+    "parentCode": "82.08.04"
+  },
+  {
+    "code": "82.08.04.2011",
+    "name": "Dege",
+    "level": "VILLAGE",
+    "parentCode": "82.08.04"
+  },
+  {
+    "code": "82.08.04.2012",
+    "name": "Air Bulan",
+    "level": "VILLAGE",
+    "parentCode": "82.08.04"
+  },
+  {
+    "code": "82.08.04.2013",
+    "name": "Air Kalimat",
+    "level": "VILLAGE",
+    "parentCode": "82.08.04"
+  },
+  {
+    "code": "82.08.04.2014",
+    "name": "Ufung",
+    "level": "VILLAGE",
+    "parentCode": "82.08.04"
+  },
+  {
+    "code": "82.08.04.2015",
+    "name": "Padang",
+    "level": "VILLAGE",
+    "parentCode": "82.08.04"
+  },
+  {
+    "code": "82.08.04.2016",
+    "name": "Natang Kuning",
+    "level": "VILLAGE",
+    "parentCode": "82.08.04"
+  },
+  {
+    "code": "82.08.04.2017",
+    "name": "Nunu",
+    "level": "VILLAGE",
+    "parentCode": "82.08.04"
+  },
+  {
+    "code": "82.08.04.2018",
+    "name": "London",
+    "level": "VILLAGE",
+    "parentCode": "82.08.04"
+  },
+  {
+    "code": "82.08.04.2019",
+    "name": "Wahe",
+    "level": "VILLAGE",
+    "parentCode": "82.08.04"
+  },
+  {
+    "code": "82.08.05",
+    "name": "Taliabu Timur",
+    "level": "DISTRICT",
+    "parentCode": "82.08"
+  },
+  {
+    "code": "82.08.05.2001",
+    "name": "Penu",
+    "level": "VILLAGE",
+    "parentCode": "82.08.05"
+  },
+  {
+    "code": "82.08.05.2002",
+    "name": "Parigi",
+    "level": "VILLAGE",
+    "parentCode": "82.08.05"
+  },
+  {
+    "code": "82.08.05.2003",
+    "name": "Samuya",
+    "level": "VILLAGE",
+    "parentCode": "82.08.05"
+  },
+  {
+    "code": "82.08.05.2004",
+    "name": "Tubang",
+    "level": "VILLAGE",
+    "parentCode": "82.08.05"
+  },
+  {
+    "code": "82.08.06",
+    "name": "Taliabu Timur Selatan",
+    "level": "DISTRICT",
+    "parentCode": "82.08"
+  },
+  {
+    "code": "82.08.06.2001",
+    "name": "Waikadai",
+    "level": "VILLAGE",
+    "parentCode": "82.08.06"
+  },
+  {
+    "code": "82.08.06.2002",
+    "name": "Losseng",
+    "level": "VILLAGE",
+    "parentCode": "82.08.06"
+  },
+  {
+    "code": "82.08.06.2003",
+    "name": "Kawadang",
+    "level": "VILLAGE",
+    "parentCode": "82.08.06"
+  },
+  {
+    "code": "82.08.06.2004",
+    "name": "Sofan",
+    "level": "VILLAGE",
+    "parentCode": "82.08.06"
+  },
+  {
+    "code": "82.08.06.2005",
+    "name": "Mantarara",
+    "level": "VILLAGE",
+    "parentCode": "82.08.06"
+  },
+  {
+    "code": "82.08.06.2006",
+    "name": "Belo",
+    "level": "VILLAGE",
+    "parentCode": "82.08.06"
+  },
+  {
+    "code": "82.08.06.2007",
+    "name": "Kamaya",
+    "level": "VILLAGE",
+    "parentCode": "82.08.06"
+  },
+  {
+    "code": "82.08.06.2008",
+    "name": "Waikoka",
+    "level": "VILLAGE",
+    "parentCode": "82.08.06"
+  },
+  {
+    "code": "82.08.06.2009",
+    "name": "Waikadai Sula",
+    "level": "VILLAGE",
+    "parentCode": "82.08.06"
+  },
+  {
+    "code": "82.08.07",
+    "name": "Taliabu Selatan",
+    "level": "DISTRICT",
+    "parentCode": "82.08"
+  },
+  {
+    "code": "82.08.07.2001",
+    "name": "Bahu",
+    "level": "VILLAGE",
+    "parentCode": "82.08.07"
+  },
+  {
+    "code": "82.08.07.2002",
+    "name": "Bapenu",
+    "level": "VILLAGE",
+    "parentCode": "82.08.07"
+  },
+  {
+    "code": "82.08.07.2003",
+    "name": "Kilo",
+    "level": "VILLAGE",
+    "parentCode": "82.08.07"
+  },
+  {
+    "code": "82.08.07.2004",
+    "name": "Pancado",
+    "level": "VILLAGE",
+    "parentCode": "82.08.07"
+  },
+  {
+    "code": "82.08.07.2005",
+    "name": "Nggaki",
+    "level": "VILLAGE",
+    "parentCode": "82.08.07"
+  },
+  {
+    "code": "82.08.07.2006",
+    "name": "Sumbong",
+    "level": "VILLAGE",
+    "parentCode": "82.08.07"
+  },
+  {
+    "code": "82.08.07.2007",
+    "name": "Maluli",
+    "level": "VILLAGE",
+    "parentCode": "82.08.07"
+  },
+  {
+    "code": "82.08.07.2008",
+    "name": "Galebo",
+    "level": "VILLAGE",
+    "parentCode": "82.08.07"
+  },
+  {
+    "code": "82.08.07.2009",
+    "name": "Nggoli",
+    "level": "VILLAGE",
+    "parentCode": "82.08.07"
+  },
+  {
+    "code": "82.08.08",
+    "name": "Tabona",
+    "level": "DISTRICT",
+    "parentCode": "82.08"
+  },
+  {
+    "code": "82.08.08.2001",
+    "name": "Tabona",
+    "level": "VILLAGE",
+    "parentCode": "82.08.08"
+  },
+  {
+    "code": "82.08.08.2002",
+    "name": "Kabunu",
+    "level": "VILLAGE",
+    "parentCode": "82.08.08"
+  },
+  {
+    "code": "82.08.08.2003",
+    "name": "Peleng",
+    "level": "VILLAGE",
+    "parentCode": "82.08.08"
+  },
+  {
+    "code": "82.08.08.2004",
+    "name": "Fayaunana",
+    "level": "VILLAGE",
+    "parentCode": "82.08.08"
+  },
+  {
+    "code": "82.08.08.2005",
+    "name": "Habunuha",
+    "level": "VILLAGE",
+    "parentCode": "82.08.08"
+  },
+  {
+    "code": "82.08.08.2006",
+    "name": "Kataga",
+    "level": "VILLAGE",
+    "parentCode": "82.08.08"
+  },
+  {
+    "code": "82.08.08.2007",
+    "name": "Wolio",
+    "level": "VILLAGE",
+    "parentCode": "82.08.08"
+  },
+  {
+    "code": "82.71",
+    "name": "Kota Ternate",
+    "level": "REGENCY",
+    "parentCode": "82"
+  },
+  {
+    "code": "82.71.01",
+    "name": "Pulau Ternate",
+    "level": "DISTRICT",
+    "parentCode": "82.71"
+  },
+  {
+    "code": "82.71.01.1001",
+    "name": "Jambula",
+    "level": "VILLAGE",
+    "parentCode": "82.71.01"
+  },
+  {
+    "code": "82.71.01.1002",
+    "name": "Foramadiahi",
+    "level": "VILLAGE",
+    "parentCode": "82.71.01"
+  },
+  {
+    "code": "82.71.01.1003",
+    "name": "Kastela",
+    "level": "VILLAGE",
+    "parentCode": "82.71.01"
+  },
+  {
+    "code": "82.71.01.1004",
+    "name": "Rua",
+    "level": "VILLAGE",
+    "parentCode": "82.71.01"
+  },
+  {
+    "code": "82.71.01.1005",
+    "name": "Afe Taduma",
+    "level": "VILLAGE",
+    "parentCode": "82.71.01"
+  },
+  {
+    "code": "82.71.01.1019",
+    "name": "Dorpedu",
+    "level": "VILLAGE",
+    "parentCode": "82.71.01"
+  },
+  {
+    "code": "82.71.02",
+    "name": "Kota Ternate Selatan",
+    "level": "DISTRICT",
+    "parentCode": "82.71"
+  },
+  {
+    "code": "82.71.02.1001",
+    "name": "Sasa",
+    "level": "VILLAGE",
+    "parentCode": "82.71.02"
+  },
+  {
+    "code": "82.71.02.1002",
+    "name": "Gambesi",
+    "level": "VILLAGE",
+    "parentCode": "82.71.02"
+  },
+  {
+    "code": "82.71.02.1003",
+    "name": "Fitu",
+    "level": "VILLAGE",
+    "parentCode": "82.71.02"
+  },
+  {
+    "code": "82.71.02.1004",
+    "name": "Kalumata",
+    "level": "VILLAGE",
+    "parentCode": "82.71.02"
+  },
+  {
+    "code": "82.71.02.1005",
+    "name": "Kayu Merah",
+    "level": "VILLAGE",
+    "parentCode": "82.71.02"
+  },
+  {
+    "code": "82.71.02.1006",
+    "name": "Bastiong Talangame",
+    "level": "VILLAGE",
+    "parentCode": "82.71.02"
+  },
+  {
+    "code": "82.71.02.1007",
+    "name": "Ubo-Ubo",
+    "level": "VILLAGE",
+    "parentCode": "82.71.02"
+  },
+  {
+    "code": "82.71.02.1008",
+    "name": "Mangga Dua",
+    "level": "VILLAGE",
+    "parentCode": "82.71.02"
+  },
+  {
+    "code": "82.71.02.1009",
+    "name": "Jati",
+    "level": "VILLAGE",
+    "parentCode": "82.71.02"
+  },
+  {
+    "code": "82.71.02.1010",
+    "name": "Toboko",
+    "level": "VILLAGE",
+    "parentCode": "82.71.02"
+  },
+  {
+    "code": "82.71.02.1011",
+    "name": "Tanah Tinggi",
+    "level": "VILLAGE",
+    "parentCode": "82.71.02"
+  },
+  {
+    "code": "82.71.02.1020",
+    "name": "Tanah Tinggi Barat",
+    "level": "VILLAGE",
+    "parentCode": "82.71.02"
+  },
+  {
+    "code": "82.71.02.1021",
+    "name": "Mangga Dua Utara",
+    "level": "VILLAGE",
+    "parentCode": "82.71.02"
+  },
+  {
+    "code": "82.71.02.1022",
+    "name": "Jati Perumnas",
+    "level": "VILLAGE",
+    "parentCode": "82.71.02"
+  },
+  {
+    "code": "82.71.02.1023",
+    "name": "Tabona",
+    "level": "VILLAGE",
+    "parentCode": "82.71.02"
+  },
+  {
+    "code": "82.71.02.1024",
+    "name": "Bastiong Karance",
+    "level": "VILLAGE",
+    "parentCode": "82.71.02"
+  },
+  {
+    "code": "82.71.02.1025",
+    "name": "Ngade",
+    "level": "VILLAGE",
+    "parentCode": "82.71.02"
+  },
+  {
+    "code": "82.71.03",
+    "name": "Kota Ternate Utara",
+    "level": "DISTRICT",
+    "parentCode": "82.71"
+  },
+  {
+    "code": "82.71.03.1007",
+    "name": "Soa",
+    "level": "VILLAGE",
+    "parentCode": "82.71.03"
+  },
+  {
+    "code": "82.71.03.1008",
+    "name": "Soa Sio",
+    "level": "VILLAGE",
+    "parentCode": "82.71.03"
+  },
+  {
+    "code": "82.71.03.1009",
+    "name": "Kasturian",
+    "level": "VILLAGE",
+    "parentCode": "82.71.03"
+  },
+  {
+    "code": "82.71.03.1010",
+    "name": "Salero",
+    "level": "VILLAGE",
+    "parentCode": "82.71.03"
+  },
+  {
+    "code": "82.71.03.1011",
+    "name": "Toboleu",
+    "level": "VILLAGE",
+    "parentCode": "82.71.03"
+  },
+  {
+    "code": "82.71.03.1012",
+    "name": "Sangaji",
+    "level": "VILLAGE",
+    "parentCode": "82.71.03"
+  },
+  {
+    "code": "82.71.03.1013",
+    "name": "Dufa-Dufa",
+    "level": "VILLAGE",
+    "parentCode": "82.71.03"
+  },
+  {
+    "code": "82.71.03.1014",
+    "name": "Tafure",
+    "level": "VILLAGE",
+    "parentCode": "82.71.03"
+  },
+  {
+    "code": "82.71.03.1015",
+    "name": "Tabam",
+    "level": "VILLAGE",
+    "parentCode": "82.71.03"
+  },
+  {
+    "code": "82.71.03.1016",
+    "name": "Sango",
+    "level": "VILLAGE",
+    "parentCode": "82.71.03"
+  },
+  {
+    "code": "82.71.03.1017",
+    "name": "Tarau",
+    "level": "VILLAGE",
+    "parentCode": "82.71.03"
+  },
+  {
+    "code": "82.71.03.1019",
+    "name": "Sangaji utara",
+    "level": "VILLAGE",
+    "parentCode": "82.71.03"
+  },
+  {
+    "code": "82.71.03.1020",
+    "name": "Akehuda",
+    "level": "VILLAGE",
+    "parentCode": "82.71.03"
+  },
+  {
+    "code": "82.71.03.1021",
+    "name": "Tubo",
+    "level": "VILLAGE",
+    "parentCode": "82.71.03"
+  },
+  {
+    "code": "82.71.04",
+    "name": "Moti",
+    "level": "DISTRICT",
+    "parentCode": "82.71"
+  },
+  {
+    "code": "82.71.04.1001",
+    "name": "Takofi",
+    "level": "VILLAGE",
+    "parentCode": "82.71.04"
+  },
+  {
+    "code": "82.71.04.1002",
+    "name": "Moti Kota",
+    "level": "VILLAGE",
+    "parentCode": "82.71.04"
+  },
+  {
+    "code": "82.71.04.1003",
+    "name": "Tafamutu",
+    "level": "VILLAGE",
+    "parentCode": "82.71.04"
+  },
+  {
+    "code": "82.71.04.1004",
+    "name": "Tafaga",
+    "level": "VILLAGE",
+    "parentCode": "82.71.04"
+  },
+  {
+    "code": "82.71.04.1006",
+    "name": "Figur",
+    "level": "VILLAGE",
+    "parentCode": "82.71.04"
+  },
+  {
+    "code": "82.71.04.1007",
+    "name": "Tadenas",
+    "level": "VILLAGE",
+    "parentCode": "82.71.04"
+  },
+  {
+    "code": "82.71.05",
+    "name": "Pulau Batang Dua",
+    "level": "DISTRICT",
+    "parentCode": "82.71"
+  },
+  {
+    "code": "82.71.05.1001",
+    "name": "Mayau",
+    "level": "VILLAGE",
+    "parentCode": "82.71.05"
+  },
+  {
+    "code": "82.71.05.1002",
+    "name": "Tifure",
+    "level": "VILLAGE",
+    "parentCode": "82.71.05"
+  },
+  {
+    "code": "82.71.05.1003",
+    "name": "Lelewi",
+    "level": "VILLAGE",
+    "parentCode": "82.71.05"
+  },
+  {
+    "code": "82.71.05.1004",
+    "name": "Bido",
+    "level": "VILLAGE",
+    "parentCode": "82.71.05"
+  },
+  {
+    "code": "82.71.05.1005",
+    "name": "Pantai Sagu",
+    "level": "VILLAGE",
+    "parentCode": "82.71.05"
+  },
+  {
+    "code": "82.71.05.1006",
+    "name": "Perum Bersatu",
+    "level": "VILLAGE",
+    "parentCode": "82.71.05"
+  },
+  {
+    "code": "82.71.06",
+    "name": "Kota Ternate Tengah",
+    "level": "DISTRICT",
+    "parentCode": "82.71"
+  },
+  {
+    "code": "82.71.06.1001",
+    "name": "Takoma",
+    "level": "VILLAGE",
+    "parentCode": "82.71.06"
+  },
+  {
+    "code": "82.71.06.1002",
+    "name": "Tanah Raja",
+    "level": "VILLAGE",
+    "parentCode": "82.71.06"
+  },
+  {
+    "code": "82.71.06.1003",
+    "name": "Muhajirin",
+    "level": "VILLAGE",
+    "parentCode": "82.71.06"
+  },
+  {
+    "code": "82.71.06.1004",
+    "name": "Stadion",
+    "level": "VILLAGE",
+    "parentCode": "82.71.06"
+  },
+  {
+    "code": "82.71.06.1005",
+    "name": "Maliaro",
+    "level": "VILLAGE",
+    "parentCode": "82.71.06"
+  },
+  {
+    "code": "82.71.06.1006",
+    "name": "Kampung Pisang",
+    "level": "VILLAGE",
+    "parentCode": "82.71.06"
+  },
+  {
+    "code": "82.71.06.1007",
+    "name": "Marikurubu",
+    "level": "VILLAGE",
+    "parentCode": "82.71.06"
+  },
+  {
+    "code": "82.71.06.1008",
+    "name": "Kota Baru",
+    "level": "VILLAGE",
+    "parentCode": "82.71.06"
+  },
+  {
+    "code": "82.71.06.1009",
+    "name": "Gamalama",
+    "level": "VILLAGE",
+    "parentCode": "82.71.06"
+  },
+  {
+    "code": "82.71.06.1010",
+    "name": "Kalumpang",
+    "level": "VILLAGE",
+    "parentCode": "82.71.06"
+  },
+  {
+    "code": "82.71.06.1011",
+    "name": "Moya",
+    "level": "VILLAGE",
+    "parentCode": "82.71.06"
+  },
+  {
+    "code": "82.71.06.1012",
+    "name": "Santiong",
+    "level": "VILLAGE",
+    "parentCode": "82.71.06"
+  },
+  {
+    "code": "82.71.06.1013",
+    "name": "Makassar Barat",
+    "level": "VILLAGE",
+    "parentCode": "82.71.06"
+  },
+  {
+    "code": "82.71.06.1014",
+    "name": "Makassar Timur",
+    "level": "VILLAGE",
+    "parentCode": "82.71.06"
+  },
+  {
+    "code": "82.71.06.1015",
+    "name": "Salahuddin",
+    "level": "VILLAGE",
+    "parentCode": "82.71.06"
+  },
+  {
+    "code": "82.71.06.1016",
+    "name": "Tongole",
+    "level": "VILLAGE",
+    "parentCode": "82.71.06"
+  },
+  {
+    "code": "82.71.07",
+    "name": "Pulau Hiri",
+    "level": "DISTRICT",
+    "parentCode": "82.71"
+  },
+  {
+    "code": "82.71.07.1001",
+    "name": "Faudu",
+    "level": "VILLAGE",
+    "parentCode": "82.71.07"
+  },
+  {
+    "code": "82.71.07.1002",
+    "name": "Tomajiko",
+    "level": "VILLAGE",
+    "parentCode": "82.71.07"
+  },
+  {
+    "code": "82.71.07.1003",
+    "name": "Dorari Isa",
+    "level": "VILLAGE",
+    "parentCode": "82.71.07"
+  },
+  {
+    "code": "82.71.07.1004",
+    "name": "Togolobe",
+    "level": "VILLAGE",
+    "parentCode": "82.71.07"
+  },
+  {
+    "code": "82.71.07.1005",
+    "name": "Mado",
+    "level": "VILLAGE",
+    "parentCode": "82.71.07"
+  },
+  {
+    "code": "82.71.07.1006",
+    "name": "Tafraka",
+    "level": "VILLAGE",
+    "parentCode": "82.71.07"
+  },
+  {
+    "code": "82.71.08",
+    "name": "Ternate Barat",
+    "level": "DISTRICT",
+    "parentCode": "82.71"
+  },
+  {
+    "code": "82.71.08.1001",
+    "name": "Tagafo",
+    "level": "VILLAGE",
+    "parentCode": "82.71.08"
+  },
+  {
+    "code": "82.71.08.1002",
+    "name": "Loto",
+    "level": "VILLAGE",
+    "parentCode": "82.71.08"
+  },
+  {
+    "code": "82.71.08.1003",
+    "name": "Takome",
+    "level": "VILLAGE",
+    "parentCode": "82.71.08"
+  },
+  {
+    "code": "82.71.08.1004",
+    "name": "Sulamadaha",
+    "level": "VILLAGE",
+    "parentCode": "82.71.08"
+  },
+  {
+    "code": "82.71.08.1005",
+    "name": "Tobololo",
+    "level": "VILLAGE",
+    "parentCode": "82.71.08"
+  },
+  {
+    "code": "82.71.08.1006",
+    "name": "Bula",
+    "level": "VILLAGE",
+    "parentCode": "82.71.08"
+  },
+  {
+    "code": "82.71.08.1007",
+    "name": "Kulaba",
+    "level": "VILLAGE",
+    "parentCode": "82.71.08"
+  },
+  {
+    "code": "82.72",
+    "name": "Kota Tidore Kepulauan",
+    "level": "REGENCY",
+    "parentCode": "82"
+  },
+  {
+    "code": "82.72.01",
+    "name": "Tidore",
+    "level": "DISTRICT",
+    "parentCode": "82.72"
+  },
+  {
+    "code": "82.72.01.1001",
+    "name": "Soasio",
+    "level": "VILLAGE",
+    "parentCode": "82.72.01"
+  },
+  {
+    "code": "82.72.01.1002",
+    "name": "Gamtufkange",
+    "level": "VILLAGE",
+    "parentCode": "82.72.01"
+  },
+  {
+    "code": "82.72.01.1003",
+    "name": "Indonesiana",
+    "level": "VILLAGE",
+    "parentCode": "82.72.01"
+  },
+  {
+    "code": "82.72.01.1005",
+    "name": "Seli",
+    "level": "VILLAGE",
+    "parentCode": "82.72.01"
+  },
+  {
+    "code": "82.72.01.1006",
+    "name": "Soadara",
+    "level": "VILLAGE",
+    "parentCode": "82.72.01"
+  },
+  {
+    "code": "82.72.01.1007",
+    "name": "Topo",
+    "level": "VILLAGE",
+    "parentCode": "82.72.01"
+  },
+  {
+    "code": "82.72.01.1008",
+    "name": "Gurabunga",
+    "level": "VILLAGE",
+    "parentCode": "82.72.01"
+  },
+  {
+    "code": "82.72.01.1012",
+    "name": "Goto",
+    "level": "VILLAGE",
+    "parentCode": "82.72.01"
+  },
+  {
+    "code": "82.72.01.1013",
+    "name": "Tomagoba",
+    "level": "VILLAGE",
+    "parentCode": "82.72.01"
+  },
+  {
+    "code": "82.72.01.1014",
+    "name": "Folarora",
+    "level": "VILLAGE",
+    "parentCode": "82.72.01"
+  },
+  {
+    "code": "82.72.01.1015",
+    "name": "Topo Tiga",
+    "level": "VILLAGE",
+    "parentCode": "82.72.01"
+  },
+  {
+    "code": "82.72.01.1016",
+    "name": "Tambula",
+    "level": "VILLAGE",
+    "parentCode": "82.72.01"
+  },
+  {
+    "code": "82.72.01.1017",
+    "name": "Tuguwaji",
+    "level": "VILLAGE",
+    "parentCode": "82.72.01"
+  },
+  {
+    "code": "82.72.02",
+    "name": "Oba Utara",
+    "level": "DISTRICT",
+    "parentCode": "82.72"
+  },
+  {
+    "code": "82.72.02.1002",
+    "name": "Guraping",
+    "level": "VILLAGE",
+    "parentCode": "82.72.02"
+  },
+  {
+    "code": "82.72.02.1003",
+    "name": "Sofifi",
+    "level": "VILLAGE",
+    "parentCode": "82.72.02"
+  },
+  {
+    "code": "82.72.02.2001",
+    "name": "Kaiyasa",
+    "level": "VILLAGE",
+    "parentCode": "82.72.02"
+  },
+  {
+    "code": "82.72.02.2005",
+    "name": "Oba",
+    "level": "VILLAGE",
+    "parentCode": "82.72.02"
+  },
+  {
+    "code": "82.72.02.2006",
+    "name": "Somahode",
+    "level": "VILLAGE",
+    "parentCode": "82.72.02"
+  },
+  {
+    "code": "82.72.02.2007",
+    "name": "Ake Kolano",
+    "level": "VILLAGE",
+    "parentCode": "82.72.02"
+  },
+  {
+    "code": "82.72.02.2009",
+    "name": "Balbar",
+    "level": "VILLAGE",
+    "parentCode": "82.72.02"
+  },
+  {
+    "code": "82.72.02.2010",
+    "name": "Bukit Durian",
+    "level": "VILLAGE",
+    "parentCode": "82.72.02"
+  },
+  {
+    "code": "82.72.02.2011",
+    "name": "Galala",
+    "level": "VILLAGE",
+    "parentCode": "82.72.02"
+  },
+  {
+    "code": "82.72.02.2012",
+    "name": "Ampera",
+    "level": "VILLAGE",
+    "parentCode": "82.72.02"
+  },
+  {
+    "code": "82.72.02.2013",
+    "name": "Kusu",
+    "level": "VILLAGE",
+    "parentCode": "82.72.02"
+  },
+  {
+    "code": "82.72.02.2014",
+    "name": "Garojou",
+    "level": "VILLAGE",
+    "parentCode": "82.72.02"
+  },
+  {
+    "code": "82.72.02.2015",
+    "name": "Gosale",
+    "level": "VILLAGE",
+    "parentCode": "82.72.02"
+  },
+  {
+    "code": "82.72.03",
+    "name": "Oba",
+    "level": "DISTRICT",
+    "parentCode": "82.72"
+  },
+  {
+    "code": "82.72.03.1004",
+    "name": "Payahe",
+    "level": "VILLAGE",
+    "parentCode": "82.72.03"
+  },
+  {
+    "code": "82.72.03.2001",
+    "name": "Woda",
+    "level": "VILLAGE",
+    "parentCode": "82.72.03"
+  },
+  {
+    "code": "82.72.03.2002",
+    "name": "Gita",
+    "level": "VILLAGE",
+    "parentCode": "82.72.03"
+  },
+  {
+    "code": "82.72.03.2003",
+    "name": "Toseho",
+    "level": "VILLAGE",
+    "parentCode": "82.72.03"
+  },
+  {
+    "code": "82.72.03.2005",
+    "name": "Kususinopa",
+    "level": "VILLAGE",
+    "parentCode": "82.72.03"
+  },
+  {
+    "code": "82.72.03.2008",
+    "name": "Bale",
+    "level": "VILLAGE",
+    "parentCode": "82.72.03"
+  },
+  {
+    "code": "82.72.03.2009",
+    "name": "Koli",
+    "level": "VILLAGE",
+    "parentCode": "82.72.03"
+  },
+  {
+    "code": "82.72.03.2010",
+    "name": "Kosa",
+    "level": "VILLAGE",
+    "parentCode": "82.72.03"
+  },
+  {
+    "code": "82.72.03.2011",
+    "name": "Tului",
+    "level": "VILLAGE",
+    "parentCode": "82.72.03"
+  },
+  {
+    "code": "82.72.03.2012",
+    "name": "Todapa",
+    "level": "VILLAGE",
+    "parentCode": "82.72.03"
+  },
+  {
+    "code": "82.72.03.2013",
+    "name": "Talasi",
+    "level": "VILLAGE",
+    "parentCode": "82.72.03"
+  },
+  {
+    "code": "82.72.03.2014",
+    "name": "Sigela Yef",
+    "level": "VILLAGE",
+    "parentCode": "82.72.03"
+  },
+  {
+    "code": "82.72.03.2015",
+    "name": "Talagamori",
+    "level": "VILLAGE",
+    "parentCode": "82.72.03"
+  },
+  {
+    "code": "82.72.04",
+    "name": "Tidore Selatan",
+    "level": "DISTRICT",
+    "parentCode": "82.72"
+  },
+  {
+    "code": "82.72.04.1001",
+    "name": "Toloa",
+    "level": "VILLAGE",
+    "parentCode": "82.72.04"
+  },
+  {
+    "code": "82.72.04.1002",
+    "name": "Dokiri",
+    "level": "VILLAGE",
+    "parentCode": "82.72.04"
+  },
+  {
+    "code": "82.72.04.1003",
+    "name": "Tuguiha",
+    "level": "VILLAGE",
+    "parentCode": "82.72.04"
+  },
+  {
+    "code": "82.72.04.1004",
+    "name": "Tomalou",
+    "level": "VILLAGE",
+    "parentCode": "82.72.04"
+  },
+  {
+    "code": "82.72.04.1005",
+    "name": "Gurabati",
+    "level": "VILLAGE",
+    "parentCode": "82.72.04"
+  },
+  {
+    "code": "82.72.04.1006",
+    "name": "Tongowai",
+    "level": "VILLAGE",
+    "parentCode": "82.72.04"
+  },
+  {
+    "code": "82.72.04.2007",
+    "name": "Mare Kofo",
+    "level": "VILLAGE",
+    "parentCode": "82.72.04"
+  },
+  {
+    "code": "82.72.04.2008",
+    "name": "Mare Gam",
+    "level": "VILLAGE",
+    "parentCode": "82.72.04"
+  },
+  {
+    "code": "82.72.05",
+    "name": "Tidore Utara",
+    "level": "DISTRICT",
+    "parentCode": "82.72"
+  },
+  {
+    "code": "82.72.05.1001",
+    "name": "Rum",
+    "level": "VILLAGE",
+    "parentCode": "82.72.05"
+  },
+  {
+    "code": "82.72.05.1002",
+    "name": "Fobaharu",
+    "level": "VILLAGE",
+    "parentCode": "82.72.05"
+  },
+  {
+    "code": "82.72.05.1003",
+    "name": "Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.72.05"
+  },
+  {
+    "code": "82.72.05.1004",
+    "name": "Ome",
+    "level": "VILLAGE",
+    "parentCode": "82.72.05"
+  },
+  {
+    "code": "82.72.05.1005",
+    "name": "Mareku",
+    "level": "VILLAGE",
+    "parentCode": "82.72.05"
+  },
+  {
+    "code": "82.72.05.1006",
+    "name": "Afa Afa",
+    "level": "VILLAGE",
+    "parentCode": "82.72.05"
+  },
+  {
+    "code": "82.72.05.1008",
+    "name": "Bobo",
+    "level": "VILLAGE",
+    "parentCode": "82.72.05"
+  },
+  {
+    "code": "82.72.05.1009",
+    "name": "Gubu Kusuma",
+    "level": "VILLAGE",
+    "parentCode": "82.72.05"
+  },
+  {
+    "code": "82.72.05.1010",
+    "name": "Sirongo Folaraha",
+    "level": "VILLAGE",
+    "parentCode": "82.72.05"
+  },
+  {
+    "code": "82.72.05.1011",
+    "name": "Rum Balibunga",
+    "level": "VILLAGE",
+    "parentCode": "82.72.05"
+  },
+  {
+    "code": "82.72.05.2007",
+    "name": "Maitara",
+    "level": "VILLAGE",
+    "parentCode": "82.72.05"
+  },
+  {
+    "code": "82.72.05.2012",
+    "name": "Maitara Selatan",
+    "level": "VILLAGE",
+    "parentCode": "82.72.05"
+  },
+  {
+    "code": "82.72.05.2013",
+    "name": "Maitara Utara",
+    "level": "VILLAGE",
+    "parentCode": "82.72.05"
+  },
+  {
+    "code": "82.72.05.2014",
+    "name": "Maitara Tengah",
+    "level": "VILLAGE",
+    "parentCode": "82.72.05"
+  },
+  {
+    "code": "82.72.06",
+    "name": "Oba Tengah",
+    "level": "DISTRICT",
+    "parentCode": "82.72"
+  },
+  {
+    "code": "82.72.06.1001",
+    "name": "Akelamo",
+    "level": "VILLAGE",
+    "parentCode": "82.72.06"
+  },
+  {
+    "code": "82.72.06.2002",
+    "name": "Lola",
+    "level": "VILLAGE",
+    "parentCode": "82.72.06"
+  },
+  {
+    "code": "82.72.06.2003",
+    "name": "Aketobololo",
+    "level": "VILLAGE",
+    "parentCode": "82.72.06"
+  },
+  {
+    "code": "82.72.06.2004",
+    "name": "Aketobatu",
+    "level": "VILLAGE",
+    "parentCode": "82.72.06"
+  },
+  {
+    "code": "82.72.06.2005",
+    "name": "Akedotilou",
+    "level": "VILLAGE",
+    "parentCode": "82.72.06"
+  },
+  {
+    "code": "82.72.06.2006",
+    "name": "Akeguraci",
+    "level": "VILLAGE",
+    "parentCode": "82.72.06"
+  },
+  {
+    "code": "82.72.06.2007",
+    "name": "Akesai",
+    "level": "VILLAGE",
+    "parentCode": "82.72.06"
+  },
+  {
+    "code": "82.72.06.2008",
+    "name": "Togeme",
+    "level": "VILLAGE",
+    "parentCode": "82.72.06"
+  },
+  {
+    "code": "82.72.06.2009",
+    "name": "Tadupi",
+    "level": "VILLAGE",
+    "parentCode": "82.72.06"
+  },
+  {
+    "code": "82.72.06.2010",
+    "name": "Beringin Jaya",
+    "level": "VILLAGE",
+    "parentCode": "82.72.06"
+  },
+  {
+    "code": "82.72.06.2011",
+    "name": "Tauno",
+    "level": "VILLAGE",
+    "parentCode": "82.72.06"
+  },
+  {
+    "code": "82.72.06.2012",
+    "name": "Fanaha",
+    "level": "VILLAGE",
+    "parentCode": "82.72.06"
+  },
+  {
+    "code": "82.72.06.2013",
+    "name": "Yehu",
+    "level": "VILLAGE",
+    "parentCode": "82.72.06"
+  },
+  {
+    "code": "82.72.06.2014",
+    "name": "Siokona",
+    "level": "VILLAGE",
+    "parentCode": "82.72.06"
+  },
+  {
+    "code": "82.72.07",
+    "name": "Oba Selatan",
+    "level": "DISTRICT",
+    "parentCode": "82.72"
+  },
+  {
+    "code": "82.72.07.2001",
+    "name": "Maidi",
+    "level": "VILLAGE",
+    "parentCode": "82.72.07"
+  },
+  {
+    "code": "82.72.07.2002",
+    "name": "Lifofa",
+    "level": "VILLAGE",
+    "parentCode": "82.72.07"
+  },
+  {
+    "code": "82.72.07.2003",
+    "name": "Hager",
+    "level": "VILLAGE",
+    "parentCode": "82.72.07"
+  },
+  {
+    "code": "82.72.07.2004",
+    "name": "Wama",
+    "level": "VILLAGE",
+    "parentCode": "82.72.07"
+  },
+  {
+    "code": "82.72.07.2005",
+    "name": "Selamalofo",
+    "level": "VILLAGE",
+    "parentCode": "82.72.07"
+  },
+  {
+    "code": "82.72.07.2006",
+    "name": "Tagalaya",
+    "level": "VILLAGE",
+    "parentCode": "82.72.07"
+  },
+  {
+    "code": "82.72.07.2007",
+    "name": "Nuku",
+    "level": "VILLAGE",
+    "parentCode": "82.72.07"
+  },
+  {
+    "code": "82.72.08",
+    "name": "Tidore Timur",
+    "level": "DISTRICT",
+    "parentCode": "82.72"
+  },
+  {
+    "code": "82.72.08.1001",
+    "name": "Mafututu",
+    "level": "VILLAGE",
+    "parentCode": "82.72.08"
+  },
+  {
+    "code": "82.72.08.1002",
+    "name": "Tosa",
+    "level": "VILLAGE",
+    "parentCode": "82.72.08"
+  },
+  {
+    "code": "82.72.08.1003",
+    "name": "Dowora",
+    "level": "VILLAGE",
+    "parentCode": "82.72.08"
+  },
+  {
+    "code": "82.72.08.1004",
+    "name": "Kalaodi",
+    "level": "VILLAGE",
+    "parentCode": "82.72.08"
+  },
+  {
+    "code": "82.72.08.1005",
+    "name": "Cobodoe",
+    "level": "VILLAGE",
+    "parentCode": "82.72.08"
+  },
+  {
+    "code": "82.72.08.1006",
+    "name": "Doyado",
+    "level": "VILLAGE",
+    "parentCode": "82.72.08"
+  },
+  {
+    "code": "82.72.08.1007",
+    "name": "Jiko Cobo",
+    "level": "VILLAGE",
+    "parentCode": "82.72.08"
+  }
+]

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useCallback, useEffect, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import type {
   MidwifeEnrichedMotherItem,
   MidwifeMotherFilter,
@@ -22,10 +22,11 @@ import {
 type Page<T> = { items: T[]; total: number; page: number; pageSize: number };
 type Region = {
   publicId: string;
+  code?: string | null;
   name: string;
   level: string;
   active: boolean;
-  parent?: { name: string } | null;
+  parent?: { publicId?: string; name: string } | null;
 };
 type Facility = {
   publicId: string;
@@ -63,19 +64,27 @@ type Assignment = {
   startedAt: string;
 };
 
-function useList<T>(path: string) {
+function useList<T>(path: string, extraQuery?: Record<string, string | undefined>) {
   const { request } = useAuth();
   const [data, setData] = useState<Page<T> | null>(null);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
+  const extraQueryKey = JSON.stringify(extraQuery);
   const load = useCallback(() => {
     setError("");
-    request<Page<T>>(`${path}?search=${encodeURIComponent(search)}&limit=50`)
+    const params = new URLSearchParams({ search, limit: "50" });
+    if (extraQuery) {
+      for (const [k, v] of Object.entries(extraQuery)) {
+        if (v !== undefined && v !== "") params.set(k, v);
+      }
+    }
+    request<Page<T>>(`${path}?${params.toString()}`)
       .then(setData)
       .catch((e) =>
         setError(e instanceof Error ? e.message : "Gagal memuat data"),
       );
-  }, [path, request, search]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [path, request, search, extraQueryKey]);
   useEffect(load, [load]);
   return { data, error, search, setSearch, load };
 }
@@ -118,7 +127,12 @@ function State({
 
 export function RegionsPage() {
   const { request } = useAuth();
-  const list = useList<Region>("/admin/regions");
+  const [levelFilter, setLevelFilter] = useState<string>("");
+  const extraQuery = useMemo(
+    () => ({ level: levelFilter || undefined }),
+    [levelFilter],
+  );
+  const list = useList<Region>("/admin/regions", extraQuery);
   const [message, setMessage] = useState("");
   const [parentOptions, setParentOptions] = useState<Region[]>([]);
   const [form, setForm] = useState({
@@ -239,10 +253,29 @@ export function RegionsPage() {
 
       <Card>
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex-1">
-            <Search value={list.search} onChange={list.setSearch} />
+          <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="flex-1">
+              <Search value={list.search} onChange={list.setSearch} />
+            </div>
+            <div className="w-full sm:w-56">
+              <label className="sr-only" htmlFor="region-level-filter">
+                Filter Tingkat Wilayah
+              </label>
+              <select
+                id="region-level-filter"
+                className="w-full min-h-11 rounded-xl border border-slate-300 bg-white px-3 text-sm text-slate-900 shadow-sm focus:border-pfram-primary focus:outline-none focus:ring-2 focus:ring-pfram-primary/20"
+                value={levelFilter}
+                onChange={(e) => setLevelFilter(e.target.value)}
+              >
+                <option value="">Semua Tingkat Wilayah</option>
+                <option value="PROVINCE">Provinsi</option>
+                <option value="REGENCY">Kabupaten / Kota</option>
+                <option value="DISTRICT">Kecamatan</option>
+                <option value="VILLAGE">Kelurahan / Desa</option>
+              </select>
+            </div>
           </div>
-          <span className="text-xs font-semibold text-slate-500">
+          <span className="text-xs font-semibold text-slate-500 whitespace-nowrap">
             Total {list.data?.total ?? list.data?.items?.length ?? 0} wilayah
           </span>
         </div>
@@ -259,15 +292,20 @@ export function RegionsPage() {
               className="flex flex-col gap-2 py-3.5 sm:flex-row sm:items-center sm:justify-between"
               key={v.publicId}
             >
-              <div className="space-y-0.5">
-                <div className="flex items-center gap-2">
+              <div className="space-y-1">
+                <div className="flex flex-wrap items-center gap-2">
                   <span className="text-sm font-bold text-slate-900">{v.name}</span>
+                  {v.code && (
+                    <span className="rounded bg-slate-100 px-2 py-0.5 font-mono text-xs font-semibold text-slate-700">
+                      {v.code}
+                    </span>
+                  )}
                   <StatusBadge variant={v.active ? "success" : "neutral"}>
                     {v.active ? "Aktif" : "Nonaktif"}
                   </StatusBadge>
                 </div>
                 <div className="text-xs text-slate-500">
-                  <span className="font-medium text-slate-600">
+                  <span className="font-semibold text-slate-600">
                     {formatRegionLevel(v.level)}
                   </span>
                   {v.parent ? ` · Bagian dari: ${v.parent.name}` : ""}
@@ -319,31 +357,33 @@ function RegionChain({
   }, [request]);
 
   useEffect(() => {
-    const load = async (
-      key: "regency" | "district" | "village",
-      parent: string,
-    ) => {
-      if (!parent) return setOptions((o) => ({ ...o, [key]: [] }));
-      const rows = await request<Region[]>(
-        `/reference/regions/${parent}/children`,
-      );
-      setOptions((o) => ({ ...o, [key]: rows }));
-    };
-    void load("regency", values.province ?? "");
+    if (!values.province) {
+      setOptions((o) => ({ ...o, regency: [], district: [], village: [] }));
+      return;
+    }
+    request<Region[]>(`/reference/regions/${values.province}/children`)
+      .then((v) => setOptions((o) => ({ ...o, regency: v })))
+      .catch(() => undefined);
   }, [request, values.province]);
 
   useEffect(() => {
-    if (values.regency)
-      request<Region[]>(`/reference/regions/${values.regency}/children`)
-        .then((v) => setOptions((o) => ({ ...o, district: v })))
-        .catch(() => undefined);
+    if (!values.regency) {
+      setOptions((o) => ({ ...o, district: [], village: [] }));
+      return;
+    }
+    request<Region[]>(`/reference/regions/${values.regency}/children`)
+      .then((v) => setOptions((o) => ({ ...o, district: v })))
+      .catch(() => undefined);
   }, [request, values.regency]);
 
   useEffect(() => {
-    if (values.district)
-      request<Region[]>(`/reference/regions/${values.district}/children`)
-        .then((v) => setOptions((o) => ({ ...o, village: v })))
-        .catch(() => undefined);
+    if (!values.district) {
+      setOptions((o) => ({ ...o, village: [] }));
+      return;
+    }
+    request<Region[]>(`/reference/regions/${values.district}/children`)
+      .then((v) => setOptions((o) => ({ ...o, village: v })))
+      .catch(() => undefined);
   }, [request, values.district]);
 
   return (
@@ -366,7 +406,7 @@ function RegionChain({
             <option value="">-- Pilih {levelLabels[index]} --</option>
             {options[key]?.map((v) => (
               <option key={v.publicId} value={v.publicId}>
-                {v.name}
+                {v.code ? `[${v.code}] ${v.name}` : v.name}
               </option>
             ))}
           </select>

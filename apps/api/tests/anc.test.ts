@@ -27,8 +27,9 @@ describe("Stage 5A — Smart ANC Reminder & Kepatuhan Suite", () => {
     const env = {
       NODE_ENV: "test",
       DATABASE_URL:
+        process.env.TEST_DATABASE_URL ||
         process.env.DATABASE_URL ||
-        "postgresql://pfram:pfram_dev_only@localhost:5433/pfram_db?schema=public",
+        "postgresql://pfram:pfram_dev_only@localhost:5433/pfram_test?schema=public",
       JWT_ACCESS_SECRET:
         process.env.JWT_ACCESS_SECRET ||
         "development-access-secret-change-me-at-least-32-characters",
@@ -83,7 +84,7 @@ describe("Stage 5A — Smart ANC Reminder & Kepatuhan Suite", () => {
 
     // 4. Facility
     devFacility = await prisma.healthFacility.findFirstOrThrow({
-      where: { name: "Puskesmas Pilot PFRAM (Development)" },
+      where: { publicId: "32000000-0000-4000-8000-000000000001" },
     });
 
     // 5. Ensure secondary mother exists for isolation tests

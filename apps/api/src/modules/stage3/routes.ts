@@ -176,8 +176,14 @@ export async function referenceRoutes(app: FastifyInstance) {
       active: true,
       ...(q.level ? { level: q.level } : {}),
       ...(parentId ? { parentId } : {}),
+      ...(q.code ? { code: q.code } : {}),
       ...(q.search
-        ? { name: { contains: q.search, mode: "insensitive" } }
+        ? {
+            OR: [
+              { name: { contains: q.search, mode: "insensitive" } },
+              { code: { contains: q.search, mode: "insensitive" } },
+            ],
+          }
         : {}),
     };
     const [rows, total] = await app.prisma.$transaction([
@@ -300,11 +306,17 @@ export async function adminStage3Routes(app: FastifyInstance) {
     const where: Prisma.RegionWhereInput = {
       ...(q.active !== undefined ? { active: q.active } : {}),
       ...(q.level ? { level: q.level } : {}),
+      ...(q.code ? { code: q.code } : {}),
       ...(q.parentPublicId
         ? { parentId: parentId ?? "00000000-0000-0000-0000-000000000000" }
         : {}),
       ...(q.search
-        ? { name: { contains: q.search, mode: "insensitive" } }
+        ? {
+            OR: [
+              { name: { contains: q.search, mode: "insensitive" } },
+              { code: { contains: q.search, mode: "insensitive" } },
+            ],
+          }
         : {}),
     };
     const [rows, total] = await app.prisma.$transaction([
@@ -333,6 +345,18 @@ export async function adminStage3Routes(app: FastifyInstance) {
     const parsed = regionSchema.safeParse(req.body);
     if (!parsed.success) return invalid(reply, app, req, parsed.error);
     const v = parsed.data;
+    if (v.code) {
+      const existingCode = await app.prisma.region.findFirst({
+        where: { code: v.code },
+      });
+      if (existingCode) {
+        return reply
+          .code(409)
+          .send(
+            app.fail(req, "REGION_CODE_EXISTS", "Kode wilayah sudah terdaftar"),
+          );
+      }
+    }
     const parent = await getParent(app, v.level, v.parentPublicId);
     const data = asData<Prisma.RegionUncheckedCreateInput>({
       name: v.name,
@@ -363,6 +387,18 @@ export async function adminStage3Routes(app: FastifyInstance) {
       return reply
         .code(404)
         .send(app.fail(req, "REGION_NOT_FOUND", "Wilayah tidak ditemukan"));
+    if (parsed.data.code) {
+      const existingCode = await app.prisma.region.findFirst({
+        where: { code: parsed.data.code, NOT: { id: old.id } },
+      });
+      if (existingCode) {
+        return reply
+          .code(409)
+          .send(
+            app.fail(req, "REGION_CODE_EXISTS", "Kode wilayah sudah terdaftar"),
+          );
+      }
+    }
     const level = parsed.data.level ?? old.level;
     const parent =
       parsed.data.parentPublicId !== undefined || parsed.data.level

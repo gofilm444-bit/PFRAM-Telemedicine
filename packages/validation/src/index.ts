@@ -129,7 +129,7 @@ export const paginationSchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(20),
   search: z.string().trim().max(100).optional(),
-  sort: z.enum(["name", "createdAt", "updatedAt"]).default("name"),
+  sort: z.enum(["name", "code", "createdAt", "updatedAt"]).default("name"),
   order: z.enum(["asc", "desc"]).default("asc"),
   active: z
     .enum(["true", "false"])
@@ -152,6 +152,7 @@ export const regionSchema = z.object({
 export const regionFilterSchema = paginationSchema.extend({
   level: regionLevelSchema.optional(),
   parentPublicId: publicIdSchema.optional(),
+  code: z.string().trim().max(30).optional(),
 });
 export const facilityTypeSchema = z.enum([
   "PUSKESMAS",
