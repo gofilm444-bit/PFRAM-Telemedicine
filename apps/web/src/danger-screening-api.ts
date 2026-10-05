@@ -1,4 +1,7 @@
-import { createMidwifeDangerScreeningApi } from "@pfram/api-client";
+import {
+  createMidwifeDangerScreeningApi,
+  createMotherDangerScreeningApi,
+} from "@pfram/api-client";
 import type {
   DangerFollowUpStatus,
   DangerScreeningStatus,
@@ -7,6 +10,7 @@ import { api } from "./auth";
 import { formatIndonesianDate, formatIndonesianTime } from "./monitoring-api";
 
 export const midwifeDangerScreeningApi = createMidwifeDangerScreeningApi(api);
+export const motherDangerScreeningApi = createMotherDangerScreeningApi(api);
 
 export function formatScreeningDate(isoDate: string): string {
   const dateStr = formatIndonesianDate(isoDate);

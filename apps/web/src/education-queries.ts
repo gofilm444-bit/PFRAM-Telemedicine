@@ -4,7 +4,44 @@ import type {
   EducationArticleUpdateInput,
   EducationQuery,
 } from "@pfram/shared-types";
-import { adminEducationApi } from "./education-api";
+import {
+  adminEducationApi,
+  getMotherArticleDetail,
+  getMotherEducationArticles,
+  getMotherFeaturedArticles,
+} from "./education-api";
+
+export const motherEducationKeys = {
+  all: ["mother", "education"] as const,
+  articles: (query?: EducationQuery) =>
+    ["mother", "education", "articles", query ?? "all"] as const,
+  featured: () => ["mother", "education", "featured"] as const,
+  detail: (slug: string) => ["mother", "education", "detail", slug] as const,
+};
+
+export function useMotherEducationArticles(query?: EducationQuery) {
+  return useQuery({
+    queryKey: motherEducationKeys.articles(query),
+    queryFn: () => getMotherEducationArticles(query),
+    retry: 1,
+  });
+}
+
+export function useMotherFeaturedArticles() {
+  return useQuery({
+    queryKey: motherEducationKeys.featured(),
+    queryFn: () => getMotherFeaturedArticles(),
+    retry: 1,
+  });
+}
+
+export function useMotherArticleDetail(slug: string | undefined | null) {
+  return useQuery({
+    queryKey: motherEducationKeys.detail(slug ?? ""),
+    queryFn: () => getMotherArticleDetail(slug!),
+    enabled: Boolean(slug),
+  });
+}
 
 export const adminEducationKeys = {
   all: ["admin", "education"] as const,

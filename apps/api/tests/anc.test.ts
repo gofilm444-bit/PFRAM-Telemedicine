@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { describe, it, expect, beforeAll, afterAll, vi } from "vitest";
 import path from "node:path";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
@@ -304,7 +304,26 @@ describe("Stage 5A — Smart ANC Reminder & Kepatuhan Suite", () => {
       expect(body.data.doctorRequired).toBe(true);
     });
 
-    it("2.3. Ibu dapat mengonfirmasi kehadiran pemeriksaan ('Sudah Datang')", async () => {
+    it("2.3a. Ibu tidak dapat mengonfirmasi kehadiran pemeriksaan sebelum tanggal jadwal (premature confirmation ditolak)", async () => {
+      // createdSchedulePublicId was rescheduled to +21 days in test 1.5
+      const res = await app.inject({
+        method: "POST",
+        url: `/api/mother/anc-schedules/${createdSchedulePublicId}/confirm-attendance`,
+        headers: { authorization: `Bearer ${motherToken}` },
+      });
+
+      expect(res.statusCode).toBe(400);
+      const body = res.json();
+      expect(body.error.code).toBe("PREMATURE_CONFIRMATION");
+    });
+
+    it("2.3b. Ibu dapat mengonfirmasi kehadiran pemeriksaan pada hari jadwal ('Sudah Datang')", async () => {
+      // Update schedule date to today so it is eligible for attendance confirmation
+      await prisma.ancSchedule.update({
+        where: { publicId: createdSchedulePublicId },
+        data: { scheduledAt: new Date() },
+      });
+
       const res = await app.inject({
         method: "POST",
         url: `/api/mother/anc-schedules/${createdSchedulePublicId}/confirm-attendance`,
@@ -315,6 +334,76 @@ describe("Stage 5A — Smart ANC Reminder & Kepatuhan Suite", () => {
       const body = res.json();
       expect(body.data.status).toBe("COMPLETED");
       expect(body.data.completedAt).toBeDefined();
+      expect(body.data.notes).toContain("[Konfirmasi Kehadiran Mandiri oleh Ibu]");
+
+      // Verify audit metadata records source: MOTHER_SELF_REPORT
+      const auditEntry = await prisma.auditLog.findFirst({
+        where: { entityId: createdSchedulePublicId, action: "CONFIRM_ANC_ATTENDANCE" },
+        orderBy: { createdAt: "desc" },
+      });
+      expect(auditEntry).toBeDefined();
+      expect((auditEntry?.metadata as Record<string, unknown>)?.source).toBe("MOTHER_SELF_REPORT");
+    });
+
+    it("2.3c. Konfirmasi ulang jadwal yang sudah COMPLETED ditolak dengan 400 ALREADY_COMPLETED", async () => {
+      const res = await app.inject({
+        method: "POST",
+        url: `/api/mother/anc-schedules/${createdSchedulePublicId}/confirm-attendance`,
+        headers: { authorization: `Bearer ${motherToken}` },
+      });
+
+      expect(res.statusCode).toBe(400);
+      const body = res.json();
+      expect(body.error.code).toBe("ALREADY_COMPLETED");
+    });
+
+    it("2.3d. Jadwal 15 Okt 08:00 WIT (UTC 14 Okt 23:00) ditolak jika waktu masih 14 Okt WIT dan berhasil dikonfirmasi pada 15 Okt WIT terlepas dari timezone server", async () => {
+      const resCreate = await app.inject({
+        method: "POST",
+        url: `/api/midwife/mothers/${devMotherProfile.publicId}/anc-schedules`,
+        headers: { authorization: `Bearer ${assignedMidwifeToken}` },
+        payload: {
+          scheduledAt: "2026-10-14T23:00:00.000Z", // 15 Okt 08:00 WIT
+          visitType: "ANC",
+          notes: "Pemeriksaan tanggal uji zona waktu WIT",
+        },
+      });
+      expect(resCreate.statusCode).toBe(201);
+      const tzSchedulePublicId = resCreate.json().data.publicId;
+
+      vi.useFakeTimers();
+      try {
+        // 14 Okt 23:59:59 WIT (14 Okt 14:59:59 UTC) -> harus ditolak PREMATURE
+        vi.setSystemTime(new Date("2026-10-14T14:59:59.000Z"));
+
+        const resPremature = await app.inject({
+          method: "POST",
+          url: `/api/mother/anc-schedules/${tzSchedulePublicId}/confirm-attendance`,
+          headers: { authorization: `Bearer ${motherToken}` },
+        });
+        expect(resPremature.statusCode).toBe(400);
+        expect(resPremature.json().error.code).toBe("PREMATURE_CONFIRMATION");
+
+        // 15 Okt 00:00:01 WIT (14 Okt 15:00:01 UTC) -> harus berhasil dikonfirmasi
+        vi.setSystemTime(new Date("2026-10-14T15:00:01.000Z"));
+
+        const resArrived = await app.inject({
+          method: "POST",
+          url: `/api/mother/anc-schedules/${tzSchedulePublicId}/confirm-attendance`,
+          headers: { authorization: `Bearer ${motherToken}` },
+        });
+        expect(resArrived.statusCode).toBe(200);
+        expect(resArrived.json().data.status).toBe("COMPLETED");
+
+        // Verify audit log metadata
+        const auditLog = await prisma.auditLog.findFirst({
+          where: { entityId: tzSchedulePublicId, action: "CONFIRM_ANC_ATTENDANCE" },
+        });
+        expect(auditLog).toBeDefined();
+        expect((auditLog?.metadata as Record<string, unknown>)?.source).toBe("MOTHER_SELF_REPORT");
+      } finally {
+        vi.useRealTimers();
+      }
     });
 
     it("2.4. Ibu lain tidak dapat mengonfirmasi jadwal milik ibu yang bukan miliknya", async () => {

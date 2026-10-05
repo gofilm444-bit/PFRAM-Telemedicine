@@ -19,6 +19,7 @@ import {
   ANC_STATUS_BADGES,
   formatAncDateShort,
   formatAncTime,
+  isAncAppointmentDayArrived,
 } from "../../lib/anc-api";
 import {
   useConfirmAncAttendance,
@@ -173,19 +174,30 @@ export default function MotherAncScreen() {
                 {item.status === "SCHEDULED" && (
                   <Pressable
                     accessibilityRole="button"
-                    accessibilityLabel="Konfirmasi sudah datang"
+                    accessibilityLabel={
+                      isAncAppointmentDayArrived(item.scheduledAt)
+                        ? "Konfirmasi sudah datang"
+                        : "Belum hari pemeriksaan"
+                    }
                     style={[
                       styles.confirmAttendanceBtn,
-                      confirmMutation.isPending && styles.btnDisabled,
+                      (!isAncAppointmentDayArrived(item.scheduledAt) ||
+                        confirmMutation.isPending) &&
+                        styles.btnDisabled,
                     ]}
                     onPress={() => handleConfirm(item.publicId)}
-                    disabled={confirmMutation.isPending}
+                    disabled={
+                      !isAncAppointmentDayArrived(item.scheduledAt) ||
+                      confirmMutation.isPending
+                    }
                   >
                     {confirmMutation.isPending ? (
                       <ActivityIndicator color={colors.white} />
                     ) : (
                       <Text style={styles.confirmAttendanceText}>
-                        ✓ Konfirmasi Sudah Hadir
+                        {isAncAppointmentDayArrived(item.scheduledAt)
+                          ? "✓ Konfirmasi Sudah Hadir"
+                          : "Belum Hari Pemeriksaan"}
                       </Text>
                     )}
                   </Pressable>

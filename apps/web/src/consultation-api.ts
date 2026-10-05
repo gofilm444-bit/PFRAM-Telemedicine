@@ -1,4 +1,9 @@
-import { createMidwifeConsultationApi } from "@pfram/api-client";
+import {
+  createMidwifeConsultationApi,
+  createMotherConsultationApi,
+  createMidwifeVideoConsultationApi,
+  createMotherVideoConsultationApi,
+} from "@pfram/api-client";
 import type {
   ConsultationAttentionFlag,
   ConsultationAttentionUpdateInput,
@@ -8,10 +13,37 @@ import type {
   ConsultationStatusUpdateInput,
   ConsultationThreadStatus,
   ConsultationThreadSummary,
+  VideoConsultationCreateInput,
+  VideoConsultationItem,
+  VideoConsultationQuery,
+  VideoConsultationStatusUpdateInput,
+  VideoConsultationUpdateInput,
 } from "@pfram/shared-types";
+import {
+  DEFAULT_FACILITY_TIMEZONE,
+  DEFAULT_FACILITY_TIMEZONE_LABEL,
+  isValidMeetingUrl,
+} from "@pfram/validation";
 import { api } from "./auth";
 
 export const midwifeConsultationApi = createMidwifeConsultationApi(api);
+export const motherConsultationApi = createMotherConsultationApi(api);
+
+export const getMotherConsultationThread = (): Promise<ConsultationThreadSummary> =>
+  motherConsultationApi.getThread();
+
+export const getMotherConsultationMessages = (
+  query?: ConsultationQuery,
+): Promise<{ items: ConsultationMessageItem[]; total: number }> =>
+  motherConsultationApi.getMessages(query);
+
+export const sendMotherConsultationMessage = (
+  input: ConsultationMessageCreateInput,
+): Promise<ConsultationMessageItem> =>
+  motherConsultationApi.sendMessage(input);
+
+export const markMotherConsultationRead = (): Promise<{ markedCount: number }> =>
+  motherConsultationApi.markAsRead();
 
 export const getMidwifeConsultationThreads = (query?: {
   status?: ConsultationThreadStatus | undefined;
@@ -65,20 +97,11 @@ export const fetchAttachmentBlob = (
   api.fetchBlob(`/consultation/attachments/${attachmentPublicId}/file`);
 
 // ==========================================
-// TAHAP 10 — VIDEO CALL API (WEB MIDWIFE)
+// TAHAP 10 — VIDEO CALL API (WEB MIDWIFE & MOTHER)
 // ==========================================
 
-import { createMidwifeVideoConsultationApi } from "@pfram/api-client";
-import type {
-  VideoConsultationCreateInput,
-  VideoConsultationItem,
-  VideoConsultationQuery,
-  VideoConsultationStatusUpdateInput,
-  VideoConsultationUpdateInput,
-} from "@pfram/shared-types";
-import { isValidMeetingUrl } from "@pfram/validation";
-
 export const midwifeVideoConsultationApi = createMidwifeVideoConsultationApi(api);
+export const motherVideoConsultationApi = createMotherVideoConsultationApi(api);
 
 export const getMidwifeVideoConsultations = (
   query?: VideoConsultationQuery,
@@ -100,6 +123,14 @@ export const updateMidwifeVideoConsultationStatus = (
   input: VideoConsultationStatusUpdateInput,
 ): Promise<VideoConsultationItem> =>
   midwifeVideoConsultationApi.updateStatus(publicId, input);
+
+export const getMotherUpcomingVideoConsultation = (): Promise<VideoConsultationItem | null> =>
+  motherVideoConsultationApi.getUpcoming();
+
+export const getMotherVideoConsultations = (
+  query?: VideoConsultationQuery,
+): Promise<{ items: VideoConsultationItem[]; total: number }> =>
+  motherVideoConsultationApi.getAll(query);
 
 export { isValidMeetingUrl };
 
@@ -138,6 +169,43 @@ export function formatVideoDateTime(isoString: string): string {
     const hours = d.getHours().toString().padStart(2, "0");
     const minutes = d.getMinutes().toString().padStart(2, "0");
     return `${day} ${month} ${year}, ${hours}:${minutes}`;
+  } catch {
+    return "";
+  }
+}
+
+export function formatMotherMessageTime(isoString: string): string {
+  try {
+    const d = new Date(isoString);
+    if (isNaN(d.getTime())) return "";
+    const formatter = new Intl.DateTimeFormat("id-ID", {
+      timeZone: DEFAULT_FACILITY_TIMEZONE,
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+    const parts = formatter.format(d).replace(":", ".");
+    return `${parts} ${DEFAULT_FACILITY_TIMEZONE_LABEL}`;
+  } catch {
+    return "";
+  }
+}
+
+export function formatMotherVideoDateTime(isoString: string): string {
+  try {
+    const d = new Date(isoString);
+    if (isNaN(d.getTime())) return "";
+    const formatter = new Intl.DateTimeFormat("id-ID", {
+      timeZone: DEFAULT_FACILITY_TIMEZONE,
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+    const formatted = formatter.format(d).replace(":", ".");
+    return `${formatted} ${DEFAULT_FACILITY_TIMEZONE_LABEL}`;
   } catch {
     return "";
   }

@@ -1,4 +1,7 @@
-import { createMidwifeMonitoringApi } from "@pfram/api-client";
+import {
+  createMidwifeMonitoringApi,
+  createMotherMonitoringApi,
+} from "@pfram/api-client";
 import type {
   BloodPressureChartPoint,
   MonitoringCreateInput,
@@ -16,6 +19,7 @@ import { calculateGestationalAge } from "@pfram/validation";
 import { api } from "./auth";
 
 export const midwifeMonitoringApi = createMidwifeMonitoringApi(api);
+export const motherMonitoringApi = createMotherMonitoringApi(api);
 
 export const getMidwifeMotherMonitoringList = (
   motherPublicId: string,
@@ -56,6 +60,16 @@ export const MONITORING_SOURCES: Array<{
 export const SOURCE_LABELS: Record<MonitoringSource, string> = {
   MIDWIFE: "Bidan",
   SELF: "Mandiri",
+  POSYANDU: "Posyandu",
+  PUSKESMAS: "Puskesmas",
+  HOSPITAL: "Rumah Sakit",
+  CLINIC: "Klinik",
+  OTHER: "Lainnya",
+};
+
+export const MOTHER_SOURCE_LABELS: Record<MonitoringSource, string> = {
+  SELF: "Dicatat sendiri",
+  MIDWIFE: "Dicatat oleh bidan",
   POSYANDU: "Posyandu",
   PUSKESMAS: "Puskesmas",
   HOSPITAL: "Rumah Sakit",

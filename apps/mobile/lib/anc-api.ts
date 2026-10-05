@@ -1,4 +1,10 @@
 import { createMotherAncApi } from "@pfram/api-client";
+import {
+  DEFAULT_FACILITY_TIMEZONE,
+  DEFAULT_FACILITY_TIMEZONE_LABEL,
+  getCalendarDateInTimezone,
+  isAncAppointmentDayArrived,
+} from "@pfram/validation";
 import type {
   AdherenceSummary,
   AncRuleSet,
@@ -12,6 +18,13 @@ import type {
 import { api } from "./auth";
 
 export const ancApi = createMotherAncApi(api);
+
+export {
+  DEFAULT_FACILITY_TIMEZONE,
+  DEFAULT_FACILITY_TIMEZONE_LABEL,
+  getCalendarDateInTimezone,
+  isAncAppointmentDayArrived,
+};
 
 export const getMotherUpcomingAnc = (): Promise<AncSchedule | null> =>
   ancApi.getUpcomingSchedule();
@@ -60,39 +73,62 @@ export const getMotherRecommendations = (): Promise<{
   ruleSet: AncRuleSet;
 }> => ancApi.getRecommendations();
 
-export function formatAncDateShort(isoDate: string): string {
+export function formatAncDateShort(
+  isoDate: string,
+  timeZone: string = DEFAULT_FACILITY_TIMEZONE,
+): string {
   try {
     const d = new Date(isoDate);
     if (isNaN(d.getTime())) return isoDate;
-    const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "Mei",
-      "Jun",
-      "Jul",
-      "Agu",
-      "Sep",
-      "Okt",
-      "Nov",
-      "Des",
-    ];
-    return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+    return new Intl.DateTimeFormat("id-ID", {
+      timeZone,
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }).format(d);
   } catch {
     return isoDate;
   }
 }
 
-export function formatAncTime(isoDate: string): string {
+export function formatAncTime(
+  isoDate: string,
+  timeZone: string = DEFAULT_FACILITY_TIMEZONE,
+): string {
   try {
     const d = new Date(isoDate);
     if (isNaN(d.getTime())) return "";
-    const h = String(d.getHours()).padStart(2, "0");
-    const m = String(d.getMinutes()).padStart(2, "0");
-    return `${h}:${m} WIB`;
+    const timeStr = new Intl.DateTimeFormat("id-ID", {
+      timeZone,
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    })
+      .format(d)
+      .replace(":", ".");
+    return `${timeStr} ${DEFAULT_FACILITY_TIMEZONE_LABEL}`;
   } catch {
     return "";
+  }
+}
+
+export function formatAncDateTime(
+  isoDate: string,
+  timeZone: string = DEFAULT_FACILITY_TIMEZONE,
+): string {
+  try {
+    const d = new Date(isoDate);
+    if (isNaN(d.getTime())) return isoDate;
+    const dateStr = new Intl.DateTimeFormat("id-ID", {
+      timeZone,
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }).format(d);
+    const timeStr = formatAncTime(isoDate, timeZone);
+    return timeStr ? `${dateStr} · ${timeStr}` : dateStr;
+  } catch {
+    return isoDate;
   }
 }
 

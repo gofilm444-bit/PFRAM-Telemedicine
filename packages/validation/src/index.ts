@@ -52,6 +52,33 @@ export const addUtcDays = (date: Date, days: number) => {
   result.setUTCDate(result.getUTCDate() + days);
   return result;
 };
+export const DEFAULT_FACILITY_TIMEZONE = "Asia/Jayapura";
+export const DEFAULT_FACILITY_TIMEZONE_LABEL = "WIT";
+
+export const getCalendarDateInTimezone = (
+  date: Date | string,
+  timeZone: string = DEFAULT_FACILITY_TIMEZONE,
+): string => {
+  const d = typeof date === "string" ? new Date(date) : date;
+  if (isNaN(d.getTime())) throw new Error("Tanggal tidak valid");
+  const formatter = new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+  return formatter.format(d);
+};
+
+export const isAncAppointmentDayArrived = (
+  scheduledAt: Date | string,
+  now: Date | string = new Date(),
+  timeZone: string = DEFAULT_FACILITY_TIMEZONE,
+): boolean => {
+  const schedDate = getCalendarDateInTimezone(scheduledAt, timeZone);
+  const nowDate = getCalendarDateInTimezone(now, timeZone);
+  return nowDate >= schedDate;
+};
 export const calculateAge = (
   birthDate: string | Date,
   at = todayDateOnly(),
@@ -331,7 +358,7 @@ export const weightSchema = z.coerce
   .refine((w) => w > 0, "Berat badan harus lebih besar dari 0 kg")
   .refine(
     (w) => w >= 20 && w <= 300,
-    "Berat badan di luar batas wajar (20 - 300 kg)",
+    "Masukkan berat badan antara 20–300 kg.",
   );
 
 export const systolicBpSchema = z.coerce

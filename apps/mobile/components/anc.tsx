@@ -24,6 +24,7 @@ import {
   ANC_STATUS_BADGES,
   formatAncDateShort,
   formatAncTime,
+  isAncAppointmentDayArrived,
 } from "../lib/anc-api";
 import {
   useCompleteReminder,
@@ -134,19 +135,30 @@ export function UpcomingAncCard({
           {schedule.status === "SCHEDULED" && !confirmed && (
             <Pressable
               accessibilityRole="button"
-              accessibilityLabel="Konfirmasi sudah datang"
+              accessibilityLabel={
+                isAncAppointmentDayArrived(schedule.scheduledAt)
+                  ? "Konfirmasi sudah datang"
+                  : "Belum hari pemeriksaan"
+              }
               style={[
                 styles.confirmButton,
-                confirmMutation.isPending && styles.buttonDisabled,
+                (!isAncAppointmentDayArrived(schedule.scheduledAt) ||
+                  confirmMutation.isPending) &&
+                  styles.buttonDisabled,
               ]}
               onPress={handleConfirm}
-              disabled={confirmMutation.isPending}
+              disabled={
+                !isAncAppointmentDayArrived(schedule.scheduledAt) ||
+                confirmMutation.isPending
+              }
             >
               {confirmMutation.isPending ? (
                 <ActivityIndicator color={colors.white} />
               ) : (
                 <Text style={styles.confirmButtonText}>
-                  ✓ Konfirmasi Sudah Hadir
+                  {isAncAppointmentDayArrived(schedule.scheduledAt)
+                    ? "✓ Konfirmasi Sudah Hadir"
+                    : "Belum Hari Pemeriksaan"}
                 </Text>
               )}
             </Pressable>
@@ -227,7 +239,7 @@ export function DailyIronTabletCard({
           <Text style={styles.cardTitle}>Tablet Tambah Darah (TTD)</Text>
         </View>
         <Text style={styles.pillTime}>
-          {reminder?.reminderTime ?? "20:00"} WIB
+          {reminder?.reminderTime ?? "20:00"} WIT
         </Text>
       </View>
 

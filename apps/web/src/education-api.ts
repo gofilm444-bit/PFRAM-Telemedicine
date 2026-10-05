@@ -1,11 +1,28 @@
-import { createAdminEducationApi } from "@pfram/api-client";
+import { createAdminEducationApi, createMotherEducationApi } from "@pfram/api-client";
 import type {
   EducationCategory,
+  EducationQuery,
   EducationTrimester,
 } from "@pfram/shared-types";
 import { api } from "./auth";
 
 export const adminEducationApi = createAdminEducationApi(api);
+export const motherEducationApi = createMotherEducationApi(api);
+
+export const getMotherEducationArticles = (query: EducationQuery = {}) =>
+  motherEducationApi.getArticles(query);
+
+export const getMotherFeaturedArticles = () =>
+  motherEducationApi.getFeaturedArticles();
+
+export const getMotherArticleDetail = (slug: string) =>
+  motherEducationApi.getArticleDetail(slug);
+
+export function formatReadingTime(content: string): string {
+  const words = content.trim().split(/\s+/).length;
+  const minutes = Math.max(1, Math.ceil(words / 180));
+  return `${minutes} menit baca`;
+}
 
 export const CATEGORY_LABELS: Record<EducationCategory, string> = {
   PREGNANCY: "Kehamilan",

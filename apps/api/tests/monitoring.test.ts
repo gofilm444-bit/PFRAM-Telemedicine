@@ -202,7 +202,7 @@ describe("Stage 4A — Monitoring Suite", () => {
         payload: {
           systolicBp: 116,
           diastolicBp: 76,
-          source: "POSYANDU",
+          source: "SELF",
         },
       });
 
@@ -211,7 +211,7 @@ describe("Stage 4A — Monitoring Suite", () => {
       expect(data.weightKg).toBeNull();
       expect(data.systolicBp).toBe(116);
       expect(data.diastolicBp).toBe(76);
-      expect(data.source).toBe("POSYANDU");
+      expect(data.source).toBe("SELF");
     });
 
     it("3. Mother create weight + BP → PASS", async () => {
@@ -223,7 +223,7 @@ describe("Stage 4A — Monitoring Suite", () => {
           weightKg: 60.1,
           systolicBp: 120,
           diastolicBp: 80,
-          source: "PUSKESMAS",
+          source: "SELF",
           notes: "Kontrol bulanan",
         },
       });
@@ -233,7 +233,22 @@ describe("Stage 4A — Monitoring Suite", () => {
       expect(data.weightKg).toBe(60.1);
       expect(data.systolicBp).toBe(120);
       expect(data.diastolicBp).toBe(80);
-      expect(data.source).toBe("PUSKESMAS");
+      expect(data.source).toBe("SELF");
+    });
+
+    it("3b. Mother cannot forge clinical source (MIDWIFE / PUSKESMAS / POSYANDU) → REJECT 403", async () => {
+      const res = await app.inject({
+        method: "POST",
+        url: "/api/mother/monitoring",
+        headers: { authorization: `Bearer ${motherToken}` },
+        payload: {
+          weightKg: 58.5,
+          source: "MIDWIFE",
+        },
+      });
+
+      expect(res.statusCode).toBe(403);
+      expect(res.json().error.code).toBe("FORBIDDEN_SOURCE");
     });
 
     it("4. Entry kosong → REJECT", async () => {
@@ -452,6 +467,20 @@ describe("Stage 4A — Monitoring Suite", () => {
       const data = res.json().data;
       expect(data.weightKg).toBe(59.8);
       expect(data.notes).toBe("Koreksi timbangan pagi");
+    });
+
+    it("17b. Mother cannot patch monitoring source to clinical source → REJECT 403", async () => {
+      const res = await app.inject({
+        method: "PATCH",
+        url: `/api/mother/monitoring/${createdEntryPublicId}`,
+        headers: { authorization: `Bearer ${motherToken}` },
+        payload: {
+          source: "MIDWIFE",
+        },
+      });
+
+      expect(res.statusCode).toBe(403);
+      expect(res.json().error.code).toBe("FORBIDDEN_SOURCE");
     });
 
     it("18. edit mother lain → REJECT", async () => {

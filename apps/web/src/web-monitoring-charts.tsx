@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import type {
   BloodPressureChartPoint,
   MonitoringPeriodFilter,
@@ -98,10 +98,18 @@ export function WebWeightLineChart({
 }: {
   points: WeightChartPoint[];
 }) {
-  const [selectedId, setSelectedId] = useState<string | null>(
-    points.length > 0 ? (points[points.length - 1]?.id ?? null) : null,
-  );
+  const latestPoint = points.length > 0 ? points[points.length - 1] : undefined;
+  const latestId = latestPoint?.id ?? null;
+  const [selectedId, setSelectedId] = useState<string | null>(latestId);
+  const prevLatestIdRef = useRef<string | null>(latestId);
   const [showTable, setShowTable] = useState(false);
+
+  useEffect(() => {
+    if (latestId !== prevLatestIdRef.current) {
+      prevLatestIdRef.current = latestId;
+      setSelectedId(latestId);
+    }
+  }, [latestId]);
 
   if (points.length === 0) {
     return (
@@ -373,10 +381,18 @@ export function WebBloodPressureLineChart({
 }: {
   points: BloodPressureChartPoint[];
 }) {
-  const [selectedId, setSelectedId] = useState<string | null>(
-    points.length > 0 ? (points[points.length - 1]?.id ?? null) : null,
-  );
+  const latestPoint = points.length > 0 ? points[points.length - 1] : undefined;
+  const latestId = latestPoint?.id ?? null;
+  const [selectedId, setSelectedId] = useState<string | null>(latestId);
+  const prevLatestIdRef = useRef<string | null>(latestId);
   const [showTable, setShowTable] = useState(false);
+
+  useEffect(() => {
+    if (latestId !== prevLatestIdRef.current) {
+      prevLatestIdRef.current = latestId;
+      setSelectedId(latestId);
+    }
+  }, [latestId]);
 
   if (points.length === 0) {
     return (

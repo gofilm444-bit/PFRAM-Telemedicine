@@ -4,7 +4,7 @@
     "module": "ESNext",
     "jsx": "react-jsx",
     "noEmit": true,
-    "types": ["vite/client", "vitest/globals"]
+    "types": ["vite/client", "vitest/globals", "vite-plugin-pwa/client"]
   },
   "include": ["src", "vite.config.ts"]
 }

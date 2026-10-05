@@ -225,6 +225,16 @@ export async function motherMonitoringRoutes(app: FastifyInstance) {
         .send(app.fail(req, "PROFILE_NOT_FOUND", "Profil ibu tidak ditemukan"));
     }
 
+    if (v.source && v.source !== "SELF") {
+      return reply.code(403).send(
+        app.fail(
+          req,
+          "FORBIDDEN_SOURCE",
+          "Ibu hanya dapat mencatat pemantauan mandiri (SELF). Sumber klinis hanya dapat dicatat oleh tenaga medis terverifikasi.",
+        ),
+      );
+    }
+
     const entry = await app.prisma.$transaction(async (tx) => {
       let pregnancy = mother.pregnancies[0];
       if (v.pregnancyPublicId) {
@@ -250,7 +260,7 @@ export async function motherMonitoringRoutes(app: FastifyInstance) {
           motherId: mother.id,
           pregnancyId: pregnancy.id,
           recordedAt: v.recordedAt ? new Date(v.recordedAt) : new Date(),
-          source: v.source ?? "SELF",
+          source: "SELF",
           weightKg: v.weightKg !== undefined ? v.weightKg : null,
           systolicBp: v.systolicBp !== undefined ? v.systolicBp : null,
           diastolicBp: v.diastolicBp !== undefined ? v.diastolicBp : null,
@@ -335,6 +345,16 @@ export async function motherMonitoringRoutes(app: FastifyInstance) {
         );
     }
 
+    if (v.source && v.source !== "SELF") {
+      return reply.code(403).send(
+        app.fail(
+          req,
+          "FORBIDDEN_SOURCE",
+          "Sumber pemantauan mandiri tidak dapat diubah ke sumber lain",
+        ),
+      );
+    }
+
     // Determine final values after update
     const finalWeight =
       v.weightKg !== undefined
@@ -391,7 +411,6 @@ export async function motherMonitoringRoutes(app: FastifyInstance) {
       where: { id: existing.id },
       data: {
         ...(v.recordedAt ? { recordedAt: new Date(v.recordedAt) } : {}),
-        ...(v.source ? { source: v.source } : {}),
         ...(v.weightKg !== undefined ? { weightKg: v.weightKg } : {}),
         ...(v.systolicBp !== undefined ? { systolicBp: v.systolicBp } : {}),
         ...(v.diastolicBp !== undefined ? { diastolicBp: v.diastolicBp } : {}),

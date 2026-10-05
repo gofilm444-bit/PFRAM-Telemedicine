@@ -11,6 +11,11 @@ import {
   ANC_STATUS_BADGES,
   formatAncDateShort,
   formatAncTime,
+  formatAncDateTime,
+  isAncAppointmentDayArrived,
+  getCalendarDateInTimezone,
+  DEFAULT_FACILITY_TIMEZONE,
+  DEFAULT_FACILITY_TIMEZONE_LABEL,
 } from "./anc-api";
 import { scheduledNotifications } from "../test/expo-notifications-mock.js";
 
@@ -38,9 +43,43 @@ describe("Tahap 5A — Mobile ANC & Reminder Utilities", () => {
       expect(formatted).toContain("2026");
     });
 
-    it("4. formatAncTime memformat jam dengan akhiran WIB", () => {
+    it("4. formatAncTime memformat jam dengan akhiran WIT (Maluku Utara)", () => {
       const formatted = formatAncTime("2026-10-15T09:00:00.000Z");
-      expect(formatted).toContain("WIB");
+      expect(formatted).toContain("WIT");
+      expect(formatted).not.toContain("WIB");
+    });
+
+    it("4a. formatAncDateTime memformat UTC instant 2026-10-14T23:00:00.000Z menjadi 15 Oktober 2026 · 08.00 WIT", () => {
+      const utcInstant = "2026-10-14T23:00:00.000Z"; // 15 Okt 08:00 WIT
+      const dateTimeFormatted = formatAncDateTime(utcInstant);
+      const timeFormatted = formatAncTime(utcInstant);
+      const dateFormatted = formatAncDateShort(utcInstant);
+
+      expect(dateTimeFormatted).toBe("15 Oktober 2026 · 08.00 WIT");
+      expect(timeFormatted).toBe("08.00 WIT");
+      expect(dateFormatted).toContain("15");
+      expect(dateFormatted).toContain("Okt");
+      expect(dateFormatted).toContain("2026");
+
+      // Ketat: tidak ada formatter ANC yang menghasilkan string WIB
+      expect(dateTimeFormatted).not.toContain("WIB");
+      expect(timeFormatted).not.toContain("WIB");
+      expect(DEFAULT_FACILITY_TIMEZONE).toBe("Asia/Jayapura");
+      expect(DEFAULT_FACILITY_TIMEZONE_LABEL).toBe("WIT");
+    });
+
+    it("4b. isAncAppointmentDayArrived mengevaluasi hari kedatangan kalender WIT tanpa terpengaruh zona waktu device", () => {
+      const scheduledAt = "2026-10-14T23:00:00.000Z"; // 15 Okt 08:00 WIT
+      // 1 detik sebelum tengah malam WIT (14 Okt 23:59:59 WIT = 14:59:59 UTC)
+      const beforeWitArrival = new Date("2026-10-14T14:59:59.000Z");
+      expect(isAncAppointmentDayArrived(scheduledAt, beforeWitArrival)).toBe(false);
+
+      // Tepat tengah malam WIT tiba (15 Okt 00:00:00 WIT = 15:00:00 UTC)
+      const atWitArrival = new Date("2026-10-14T15:00:00.000Z");
+      expect(isAncAppointmentDayArrived(scheduledAt, atWitArrival)).toBe(true);
+
+      // Tanggal kalender fasilitas selalu konsisten 2026-10-15
+      expect(getCalendarDateInTimezone(scheduledAt)).toBe("2026-10-15");
     });
 
     it("5. ANC_STATUS_BADGES memiliki definisi warna untuk semua status", () => {

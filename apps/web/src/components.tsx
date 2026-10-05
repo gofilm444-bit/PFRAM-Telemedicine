@@ -1,9 +1,10 @@
 import type {
   ButtonHTMLAttributes,
   InputHTMLAttributes,
+  SelectHTMLAttributes,
   ReactNode,
 } from "react";
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { Navigate, NavLink, useLocation } from "react-router-dom";
 import type { UserRole } from "@pfram/shared-types";
 import { useAuth } from "./auth";
@@ -99,6 +100,55 @@ export const Input = ({
       />
       {error && (
         <span id={`${inputId}-error`} role="alert" className="text-xs font-semibold text-status-emergency">
+          {error}
+        </span>
+      )}
+    </label>
+  );
+};
+
+export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
+  label: string;
+  error?: string | undefined;
+  options: Array<{ value: string; label: string }>;
+  placeholder?: string;
+}
+
+export const Select = ({
+  label,
+  error,
+  id,
+  options,
+  placeholder,
+  className = "",
+  ...props
+}: SelectProps) => {
+  const generatedId = useId();
+  const selectId = id ?? generatedId;
+
+  return (
+    <label htmlFor={selectId} className="grid gap-1.5 text-sm font-medium text-slate-800">
+      <span>{label}</span>
+      <select
+        id={selectId}
+        className={`min-h-11 rounded-xl border border-slate-300 bg-white px-3.5 text-slate-900 shadow-sm transition-colors focus:border-pfram-primary focus:outline-none focus:ring-2 focus:ring-pfram-primary/20 ${className}`}
+        aria-invalid={!!error}
+        aria-describedby={error ? `${selectId}-error` : undefined}
+        {...props}
+      >
+        {placeholder && (
+          <option value="">
+            {placeholder}
+          </option>
+        )}
+        {options.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
+      {error && (
+        <span id={`${selectId}-error`} role="alert" className="text-xs font-semibold text-status-emergency">
           {error}
         </span>
       )}
@@ -358,10 +408,45 @@ export function MetricCard({
    AUTHENTICATION & ACCESS GUARDS
    ========================================================================= */
 
+export function AppLoadingScreen({ message = "Memulihkan sesi dan memuat data…" }: { message?: string }) {
+  return (
+    <div
+      role="status"
+      aria-label="Memuat aplikasi"
+      className="flex min-h-screen flex-col items-center justify-center bg-[#FFF8F2] px-4 text-center"
+    >
+      <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-50 p-3 shadow-sm ring-1 ring-emerald-200/60 animate-pulse">
+        <img
+          src="/brand/logo-symbol.png"
+          alt="PFRAM"
+          className="h-10 w-10 object-contain"
+        />
+      </div>
+      <h2 className="mt-4 text-base font-bold tracking-tight text-slate-800">
+        PFRAM Telemedicine
+      </h2>
+      <p className="mt-1 text-xs text-slate-500">{message}</p>
+    </div>
+  );
+}
+
 export function ProtectedRoute({ children }: { children: ReactNode }) {
   const { user, loading } = useAuth();
   const location = useLocation();
-  if (loading) return <LoadingSkeleton />;
+
+  useEffect(() => {
+    if (user && typeof document !== "undefined") {
+      let metaRobots = document.querySelector('meta[name="robots"]');
+      if (!metaRobots) {
+        metaRobots = document.createElement("meta");
+        metaRobots.setAttribute("name", "robots");
+        document.head.appendChild(metaRobots);
+      }
+      metaRobots.setAttribute("content", "noindex, nofollow");
+    }
+  }, [user]);
+
+  if (loading) return <AppLoadingScreen />;
   return user ? (
     <>{children}</>
   ) : (

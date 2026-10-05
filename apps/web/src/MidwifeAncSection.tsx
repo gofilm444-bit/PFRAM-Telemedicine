@@ -8,7 +8,9 @@ import {
   ANC_STATUS_BADGES,
   ANC_VISIT_TYPE_OPTIONS,
   formatAncDateTime,
+  formatAncTime,
 } from "./anc-api";
+import { getCalendarDateInTimezone } from "@pfram/validation";
 import {
   useCreateMidwifeMotherSchedule,
   useMidwifeMotherAdherence,
@@ -347,7 +349,7 @@ function AddScheduleModal({
       return;
     }
 
-    const scheduledAt = new Date(`${scheduledDate}T${scheduledTime}:00`).toISOString();
+    const scheduledAt = new Date(`${scheduledDate}T${scheduledTime}:00+09:00`).toISOString();
 
     createMutation.mutate(
       {
@@ -402,7 +404,7 @@ function AddScheduleModal({
 
           <div>
             <label className="block text-xs font-semibold text-slate-700">
-              Waktu Pemeriksaan (WIB)
+              Waktu Pemeriksaan (WIT)
             </label>
             <input
               type="time"
@@ -493,9 +495,9 @@ function EditScheduleModal({
 }) {
   const updateMutation = useUpdateMidwifeMotherSchedule();
 
-  const initialDateStr = schedule.scheduledAt.slice(0, 10);
+  const initialDateStr = getCalendarDateInTimezone(schedule.scheduledAt);
   const initialTimeStr = schedule.scheduledAt.includes("T")
-    ? schedule.scheduledAt.slice(11, 16)
+    ? formatAncTime(schedule.scheduledAt).replace(".", ":")
     : "09:00";
 
   const [scheduledDate, setScheduledDate] = useState(initialDateStr);
@@ -507,7 +509,7 @@ function EditScheduleModal({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const scheduledAt = new Date(`${scheduledDate}T${scheduledTime}:00`).toISOString();
+    const scheduledAt = new Date(`${scheduledDate}T${scheduledTime}:00+09:00`).toISOString();
 
     updateMutation.mutate(
       {
@@ -563,7 +565,7 @@ function EditScheduleModal({
 
           <div>
             <label className="block text-xs font-semibold text-slate-700">
-              Waktu Pemeriksaan (WIB)
+              Waktu Pemeriksaan (WIT)
             </label>
             <input
               type="time"

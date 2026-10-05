@@ -1,6 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { DangerFollowUpUpdateInput } from "@pfram/shared-types";
-import { midwifeDangerScreeningApi } from "./danger-screening-api";
+import type {
+  DangerFollowUpUpdateInput,
+  DangerScreeningCreateInput,
+} from "@pfram/shared-types";
+import {
+  midwifeDangerScreeningApi,
+  motherDangerScreeningApi,
+} from "./danger-screening-api";
 
 export const midwifeDangerScreeningKeys = {
   all: ["midwife", "danger-screening"] as const,
@@ -75,6 +81,55 @@ export function useUpdateMidwifeDangerFollowUp() {
           ),
         });
       }
+    },
+  });
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Mother Danger Screening Queries & Mutations                               */
+/* -------------------------------------------------------------------------- */
+
+export const motherDangerKeys = {
+  all: ["mother", "danger"] as const,
+  signs: () => ["mother", "danger", "signs"] as const,
+  screenings: (query?: unknown) =>
+    ["mother", "danger", "screenings", query ?? "all"] as const,
+  detail: (publicId: string) =>
+    ["mother", "danger", "screening", publicId] as const,
+};
+
+export function useMotherDangerSigns() {
+  return useQuery({
+    queryKey: motherDangerKeys.signs(),
+    queryFn: () => motherDangerScreeningApi.getDangerSigns(),
+    retry: 1,
+  });
+}
+
+export function useMotherDangerScreenings(query?: { page?: number; limit?: number }) {
+  return useQuery({
+    queryKey: motherDangerKeys.screenings(query),
+    queryFn: () => motherDangerScreeningApi.getScreenings(query),
+    retry: 1,
+  });
+}
+
+export function useMotherDangerScreeningDetail(publicId: string | null | undefined) {
+  return useQuery({
+    queryKey: motherDangerKeys.detail(publicId ?? ""),
+    queryFn: () => motherDangerScreeningApi.getScreeningDetail(publicId!),
+    enabled: Boolean(publicId),
+    retry: 1,
+  });
+}
+
+export function useCreateMotherDangerScreening() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: DangerScreeningCreateInput) =>
+      motherDangerScreeningApi.createScreening(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: motherDangerKeys.all });
     },
   });
 }

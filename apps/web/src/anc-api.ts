@@ -1,17 +1,60 @@
-import { createMidwifeAncApi } from "@pfram/api-client";
+import { createMidwifeAncApi, createMotherAncApi } from "@pfram/api-client";
 import { api } from "./auth";
-import { formatIndonesianDate, formatIndonesianTime } from "./monitoring-api";
+import {
+  DEFAULT_FACILITY_TIMEZONE,
+  DEFAULT_FACILITY_TIMEZONE_LABEL,
+} from "@pfram/validation";
 
 export const midwifeAncApi = createMidwifeAncApi(api);
+export const motherAncApi = createMotherAncApi(api);
 
-export function formatAncDateShort(isoDate: string): string {
-  return formatIndonesianDate(isoDate);
+export function formatAncDateShort(
+  isoDate: string,
+  timeZone: string = DEFAULT_FACILITY_TIMEZONE,
+): string {
+  if (!isoDate) return "-";
+  try {
+    const d = new Date(isoDate);
+    if (isNaN(d.getTime())) return isoDate;
+    return new Intl.DateTimeFormat("id-ID", {
+      timeZone,
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }).format(d);
+  } catch {
+    return isoDate;
+  }
 }
 
-export function formatAncDateTime(isoDate: string): string {
-  const dateStr = formatIndonesianDate(isoDate);
-  const timeStr = formatIndonesianTime(isoDate);
-  return timeStr ? `${dateStr} • ${timeStr} WIB` : dateStr;
+export function formatAncTime(
+  isoDate: string,
+  timeZone: string = DEFAULT_FACILITY_TIMEZONE,
+): string {
+  if (!isoDate || !isoDate.includes("T")) return "";
+  try {
+    const d = new Date(isoDate);
+    if (isNaN(d.getTime())) return "";
+    return new Intl.DateTimeFormat("id-ID", {
+      timeZone,
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    })
+      .format(d)
+      .replace(":", ".");
+  } catch {
+    return "";
+  }
+}
+
+export function formatAncDateTime(
+  isoDate: string,
+  timeZone: string = DEFAULT_FACILITY_TIMEZONE,
+): string {
+  const dateStr = formatAncDateShort(isoDate, timeZone);
+  const timeStr = formatAncTime(isoDate, timeZone);
+  return timeStr ? `${dateStr} · ${timeStr} ${DEFAULT_FACILITY_TIMEZONE_LABEL}` : dateStr;
 }
 
 export const ANC_VISIT_TYPE_OPTIONS: Array<{ value: "ANC" | "DOCTOR_ANC"; label: string }> = [

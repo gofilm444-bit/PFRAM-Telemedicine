@@ -27,6 +27,12 @@ import {
   createMidwifeVideoConsultation,
   updateMidwifeVideoConsultation,
   updateMidwifeVideoConsultationStatus,
+  getMotherConsultationMessages,
+  getMotherConsultationThread,
+  markMotherConsultationRead,
+  sendMotherConsultationMessage,
+  getMotherUpcomingVideoConsultation,
+  getMotherVideoConsultations,
 } from "./consultation-api";
 
 export const midwifeConsultationKeys = {
@@ -194,5 +200,91 @@ export function useUpdateVideoConsultationStatus(publicId: string) {
         queryKey: midwifeVideoConsultationKeys.all,
       });
     },
+  });
+}
+
+// ==========================================
+// TAHAP 10 / PWA-6 — MOTHER CONSULTATION & VIDEO QUERIES
+// ==========================================
+
+export const motherConsultationKeys = {
+  all: ["mother-consultation"] as const,
+  thread: () => ["mother-consultation", "thread"] as const,
+  messages: (query?: ConsultationQuery) =>
+    ["mother-consultation", "messages", query ?? "default"] as const,
+  videoUpcoming: () => ["mother-consultation", "video", "upcoming"] as const,
+  videoList: (query?: VideoConsultationQuery) =>
+    ["mother-consultation", "video", "list", query ?? "all"] as const,
+};
+
+export function useMotherConsultationThread() {
+  return useQuery({
+    queryKey: motherConsultationKeys.thread(),
+    queryFn: () => getMotherConsultationThread(),
+    refetchInterval: 10000,
+    retry: (failureCount, error: unknown) => {
+      const err = error as { status?: number; code?: string } | null;
+      if (err?.status === 404 || err?.code === "MIDWIFE_NOT_ASSIGNED") return false;
+      return failureCount < 1;
+    },
+  });
+}
+
+export function useMotherConsultationMessages(query?: ConsultationQuery) {
+  return useQuery({
+    queryKey: motherConsultationKeys.messages(query),
+    queryFn: () => getMotherConsultationMessages(query),
+    refetchInterval: 5000,
+    retry: (failureCount, error: unknown) => {
+      const err = error as { status?: number; code?: string } | null;
+      if (err?.status === 404 || err?.code === "MIDWIFE_NOT_ASSIGNED") return false;
+      return failureCount < 1;
+    },
+  });
+}
+
+export function useSendMotherConsultationMessage() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (input: ConsultationMessageCreateInput) =>
+      sendMotherConsultationMessage(input),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: motherConsultationKeys.messages(),
+      });
+      queryClient.invalidateQueries({
+        queryKey: motherConsultationKeys.thread(),
+      });
+    },
+  });
+}
+
+export function useMarkMotherConsultationRead() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => markMotherConsultationRead(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: motherConsultationKeys.thread(),
+      });
+    },
+  });
+}
+
+export function useMotherUpcomingVideoConsultation() {
+  return useQuery({
+    queryKey: motherConsultationKeys.videoUpcoming(),
+    queryFn: () => getMotherUpcomingVideoConsultation(),
+    refetchInterval: 15000,
+    retry: 1,
+  });
+}
+
+export function useMotherVideoConsultations(query?: VideoConsultationQuery) {
+  return useQuery({
+    queryKey: motherConsultationKeys.videoList(query),
+    queryFn: () => getMotherVideoConsultations(query),
+    refetchInterval: 15000,
+    retry: 1,
   });
 }

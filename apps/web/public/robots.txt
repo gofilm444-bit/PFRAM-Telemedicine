@@ -1,0 +1,21 @@
+# PFRAM Telemedicine Robots Policy
+# https://pfram.id
+
+User-agent: *
+Allow: /login
+Allow: /register
+Disallow: /m/
+Disallow: /m/*
+Disallow: /dashboard
+Disallow: /facilities
+Disallow: /mothers
+Disallow: /midwives
+Disallow: /regions
+Disallow: /assignments
+Disallow: /users
+Disallow: /education
+Disallow: /api/
+Disallow: /api/*
+
+# Safe Crawl-Delay for maternal server health
+Crawl-delay: 10

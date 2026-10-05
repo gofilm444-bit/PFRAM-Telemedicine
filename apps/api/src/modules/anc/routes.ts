@@ -12,6 +12,7 @@ import {
   ancScheduleUpdateSchema,
   reminderSettingsUpdateSchema,
   reminderSnoozeSchema,
+  isAncAppointmentDayArrived,
 } from "@pfram/validation";
 import { audit } from "../auth/service.js";
 import {
@@ -172,12 +173,42 @@ export async function motherAncRoutes(app: FastifyInstance) {
         .send(app.fail(req, "NOT_FOUND", "Jadwal ANC tidak ditemukan"));
     }
 
+    if (schedule.status === "COMPLETED") {
+      return reply
+        .code(400)
+        .send(app.fail(req, "ALREADY_COMPLETED", "Pemeriksaan ANC sudah dikonfirmasi sebelumnya"));
+    }
+
+    if (schedule.status === "CANCELLED") {
+      return reply
+        .code(400)
+        .send(app.fail(req, "SCHEDULE_CANCELLED", "Jadwal ANC yang telah dibatalkan tidak dapat dikonfirmasi"));
+    }
+
     const now = new Date();
+
+    if (!isAncAppointmentDayArrived(schedule.scheduledAt, now)) {
+      return reply.code(400).send(
+        app.fail(
+          req,
+          "PREMATURE_CONFIRMATION",
+          "Konfirmasi kehadiran mandiri hanya dapat dilakukan pada atau setelah hari pemeriksaan yang dijadwalkan",
+        ),
+      );
+    }
+    const selfReportTag = "[Konfirmasi Kehadiran Mandiri oleh Ibu]";
+    const updatedNotes = schedule.notes
+      ? (schedule.notes.includes(selfReportTag)
+          ? schedule.notes
+          : `${schedule.notes}\n${selfReportTag}`)
+      : selfReportTag;
+
     const updated = await app.prisma.ancSchedule.update({
       where: { id: schedule.id },
       data: {
         status: "COMPLETED",
         completedAt: now,
+        notes: updatedNotes,
       },
       include: scheduleInclude,
     });
@@ -194,7 +225,10 @@ export async function motherAncRoutes(app: FastifyInstance) {
       entityType: "AncSchedule",
       entityId: updated.publicId,
       result: "SUCCESS",
-      metadata: { completedAt: now.toISOString() },
+      metadata: {
+        completedAt: now.toISOString(),
+        source: "MOTHER_SELF_REPORT",
+      },
     });
 
     return reply.send(app.ok(req, ancScheduleView(updated)));

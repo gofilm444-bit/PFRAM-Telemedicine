@@ -1,4 +1,4 @@
-﻿import { createMidwifeP4kApi } from "@pfram/api-client";
+import { createMidwifeP4kApi, createMotherP4kApi } from "@pfram/api-client";
 import type {
   P4kPlan,
   P4kPlanInput,
@@ -8,6 +8,7 @@ import type {
 import { api } from "./auth";
 
 export const midwifeP4kApi = createMidwifeP4kApi(api);
+export const motherP4kApi = createMotherP4kApi(api);
 
 export const getMotherP4k = (motherPublicId: string): Promise<P4kPlan> =>
   midwifeP4kApi.getMotherP4k(motherPublicId);

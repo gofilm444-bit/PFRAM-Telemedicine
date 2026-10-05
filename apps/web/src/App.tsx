@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
   BrowserRouter,
+  Link,
   Navigate,
   Route,
   Routes,
@@ -45,6 +46,12 @@ import { MidwifeMissedAncPage } from "./MidwifeMissedAncPage";
 import { MidwifeConsultationPage } from "./MidwifeConsultationPage";
 import { AdminEducationListPage } from "./AdminEducationListPage";
 import { AdminUsersPage } from "./AdminUsersPage";
+import {
+  PwaUpdateNotification,
+  MotherRouter,
+  MotherRegisterPage,
+  usePwaInstall,
+} from "./pwa";
 
 /* =========================================================================
    LOGIN SCREEN
@@ -54,6 +61,8 @@ function Login() {
   const { user, login } = useAuth();
   const nav = useNavigate();
   const [error, setError] = useState("");
+  const { canInstall, isInstalled, promptInstall, isIos } = usePwaInstall();
+  const [showInstallHelp, setShowInstallHelp] = useState(false);
   const {
     register,
     handleSubmit,
@@ -64,7 +73,26 @@ function Login() {
   });
 
   useEffect(() => {
-    if (user) nav("/dashboard", { replace: true });
+    document.title = "Masuk ke PFRAM — Layanan Telemedicine Maternal";
+    if (typeof document !== "undefined") {
+      let metaRobots = document.querySelector('meta[name="robots"]');
+      if (!metaRobots) {
+        metaRobots = document.createElement("meta");
+        metaRobots.setAttribute("name", "robots");
+        document.head.appendChild(metaRobots);
+      }
+      metaRobots.setAttribute("content", "index, follow");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      if (user.role === "MOTHER") {
+        nav("/m", { replace: true });
+      } else {
+        nav("/dashboard", { replace: true });
+      }
+    }
   }, [user, nav]);
 
   return (
@@ -77,6 +105,10 @@ function Login() {
               <img
                 src="/brand/logo-symbol.png"
                 alt="Logo PFRAM"
+                width={40}
+                height={40}
+                loading="eager"
+                decoding="async"
                 className="h-10 w-10 object-contain"
               />
             </div>
@@ -87,7 +119,7 @@ function Login() {
               Pantau Kehamilan, Lindungi Ibu dan Bayi
             </p>
             <div className="mt-2.5 inline-flex items-center rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-pfram-text ring-1 ring-emerald-200/60">
-              Dashboard Bidan & Administrator
+              Layanan Maternal Terintegrasi
             </div>
           </div>
 
@@ -103,8 +135,12 @@ function Login() {
             onSubmit={handleSubmit(async (v) => {
               setError("");
               try {
-                await login(v.phoneNumber, v.password);
-                nav("/dashboard");
+                const u = await login(v.phoneNumber, v.password);
+                if (u?.role === "MOTHER") {
+                  nav("/m");
+                } else {
+                  nav("/dashboard");
+                }
               } catch (e) {
                 setError(e instanceof Error ? e.message : "Login gagal");
               }
@@ -135,8 +171,77 @@ function Login() {
             </Button>
           </form>
 
+          {/* Secondary CTA: Install App / Fallback Help */}
+          {!isInstalled && (
+            <div className="mt-4 pt-3 border-t border-slate-100 flex flex-col items-center">
+              {canInstall ? (
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="md"
+                  className="w-full min-h-[44px] flex items-center justify-center gap-2 border-emerald-300 text-emerald-800 bg-emerald-50/60 hover:bg-emerald-100"
+                  onClick={async () => {
+                    await promptInstall();
+                  }}
+                >
+                  <span aria-hidden="true">📱</span>
+                  <span>Pasang Aplikasi PFRAM</span>
+                </Button>
+              ) : (
+                <div className="w-full text-center">
+                  <button
+                    type="button"
+                    onClick={() => setShowInstallHelp((prev) => !prev)}
+                    className="min-h-[44px] py-2 px-3 inline-flex items-center justify-center text-xs font-medium text-emerald-700 hover:text-emerald-900 underline gap-1 mx-auto"
+                  >
+                    <span>ℹ️</span>
+                    <span>Cara memasang aplikasi</span>
+                  </button>
+
+                  {showInstallHelp && (
+                    <div className="mt-3 text-left bg-emerald-50/80 border border-emerald-200/80 rounded-xl p-3.5 text-xs text-slate-700 space-y-2">
+                      <p className="font-semibold text-emerald-950 flex items-center gap-1.5">
+                        <span>📲</span>
+                        <span>Pasang PFRAM di Perangkat Anda:</span>
+                      </p>
+                      {isIos ? (
+                        <ol className="list-decimal pl-4 space-y-1 text-slate-600">
+                          <li>Buka peramban Safari di perangkat iPhone/iPad Anda.</li>
+                          <li>
+                            Ketuk tombol <strong>Bagikan (Share)</strong> pada bilah navigasi.
+                          </li>
+                          <li>
+                            Gulir ke bawah dan pilih <strong>"Tambahkan ke Layar Utama" (Add to Home Screen)</strong>.
+                          </li>
+                          <li>Ketuk <strong>Tambah</strong> di sudut kanan atas.</li>
+                        </ol>
+                      ) : (
+                        <ol className="list-decimal pl-4 space-y-1 text-slate-600">
+                          <li>Buka menu opsi peramban (ikon titik tiga di sudut kanan atas).</li>
+                          <li>Pilih <strong>"Pasang aplikasi"</strong> atau <strong>"Tambahkan ke layar utama"</strong>.</li>
+                          <li>Ikuti petunjuk di layar untuk memasang ikon PFRAM.</li>
+                        </ol>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Registration Link for Mothers */}
+          <div className="mt-4 text-center text-xs text-slate-600">
+            Ibu hamil belum punya akun?{" "}
+            <Link
+              to="/register"
+              className="font-bold text-pfram-primary hover:text-pfram-text hover:underline min-h-[44px] py-2 px-1 inline-flex items-center"
+            >
+              Daftar Akun Ibu
+            </Link>
+          </div>
+
           {/* Footer note */}
-          <div className="mt-6 border-t border-slate-100 pt-4 text-center text-[11px] text-slate-500">
+          <div className="mt-6 border-t border-slate-100 pt-4 text-center text-xs text-slate-500">
             Sistem Terintegrasi Buku KIA Kemenkes RI · Hak Cipta Terlindungi
           </div>
         </Card>
@@ -150,6 +255,11 @@ function Login() {
    ========================================================================= */
 
 function Layout() {
+  const { user } = useAuth();
+  if (user?.role === "MOTHER") {
+    return <Navigate to="/m" replace />;
+  }
+
   return (
     <AppShell>
       <Routes>
@@ -395,7 +505,7 @@ function AdminDashboard() {
               description: "Metrik sistem",
               icon: "📊",
             };
-            const val = data?.counts[k] ?? 0;
+            const val = data?.counts?.[k] ?? 0;
             return (
               <MetricCard
                 key={k}
@@ -591,7 +701,16 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<MotherRegisterPage />} />
           <Route path="/403" element={<Forbidden />} />
+          <Route
+            path="/m/*"
+            element={
+              <ProtectedRoute>
+                <MotherRouter />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/*"
             element={
@@ -601,6 +720,7 @@ export default function App() {
             }
           />
         </Routes>
+        <PwaUpdateNotification />
       </BrowserRouter>
     </AuthProvider>
   );
