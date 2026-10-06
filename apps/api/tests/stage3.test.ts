@@ -43,7 +43,10 @@ describe("Stage 3 — Verification Suite", () => {
   beforeAll(async () => {
     const env = {
       NODE_ENV: "test",
-      DATABASE_URL: process.env.DATABASE_URL || "postgresql://pfram:pfram_dev_only@localhost:5433/pfram_db?schema=public",
+      DATABASE_URL:
+        process.env.TEST_DATABASE_URL ||
+        process.env.DATABASE_URL ||
+        "postgresql://pfram:pfram_dev_only@localhost:5433/pfram_test?schema=public",
       JWT_ACCESS_SECRET: process.env.JWT_ACCESS_SECRET || "development-access-secret-change-me-at-least-32-characters",
       JWT_REFRESH_SECRET: process.env.JWT_REFRESH_SECRET || "development-refresh-secret-change-me-at-least-32-characters",
       CORS_ORIGINS: "http://localhost:5173",
@@ -80,22 +83,22 @@ describe("Stage 3 — Verification Suite", () => {
     });
 
     const prov = await prisma.region.findFirstOrThrow({
-      where: { name: "Provinsi Pilot Development" },
+      where: { code: "82" },
     });
     devProvince = prov;
 
     const reg = await prisma.region.findFirstOrThrow({
-      where: { name: "Kabupaten Pilot Development" },
+      where: { code: "82.71" },
     });
     devRegency = reg;
 
     const dist = await prisma.region.findFirstOrThrow({
-      where: { name: "Kecamatan Pilot Development" },
+      where: { code: "82.71.02" },
     });
     devDistrict = dist;
 
     const fac = await prisma.healthFacility.findFirstOrThrow({
-      where: { name: "Puskesmas Pilot PFRAM (Development)" },
+      where: { publicId: "32000000-0000-4000-8000-000000000001" },
     });
     devFacility = fac;
 
