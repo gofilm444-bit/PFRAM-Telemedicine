@@ -19,17 +19,21 @@ function setWebCookies(
 ) {
   const csrf = newOpaqueToken();
   const common = {
-    path: "/api/auth",
     secure: app.env.cookieSecure,
     sameSite: "strict" as const,
   };
   reply.setCookie("pfram_refresh", refreshToken, {
     ...common,
+    path: "/api/auth",
     httpOnly: true,
     maxAge: app.env.REFRESH_TOKEN_DAYS * 86400,
   });
+  // CSRF harus dapat dibaca oleh aplikasi web melalui document.cookie.
+  // Hapus cookie legacy yang sebelumnya dibatasi ke /api/auth.
+  reply.clearCookie("pfram_csrf", { path: "/api/auth" });
   reply.setCookie("pfram_csrf", csrf, {
     ...common,
+    path: "/",
     httpOnly: false,
     maxAge: app.env.REFRESH_TOKEN_DAYS * 86400,
   });
@@ -37,6 +41,8 @@ function setWebCookies(
 }
 function clearCookies(reply: FastifyReply) {
   reply.clearCookie("pfram_refresh", { path: "/api/auth" });
+  reply.clearCookie("pfram_csrf", { path: "/" });
+  // Cleanup cookie legacy dari versi sebelum session-restore hotfix.
   reply.clearCookie("pfram_csrf", { path: "/api/auth" });
 }
 function tokenFrom(
