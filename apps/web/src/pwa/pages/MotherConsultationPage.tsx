@@ -516,7 +516,7 @@ export function MotherConsultationPage() {
         <aside
           role="note"
           aria-label="Perhatian Keselamatan Maternal"
-          className="rounded-xl border border-rose-200 bg-rose-50/80 p-3.5 text-xs text-rose-950 shadow-sm"
+          className="rounded-2xl border border-rose-200/90 bg-rose-50/80 p-3.5 text-xs text-rose-950 shadow-xs"
         >
           <div className="flex items-start gap-2.5">
             <span className="text-base leading-none">⚠️</span>
@@ -537,14 +537,14 @@ export function MotherConsultationPage() {
         {/* =========================================================================
            2. NAVIGATION TABS (CHAT VS VIDEO CALL)
            ========================================================================= */}
-        <div className="flex items-center rounded-xl bg-slate-100 p-1">
+        <div className="inline-flex w-full rounded-xl bg-slate-100 p-1 border border-slate-200/70 shadow-2xs gap-1">
           <button
             type="button"
             onClick={() => setActiveTab("chat")}
-            className={`flex-1 rounded-lg py-1.5 text-xs font-semibold transition-all ${
+            className={`flex-1 rounded-lg py-2 text-xs font-semibold transition-all ${
               activeTab === "chat"
-                ? "bg-white text-pfram-primary shadow-sm"
-                : "text-slate-600 hover:text-slate-900"
+                ? "bg-white text-pfram-primary shadow-xs font-bold"
+                : "text-slate-600 hover:text-slate-900 font-medium"
             }`}
           >
             💬 Pesan Konsultasi
@@ -552,10 +552,10 @@ export function MotherConsultationPage() {
           <button
             type="button"
             onClick={() => setActiveTab("video")}
-            className={`flex-1 rounded-lg py-1.5 text-xs font-semibold transition-all ${
+            className={`flex-1 rounded-lg py-2 text-xs font-semibold transition-all ${
               activeTab === "video"
-                ? "bg-white text-pfram-primary shadow-sm"
-                : "text-slate-600 hover:text-slate-900"
+                ? "bg-white text-pfram-primary shadow-xs font-bold"
+                : "text-slate-600 hover:text-slate-900 font-medium"
             }`}
           >
             📹 Video Konsultasi
@@ -569,12 +569,12 @@ export function MotherConsultationPage() {
            3. MIDWIFE / CARE TEAM INFO OR NOT ASSIGNED
            ========================================================================= */}
         {threadLoading ? (
-          <Card className="p-4 border border-slate-200/90 bg-white">
+          <Card className="rounded-2xl p-4 border border-slate-200/80 bg-white">
             <LoadingSkeleton className="h-4 w-32 mb-2" />
             <LoadingSkeleton className="h-3 w-48" />
           </Card>
         ) : isNotAssigned ? (
-          <Card className="p-5 border border-amber-200 bg-amber-50/70 text-center shadow-sm">
+          <Card className="rounded-2xl p-5 border border-amber-200 bg-amber-50/70 text-center shadow-xs">
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-100 text-2xl text-amber-800">
               👩‍⚕️
             </div>
@@ -589,13 +589,14 @@ export function MotherConsultationPage() {
                 variant="outline"
                 size="sm"
                 onClick={() => refetchThread()}
+                className="rounded-xl"
               >
                 Coba Lagi
               </Button>
             </div>
           </Card>
         ) : midwife ? (
-          <Card className="p-3.5 border border-slate-200/90 bg-white shadow-sm">
+          <Card className="rounded-2xl p-3.5 sm:p-4 border border-slate-200/80 bg-white shadow-xs">
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-start gap-2.5">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-xl ring-1 ring-emerald-200/70 text-emerald-800">
@@ -614,14 +615,9 @@ export function MotherConsultationPage() {
                     📍 {(midwife as { facilityName?: string }).facilityName || midwife.primaryFacilityName || "Puskesmas"}
                   </p>
                   {/* Working Hours & SLA */}
-                  <p className="text-[11px] text-slate-500 mt-1 flex items-center gap-1">
-                    <span>⏰</span>
-                    <span>
-                      Waktu layanan bidan: {midwife.serviceStartTime || "08.00"}–{midwife.serviceEndTime || "16.00"} WIT
-                    </span>
-                  </p>
-                  <p className="text-[11px] text-slate-500">
-                    Estimasi balasan: {midwife.estimatedResponseMinutes ? `~${midwife.estimatedResponseMinutes} menit` : "1-2 jam kerja"}
+                  <p className="text-[11px] text-slate-500 mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                    <span>⏰ {midwife.serviceStartTime || "08.00"}–{midwife.serviceEndTime || "16.00"} WIT</span>
+                    <span>• Estimasi balasan: {midwife.estimatedResponseMinutes ? `~${midwife.estimatedResponseMinutes} menit` : "1-2 jam kerja"}</span>
                   </p>
                 </div>
               </div>
@@ -633,7 +629,7 @@ export function MotherConsultationPage() {
                     href={`https://wa.me/${midwife.whatsappNumber.replace(/\D/g, "")}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-1 rounded-lg bg-emerald-50 px-2 py-1 text-[11px] font-semibold text-emerald-700 hover:bg-emerald-100 transition-colors"
+                    className="inline-flex items-center justify-center gap-1 rounded-xl bg-emerald-50 px-2.5 py-1.5 text-[11px] font-semibold text-emerald-800 hover:bg-emerald-100 border border-emerald-200/60 transition-colors"
                     aria-label="WhatsApp Bidan"
                     title="Buka WhatsApp Bidan"
                   >
@@ -644,7 +640,7 @@ export function MotherConsultationPage() {
                 {midwife.phoneNumber && (
                   <a
                     href={`tel:${midwife.phoneNumber}`}
-                    className="inline-flex items-center justify-center gap-1 rounded-lg bg-slate-100 px-2 py-1 text-[11px] font-medium text-slate-700 hover:bg-slate-200 transition-colors"
+                    className="inline-flex items-center justify-center gap-1 rounded-xl bg-slate-100 px-2.5 py-1.5 text-[11px] font-medium text-slate-700 hover:bg-slate-200 border border-slate-200/60 transition-colors"
                     aria-label="Telepon Bidan"
                     title="Telepon Bidan"
                   >
@@ -791,9 +787,9 @@ export function MotherConsultationPage() {
            6. TAB CONTENT: CHAT THREAD & COMPOSER
            ========================================================================= */}
         {activeTab === "chat" && (
-          <div className="flex flex-col rounded-2xl border border-slate-200/90 bg-white shadow-sm overflow-hidden min-h-[460px]">
+          <div className="flex flex-col rounded-2xl border border-slate-200/80 bg-white shadow-xs overflow-hidden min-h-[460px]">
             {/* Thread Header */}
-            <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/70 px-4 py-2.5">
+            <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/80 px-4 py-2.5">
               <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
                 <span>💬</span>
                 <span>Ruang Pesan Telekonsultasi</span>
@@ -845,10 +841,10 @@ export function MotherConsultationPage() {
 
                       {/* Message Bubble */}
                       <div
-                        className={`max-w-[85%] rounded-2xl p-3 shadow-xs space-y-2 ${
+                        className={`max-w-[85%] rounded-2xl p-3.5 shadow-2xs space-y-2 ${
                           isMother
-                            ? "bg-emerald-600 text-white rounded-br-xs"
-                            : "bg-white text-slate-900 border border-slate-200/90 rounded-bl-xs"
+                            ? "bg-gradient-to-br from-[#168C68] to-[#155E4B] text-white rounded-br-xs"
+                            : "bg-white text-slate-900 border border-slate-200/80 rounded-bl-xs"
                         }`}
                       >
                         {/* Text Content */}
@@ -1012,14 +1008,14 @@ export function MotherConsultationPage() {
                   aria-label="Lampirkan Foto"
                 />
 
-                <div className="flex items-end gap-1.5">
+                <div className="flex items-end gap-2">
                   {/* Photo Button */}
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isNotAssigned || sendMutation.isPending}
                     aria-label="Tombol lampirkan foto"
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900 transition-colors disabled:opacity-50"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900 transition-colors disabled:opacity-50"
                     title="Pilih foto"
                   >
                     📷
@@ -1031,7 +1027,7 @@ export function MotherConsultationPage() {
                     onClick={startRecording}
                     disabled={isNotAssigned || sendMutation.isPending}
                     aria-label="Rekam Pesan Suara"
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900 transition-colors disabled:opacity-50"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 hover:text-slate-900 transition-colors disabled:opacity-50"
                     title="Rekam pesan suara"
                   >
                     🎤
@@ -1056,7 +1052,7 @@ export function MotherConsultationPage() {
                       }
                       disabled={isNotAssigned || sendMutation.isPending}
                       rows={1}
-                      className="w-full resize-none rounded-xl border border-slate-200/90 bg-slate-50/50 p-2.5 text-xs text-slate-900 placeholder:text-slate-400 focus:border-pfram-primary focus:bg-white focus:outline-none focus:ring-1 focus:ring-pfram-primary"
+                      className="w-full resize-none rounded-xl border border-slate-200/90 bg-slate-50/60 p-2.5 text-xs text-slate-900 placeholder:text-slate-400 focus:border-pfram-primary focus:bg-white focus:outline-none focus:ring-1 focus:ring-pfram-primary"
                     />
                   </div>
 
@@ -1069,7 +1065,7 @@ export function MotherConsultationPage() {
                       (!inputText.trim() && !pendingImage && !pendingAudio)
                     }
                     aria-label="Kirim pesan"
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-sm hover:bg-emerald-700 active:scale-95 transition-all disabled:opacity-40 disabled:pointer-events-none"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-pfram-primary text-white shadow-sm hover:bg-emerald-700 active:scale-95 transition-all disabled:opacity-40 disabled:pointer-events-none"
                   >
                     {sendMutation.isPending ? (
                       <span className="text-xs">⏳</span>

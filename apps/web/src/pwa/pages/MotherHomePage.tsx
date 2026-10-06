@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../../auth";
 import { MotherAppShell } from "../MotherAppShell";
-import { Card, StatusBadge, Button } from "../../components";
+import { Card, Button } from "../../components";
 import { motherAncApi, formatAncDateShort, formatAncTime } from "../../anc-api";
 import {
   motherMonitoringApi,
@@ -66,36 +66,48 @@ export function MotherHomePage() {
         {/* A. GREETING & MATERNAL STATUS */}
         <section className="flex items-center justify-between gap-3 pt-1">
           <div>
-            <span className="text-xs font-medium text-slate-500">
+            <span className="text-[11px] font-medium text-slate-500">
               Selamat datang di PFRAM Telemedicine
             </span>
-            <h1 className="text-lg font-extrabold tracking-tight text-slate-900 leading-tight">
+            <h1 className="text-xl font-black tracking-tight text-slate-900 leading-tight">
               Halo, {greetingName}!
             </h1>
           </div>
-          <StatusBadge
-            variant={activePregnancy ? "success" : "info"}
-            size="sm"
+          <span
+            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold shadow-2xs border ${
+              activePregnancy
+                ? "bg-emerald-50 text-emerald-800 border-emerald-200/80"
+                : "bg-sky-50 text-sky-800 border-sky-200/80"
+            }`}
           >
+            <span
+              className={`h-2 w-2 rounded-full ${
+                activePregnancy ? "bg-emerald-500 animate-pulse" : "bg-sky-500"
+              }`}
+            />
             {activePregnancy ? "Kehamilan Aktif" : "Menunggu Data"}
-          </StatusBadge>
+          </span>
         </section>
 
         {/* B. PREGNANCY HERO CARD */}
         <section aria-labelledby="pregnancy-hero-title">
-          <Card className="relative overflow-hidden border-0 bg-gradient-to-br from-[#168C68] to-[#155E4B] p-5 text-white shadow-lg shadow-emerald-950/15">
-            {/* Background subtle decoration */}
+          <div className="relative overflow-hidden rounded-[22px] border border-emerald-600/30 bg-gradient-to-br from-[#168C68] via-[#147a5b] to-[#115140] p-5 text-white shadow-lg shadow-emerald-950/15">
+            {/* Subtle maternal glow & ambient lighting */}
             <div
               className="pointer-events-none absolute -right-6 -bottom-6 h-36 w-36 rounded-full bg-white/10 blur-xl"
               aria-hidden="true"
             />
+            <div
+              className="pointer-events-none absolute -left-8 -top-8 h-28 w-28 rounded-full bg-[#F3A6B8]/15 blur-2xl"
+              aria-hidden="true"
+            />
 
-            <div className="relative z-10 space-y-3">
+            <div className="relative z-10 space-y-3.5">
               <div className="flex items-center justify-between">
                 <span className="text-[11px] font-bold tracking-wider uppercase text-emerald-100/90">
                   Kehamilan Anda
                 </span>
-                <span className="inline-flex items-center rounded-full bg-white/20 px-2.5 py-0.5 text-[11px] font-semibold text-white backdrop-blur-sm">
+                <span className="inline-flex items-center rounded-full bg-white/20 px-3 py-0.5 text-xs font-semibold text-white backdrop-blur-md border border-white/20">
                   {trimesterLabel}
                 </span>
               </div>
@@ -103,26 +115,28 @@ export function MotherHomePage() {
               <div>
                 <h2
                   id="pregnancy-hero-title"
-                  className="text-2xl font-black tracking-tight text-white leading-tight"
+                  className="text-3xl font-black tracking-tight text-white leading-tight"
                 >
                   {gestationalAgeText}
                 </h2>
-                <p className="mt-1 text-xs text-emerald-100">
-                  Perkiraan Persalinan (HPL):{" "}
-                  <strong className="font-semibold text-white">{hplText}</strong>
+                <p className="mt-1.5 text-xs text-emerald-100 flex items-center gap-1.5 flex-wrap">
+                  <span>Perkiraan Persalinan (HPL):</span>
+                  <strong className="font-bold text-white bg-white/15 px-2 py-0.5 rounded-md backdrop-blur-xs">
+                    {hplText}
+                  </strong>
                 </p>
               </div>
 
               {/* Progress bar visual indicator */}
               {activePregnancy?.gestationalAge && (
-                <div className="space-y-1 pt-1">
-                  <div className="flex justify-between text-[10px] text-emerald-200">
+                <div className="space-y-1.5 pt-1.5 border-t border-white/10">
+                  <div className="flex justify-between text-[11px] font-medium text-emerald-200">
                     <span>Minggu {activePregnancy.gestationalAge.weeks}</span>
                     <span>Target 40 Minggu</span>
                   </div>
-                  <div className="h-1.5 w-full overflow-hidden rounded-full bg-emerald-950/30">
+                  <div className="h-2 w-full overflow-hidden rounded-full bg-emerald-950/40 backdrop-blur-sm p-0.5">
                     <div
-                      className="h-full rounded-full bg-emerald-300 transition-all duration-500"
+                      className="h-full rounded-full bg-gradient-to-r from-emerald-300 via-teal-200 to-emerald-200 shadow-sm transition-all duration-500"
                       style={{
                         width: `${Math.min(100, Math.max(5, (activePregnancy.gestationalAge.weeks / 40) * 100))}%`,
                       }}
@@ -131,17 +145,17 @@ export function MotherHomePage() {
                 </div>
               )}
             </div>
-          </Card>
+          </div>
         </section>
 
         {/* CLINICAL SERVICES / ACTION CARDS */}
         <section aria-label="Layanan Klinis Ibu">
-          <div className="grid grid-cols-3 gap-2 text-center">
+          <div className="grid grid-cols-3 gap-2.5 text-center">
             <Link
               to="/m/anc"
-              className="flex flex-col items-center justify-center rounded-2xl border border-slate-200/90 bg-white p-3 shadow-2xs transition-all hover:border-pfram-primary hover:bg-emerald-50/20 active:scale-95"
+              className="flex flex-col items-center justify-center rounded-2xl border border-slate-200/80 bg-white p-3 shadow-2xs transition-all hover:border-pfram-primary hover:bg-emerald-50/20 active:scale-95"
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 text-lg text-pfram-primary ring-1 ring-emerald-200/60 mb-1.5">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-xl text-pfram-primary ring-1 ring-emerald-200/60 mb-1.5">
                 🗓️
               </div>
               <span className="text-xs font-bold text-slate-900 leading-tight">
@@ -154,9 +168,9 @@ export function MotherHomePage() {
 
             <Link
               to="/m/danger-screening"
-              className="flex flex-col items-center justify-center rounded-2xl border border-slate-200/90 bg-white p-3 shadow-2xs transition-all hover:border-rose-400 hover:bg-rose-50/20 active:scale-95"
+              className="flex flex-col items-center justify-center rounded-2xl border border-slate-200/80 bg-white p-3 shadow-2xs transition-all hover:border-rose-400 hover:bg-rose-50/20 active:scale-95"
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-rose-50 text-lg text-rose-700 ring-1 ring-rose-200/60 mb-1.5">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-rose-50 text-xl text-rose-700 ring-1 ring-rose-200/60 mb-1.5">
                 🩺
               </div>
               <span className="text-xs font-bold text-slate-900 leading-tight">
@@ -169,9 +183,9 @@ export function MotherHomePage() {
 
             <Link
               to="/m/p4k"
-              className="flex flex-col items-center justify-center rounded-2xl border border-slate-200/90 bg-white p-3 shadow-2xs transition-all hover:border-sky-400 hover:bg-sky-50/20 active:scale-95"
+              className="flex flex-col items-center justify-center rounded-2xl border border-slate-200/80 bg-white p-3 shadow-2xs transition-all hover:border-sky-400 hover:bg-sky-50/20 active:scale-95"
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-50 text-lg text-sky-700 ring-1 ring-sky-200/60 mb-1.5">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky-50 text-xl text-sky-700 ring-1 ring-sky-200/60 mb-1.5">
                 👶
               </div>
               <span className="text-xs font-bold text-slate-900 leading-tight">
@@ -186,7 +200,7 @@ export function MotherHomePage() {
 
         {/* C. IMPORTANT NEXT ACTION (UPCOMING ANC) */}
         <section aria-labelledby="upcoming-anc-heading">
-          <Card className="border border-slate-200/90 bg-white p-5 shadow-sm space-y-3">
+          <Card className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-xs space-y-3.5">
             <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
               <div className="flex items-center gap-2">
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-50 text-sm text-pfram-primary ring-1 ring-emerald-200/50">
@@ -212,7 +226,7 @@ export function MotherHomePage() {
                 Memeriksa jadwal pemeriksaan…
               </div>
             ) : upcomingAncQuery.isError ? (
-              <div className="rounded-xl border border-amber-200 bg-amber-50/50 p-3 text-xs text-amber-800 flex items-center justify-between">
+              <div className="rounded-xl border border-amber-200 bg-amber-50/60 p-3 text-xs text-amber-800 flex items-center justify-between">
                 <span>Jadwal ANC belum dapat dimuat saat ini.</span>
                 <Button
                   type="button"
@@ -224,17 +238,17 @@ export function MotherHomePage() {
                 </Button>
               </div>
             ) : upcomingAncQuery.data ? (
-              <div className="rounded-xl border border-emerald-200/80 bg-emerald-50/40 p-3.5 space-y-2">
+              <div className="rounded-xl border border-emerald-200/80 bg-gradient-to-br from-emerald-50/70 to-teal-50/40 p-4 space-y-2.5">
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <span className="text-xs font-bold text-slate-900 block">
+                    <span className="text-sm font-bold text-slate-900 block">
                       {formatAncDateShort(upcomingAncQuery.data.scheduledAt)}
                     </span>
-                    <span className="text-[11px] text-slate-600 block">
+                    <span className="text-xs text-slate-600 block mt-0.5">
                       Pukul {formatAncTime(upcomingAncQuery.data.scheduledAt)} WIT
                     </span>
                   </div>
-                  <span className="inline-flex items-center rounded-full border border-emerald-300 bg-white px-2 py-0.5 text-[10px] font-bold text-emerald-800 shadow-2xs">
+                  <span className="inline-flex items-center rounded-full border border-emerald-300 bg-white px-2.5 py-0.5 text-[10px] font-bold text-emerald-800 shadow-2xs">
                     {upcomingAncQuery.data.doctorRequired
                       ? "Pemeriksaan Dokter (USG)"
                       : "Pemeriksaan Bidan (ANC)"}
@@ -242,7 +256,7 @@ export function MotherHomePage() {
                 </div>
 
                 {upcomingAncQuery.data.facility && (
-                  <p className="text-[11px] text-slate-600 border-t border-emerald-200/50 pt-2">
+                  <p className="text-xs text-slate-600 border-t border-emerald-200/50 pt-2">
                     📍 {upcomingAncQuery.data.facility.name}
                   </p>
                 )}
@@ -254,7 +268,7 @@ export function MotherHomePage() {
               </div>
             ) : (
               <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/60 p-4 text-center">
-                <p className="text-xs font-medium text-slate-700">
+                <p className="text-xs font-semibold text-slate-700">
                   Belum ada jadwal ANC mendatang
                 </p>
                 <p className="mt-1 text-[11px] text-slate-500 leading-relaxed">
@@ -266,8 +280,8 @@ export function MotherHomePage() {
         </section>
 
         {/* D. HEALTH SNAPSHOT (MONITORING SUMMARY) */}
-        <section aria-labelledby="health-snapshot-heading">
-          <Card className="border border-slate-200/90 bg-white p-5 shadow-sm space-y-3">
+        <section aria-label="Ringkasan Pemantauan" aria-labelledby="health-snapshot-heading">
+          <Card className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-xs space-y-3.5">
             <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
               <div className="flex items-center gap-2">
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-50 text-sm text-teal-700 ring-1 ring-teal-200/50">
@@ -293,7 +307,7 @@ export function MotherHomePage() {
                 Memuat data pengukuran…
               </div>
             ) : monitoringQuery.isError ? (
-              <div className="rounded-xl border border-amber-200 bg-amber-50/50 p-3 text-xs text-amber-800 flex items-center justify-between">
+              <div className="rounded-xl border border-amber-200 bg-amber-50/60 p-3 text-xs text-amber-800 flex items-center justify-between">
                 <span>Data pemantauan belum dapat dimuat saat ini.</span>
                 <Button
                   type="button"
@@ -309,14 +323,14 @@ export function MotherHomePage() {
                 monitoringQuery.data.latestBloodPressure !== null) ? (
               <div className="grid grid-cols-2 gap-3">
                 {/* Weight Box */}
-                <div className="rounded-xl border border-slate-200/90 bg-slate-50/50 p-3">
-                  <span className="text-[11px] font-medium text-slate-500 block">
+                <div className="rounded-xl border border-slate-200/80 bg-gradient-to-b from-white to-slate-50/80 p-3.5 shadow-2xs">
+                  <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block">
                     Berat Badan Terakhir
                   </span>
-                  <span className="mt-1 text-base font-bold text-slate-900 block">
+                  <span className="mt-1 text-2xl font-black text-slate-900 block tracking-tight">
                     {formatWeightKg(monitoringQuery.data.latestWeight)}
                   </span>
-                  <span className="mt-0.5 text-[10px] text-slate-400 block truncate">
+                  <span className="mt-1 text-[10px] text-slate-400 block truncate">
                     {monitoringQuery.data.latestWeightRecordedAt
                       ? formatIndonesianDate(monitoringQuery.data.latestWeightRecordedAt)
                       : "-"}
@@ -324,11 +338,11 @@ export function MotherHomePage() {
                 </div>
 
                 {/* Blood Pressure Box */}
-                <div className="rounded-xl border border-slate-200/90 bg-slate-50/50 p-3">
-                  <span className="text-[11px] font-medium text-slate-500 block">
+                <div className="rounded-xl border border-slate-200/80 bg-gradient-to-b from-white to-slate-50/80 p-3.5 shadow-2xs">
+                  <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block">
                     Tekanan Darah Terakhir
                   </span>
-                  <span className="mt-1 text-base font-bold text-slate-900 block">
+                  <span className="mt-1 text-2xl font-black text-slate-900 block tracking-tight">
                     {monitoringQuery.data.latestBloodPressure
                       ? formatBp(
                           monitoringQuery.data.latestBloodPressure.systolic,
@@ -336,7 +350,7 @@ export function MotherHomePage() {
                         )
                       : "-"}
                   </span>
-                  <span className="mt-0.5 text-[10px] text-slate-400 block truncate">
+                  <span className="mt-1 text-[10px] text-slate-400 block truncate">
                     {monitoringQuery.data.latestBloodPressureRecordedAt
                       ? formatIndonesianDate(
                           monitoringQuery.data.latestBloodPressureRecordedAt,
@@ -347,7 +361,7 @@ export function MotherHomePage() {
               </div>
             ) : (
               <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50/60 p-4 text-center">
-                <p className="text-xs font-medium text-slate-700">
+                <p className="text-xs font-semibold text-slate-700">
                   Belum ada catatan pemantauan
                 </p>
                 <p className="mt-1 text-[11px] text-slate-500 leading-relaxed">
@@ -368,7 +382,7 @@ export function MotherHomePage() {
 
         {/* E. CARE TEAM & HEALTH FACILITY CARD */}
         <section aria-labelledby="care-team-heading">
-          <Card className="border border-slate-200/90 bg-white p-5 shadow-sm space-y-3">
+          <Card className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-xs space-y-3">
             <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
               <div className="flex items-center gap-2">
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-sky-50 text-sm text-sky-700 ring-1 ring-sky-200/50">
@@ -381,12 +395,15 @@ export function MotherHomePage() {
                   Tim Pendamping Maternal
                 </h3>
               </div>
-              <StatusBadge
-                variant={midwifeAssignment ? "success" : "info"}
-                size="sm"
+              <span
+                className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[11px] font-semibold border ${
+                  midwifeAssignment
+                    ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+                    : "bg-sky-50 text-sky-800 border-sky-200"
+                }`}
               >
-                {midwifeAssignment ? "Bidan Terhubung" : "Sedang Diproses"}
-              </StatusBadge>
+                {midwifeAssignment ? "● Bidan Terhubung" : "Sedang Diproses"}
+              </span>
             </div>
 
             <div className="space-y-3 text-xs">
@@ -399,7 +416,7 @@ export function MotherHomePage() {
                 {facility?.phoneNumber && (
                   <a
                     href={`tel:${facility.phoneNumber.replace(/[^\d+]/g, "")}`}
-                    className="mt-1 inline-flex items-center gap-1.5 font-medium text-emerald-700 hover:underline"
+                    className="mt-1 inline-flex items-center gap-1.5 font-semibold text-pfram-primary hover:underline"
                   >
                     <span>📞 {facility.phoneNumber}</span>
                   </a>
@@ -435,7 +452,7 @@ export function MotherHomePage() {
           <div className="grid grid-cols-2 gap-2.5">
             <Link
               to="/m/monitoring"
-              className="flex min-h-[56px] items-center gap-3 rounded-2xl border border-slate-200/90 bg-white p-3.5 shadow-sm transition-all hover:border-pfram-primary hover:bg-emerald-50/30 active:scale-95"
+              className="flex min-h-[56px] items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-2xs transition-all hover:border-pfram-primary/40 hover:bg-emerald-50/20 active:scale-95"
             >
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-xl text-pfram-primary ring-1 ring-emerald-200/60">
                 📊
@@ -452,7 +469,7 @@ export function MotherHomePage() {
 
             <Link
               to="/m/consultation"
-              className="flex min-h-[56px] items-center gap-3 rounded-2xl border border-slate-200/90 bg-white p-3.5 shadow-sm transition-all hover:border-pfram-primary hover:bg-emerald-50/30 active:scale-95"
+              className="flex min-h-[56px] items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-2xs transition-all hover:border-pfram-primary/40 hover:bg-emerald-50/20 active:scale-95"
             >
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-xl text-teal-700 ring-1 ring-teal-200/60">
                 💬
@@ -469,7 +486,7 @@ export function MotherHomePage() {
 
             <Link
               to="/m/education"
-              className="flex min-h-[56px] items-center gap-3 rounded-2xl border border-slate-200/90 bg-white p-3.5 shadow-sm transition-all hover:border-pfram-primary hover:bg-emerald-50/30 active:scale-95"
+              className="flex min-h-[56px] items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-2xs transition-all hover:border-pfram-primary/40 hover:bg-emerald-50/20 active:scale-95"
             >
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-xl text-amber-700 ring-1 ring-amber-200/60">
                 📖
@@ -486,7 +503,7 @@ export function MotherHomePage() {
 
             <Link
               to="/m/account"
-              className="flex min-h-[56px] items-center gap-3 rounded-2xl border border-slate-200/90 bg-white p-3.5 shadow-sm transition-all hover:border-pfram-primary hover:bg-emerald-50/30 active:scale-95"
+              className="flex min-h-[56px] items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-3.5 shadow-2xs transition-all hover:border-pfram-primary/40 hover:bg-emerald-50/20 active:scale-95"
             >
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-xl text-slate-700 ring-1 ring-slate-200">
                 ⚙️
@@ -505,7 +522,7 @@ export function MotherHomePage() {
 
         {/* G. CLINICAL SAFETY & EMERGENCY ADVISORY */}
         <section aria-labelledby="safety-advisory-heading">
-          <Card className="border border-rose-200 bg-rose-50/70 p-4 space-y-2">
+          <Card className="rounded-2xl border border-rose-200/90 bg-rose-50/80 p-4 space-y-2.5 shadow-xs">
             <div className="flex items-center gap-2 text-rose-800">
               <span className="text-base" aria-hidden="true">
                 ⚠️
@@ -518,11 +535,11 @@ export function MotherHomePage() {
               </h4>
             </div>
 
-            <p className="text-[11px] text-rose-950 leading-relaxed">
+            <p className="text-[11px] text-rose-950 leading-relaxed font-medium">
               Bila Ibu mengalami tanda bahaya (seperti perdarahan, sakit kepala hebat, kejang, demam tinggi, bengkak mendadak, atau gerakan janin berkurang):
             </p>
 
-            <div className="rounded-lg bg-white/90 p-2.5 border border-rose-200/80">
+            <div className="rounded-xl bg-white/95 p-3 border border-rose-200/90 shadow-2xs">
               <p className="text-xs font-bold text-rose-900 text-center leading-snug">
                 Segera menuju fasilitas kesehatan. Jangan menunggu balasan melalui aplikasi.
               </p>

@@ -36,7 +36,7 @@ export function PeriodFilterBar({
     <div
       role="tablist"
       aria-label="Filter Periode Grafik"
-      className="flex flex-wrap gap-2"
+      className="inline-flex rounded-xl bg-slate-100/90 p-1 border border-slate-200/70 shadow-2xs gap-1"
     >
       {PERIOD_OPTIONS.map((opt) => {
         const isActive = selected === opt.id;
@@ -47,10 +47,10 @@ export function PeriodFilterBar({
             role="tab"
             aria-selected={isActive}
             onClick={() => onSelect(opt.id)}
-            className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
+            className={`rounded-lg px-3.5 py-1.5 text-xs sm:text-sm font-semibold transition-all ${
               isActive
-                ? "bg-pfram-primary text-white shadow-sm"
-                : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                ? "bg-white text-pfram-primary shadow-xs font-bold"
+                : "text-slate-600 hover:text-slate-900 font-medium"
             }`}
           >
             {opt.label}
@@ -164,19 +164,33 @@ export function WebWeightLineChart({
     return idx === 0 ? `M ${curr.x} ${curr.y}` : `${acc} L ${curr.x} ${curr.y}`;
   }, "");
 
+  // Adaptive downsampled visible X-axis labels to prevent text overlap on mobile
+  const maxLabels = 6;
+  const visibleLabelIndices = new Set<number>();
+  if (coords.length <= maxLabels) {
+    coords.forEach((_, i) => visibleLabelIndices.add(i));
+  } else {
+    visibleLabelIndices.add(0);
+    visibleLabelIndices.add(coords.length - 1);
+    const step = (coords.length - 1) / (maxLabels - 1);
+    for (let i = 1; i < maxLabels - 1; i++) {
+      visibleLabelIndices.add(Math.round(i * step));
+    }
+  }
+
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-xs">
       <div className="flex items-center justify-between">
-        <h3 className="text-base font-bold text-slate-800">
+        <h3 className="text-sm sm:text-base font-bold text-slate-800">
           Grafik Perkembangan Berat Badan
         </h3>
-        <span className="rounded bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-600">
+        <span className="rounded-lg bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-600 border border-slate-200/60">
           Satuan: kg
         </span>
       </div>
 
       {isSingle && (
-        <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-2.5 text-xs text-amber-800">
+        <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50 p-2.5 text-xs text-amber-800">
           Grafik akan lebih informatif setelah ada pengukuran berikutnya.
         </div>
       )}
@@ -186,7 +200,7 @@ export function WebWeightLineChart({
         <div
           role="region"
           aria-label="Rincian titik berat badan terpilih"
-          className="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-emerald-100 bg-emerald-50/60 p-3"
+          className="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-emerald-100 bg-emerald-50/70 p-3.5 shadow-2xs"
         >
           <div>
             <div className="text-xs text-slate-500">
@@ -195,13 +209,13 @@ export function WebWeightLineChart({
             </div>
             <div className="text-sm font-semibold text-slate-700">
               Sumber:{" "}
-              <span className="text-pfram-primary">
+              <span className="text-pfram-primary font-bold">
                 {SOURCE_LABELS[selectedPoint.source] ?? selectedPoint.source}
               </span>
             </div>
           </div>
           <div className="text-right">
-            <div className="text-xl font-bold text-pfram-primary">
+            <div className="text-2xl font-black text-pfram-primary">
               {formatWeightKg(selectedPoint.weightKg)}
             </div>
             {selectedPoint.gestationalAge && (
@@ -215,7 +229,7 @@ export function WebWeightLineChart({
       )}
 
       {/* Responsive SVG Chart */}
-      <div className="relative mt-4 w-full overflow-hidden rounded-lg border border-slate-100 bg-slate-50/50 p-2">
+      <div className="relative mt-4 w-full overflow-hidden rounded-xl border border-slate-100 bg-slate-50/50 p-2">
         <svg
           viewBox={`0 0 ${width} ${height}`}
           className="w-full h-auto"
@@ -265,7 +279,7 @@ export function WebWeightLineChart({
           )}
 
           {/* Data Points */}
-          {coords.map((pt) => {
+          {coords.map((pt, idx) => {
             const isSelected = pt.id === selectedPoint?.id;
             return (
               <g
@@ -298,16 +312,18 @@ export function WebWeightLineChart({
                   stroke="#FFFFFF"
                   strokeWidth="2"
                 />
-                <text
-                  x={pt.x}
-                  y={paddingTop + plotHeight + 18}
-                  textAnchor="middle"
-                  fontSize="11"
-                  fill="#64748B"
-                  fontWeight="500"
-                >
-                  {formatShortDate(pt.recordedAt)}
-                </text>
+                {visibleLabelIndices.has(idx) && (
+                  <text
+                    x={pt.x}
+                    y={paddingTop + plotHeight + 18}
+                    textAnchor="middle"
+                    fontSize="11"
+                    fill="#64748B"
+                    fontWeight="500"
+                  >
+                    {formatShortDate(pt.recordedAt)}
+                  </text>
+                )}
               </g>
             );
           })}
@@ -451,19 +467,33 @@ export function WebBloodPressureLineChart({
     return idx === 0 ? `M ${curr.x} ${curr.diaY}` : `${acc} L ${curr.x} ${curr.diaY}`;
   }, "");
 
+  // Adaptive downsampled visible X-axis labels to prevent text overlap on mobile
+  const maxLabels = 6;
+  const visibleLabelIndices = new Set<number>();
+  if (coords.length <= maxLabels) {
+    coords.forEach((_, i) => visibleLabelIndices.add(i));
+  } else {
+    visibleLabelIndices.add(0);
+    visibleLabelIndices.add(coords.length - 1);
+    const step = (coords.length - 1) / (maxLabels - 1);
+    for (let i = 1; i < maxLabels - 1; i++) {
+      visibleLabelIndices.add(Math.round(i * step));
+    }
+  }
+
   return (
-    <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+    <div className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-xs">
       <div className="flex items-center justify-between">
-        <h3 className="text-base font-bold text-slate-800">
+        <h3 className="text-sm sm:text-base font-bold text-slate-800">
           Grafik Perkembangan Tekanan Darah
         </h3>
-        <span className="rounded bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-600">
+        <span className="rounded-lg bg-slate-100 px-2.5 py-0.5 text-xs font-semibold text-slate-600 border border-slate-200/60">
           Satuan: mmHg
         </span>
       </div>
 
       {/* Neutral Legend */}
-      <div className="mt-2 flex items-center gap-4 text-xs font-medium text-slate-600">
+      <div className="mt-2.5 flex items-center gap-4 text-xs font-medium text-slate-600">
         <div className="flex items-center gap-1.5">
           <span className="inline-block h-3 w-3 rounded-full bg-pfram-primary" />
           <span>Sistolik (mmHg)</span>
@@ -475,7 +505,7 @@ export function WebBloodPressureLineChart({
       </div>
 
       {isSingle && (
-        <div className="mt-3 rounded-lg border border-amber-200 bg-amber-50 p-2.5 text-xs text-amber-800">
+        <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50 p-2.5 text-xs text-amber-800">
           Grafik akan lebih informatif setelah ada pengukuran berikutnya.
         </div>
       )}
@@ -485,7 +515,7 @@ export function WebBloodPressureLineChart({
         <div
           role="region"
           aria-label="Rincian titik tekanan darah terpilih"
-          className="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-emerald-100 bg-emerald-50/60 p-3"
+          className="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-emerald-100 bg-emerald-50/70 p-3.5 shadow-2xs"
         >
           <div>
             <div className="text-xs text-slate-500">
@@ -494,13 +524,13 @@ export function WebBloodPressureLineChart({
             </div>
             <div className="text-sm font-semibold text-slate-700">
               Sumber:{" "}
-              <span className="text-pfram-primary">
+              <span className="text-pfram-primary font-bold">
                 {SOURCE_LABELS[selectedPoint.source] ?? selectedPoint.source}
               </span>
             </div>
           </div>
           <div className="text-right">
-            <div className="text-xl font-bold text-pfram-primary">
+            <div className="text-2xl font-black text-pfram-primary">
               {selectedPoint.systolicBp} / {selectedPoint.diastolicBp} mmHg
             </div>
             {selectedPoint.gestationalAge && (
@@ -514,7 +544,7 @@ export function WebBloodPressureLineChart({
       )}
 
       {/* Responsive SVG Chart */}
-      <div className="relative mt-4 w-full overflow-hidden rounded-lg border border-slate-100 bg-slate-50/50 p-2">
+      <div className="relative mt-4 w-full overflow-hidden rounded-xl border border-slate-100 bg-slate-50/50 p-2">
         <svg
           viewBox={`0 0 ${width} ${height}`}
           className="w-full h-auto"
@@ -577,7 +607,7 @@ export function WebBloodPressureLineChart({
           )}
 
           {/* Points */}
-          {coords.map((pt) => {
+          {coords.map((pt, idx) => {
             const isSelected = pt.id === selectedPoint?.id;
             return (
               <g
@@ -636,16 +666,18 @@ export function WebBloodPressureLineChart({
                 />
 
                 {/* X Axis label */}
-                <text
-                  x={pt.x}
-                  y={paddingTop + plotHeight + 18}
-                  textAnchor="middle"
-                  fontSize="11"
-                  fill="#64748B"
-                  fontWeight="500"
-                >
-                  {formatShortDate(pt.recordedAt)}
-                </text>
+                {visibleLabelIndices.has(idx) && (
+                  <text
+                    x={pt.x}
+                    y={paddingTop + plotHeight + 18}
+                    textAnchor="middle"
+                    fontSize="11"
+                    fill="#64748B"
+                    fontWeight="500"
+                  >
+                    {formatShortDate(pt.recordedAt)}
+                  </text>
+                )}
               </g>
             );
           })}

@@ -125,14 +125,24 @@ export function MotherBottomNav() {
               key={tab.to}
               to={tab.to}
               aria-current={isActive ? "page" : undefined}
-              className={`flex flex-1 flex-col items-center justify-center gap-1 min-h-[48px] min-w-[48px] py-1 transition-all active:scale-95 ${
+              className={`relative flex flex-1 flex-col items-center justify-center gap-0.5 min-h-[48px] min-w-[48px] py-1 transition-all active:scale-95 ${
                 isActive
                   ? "text-pfram-primary font-semibold"
-                  : "text-slate-500 hover:text-slate-700 font-normal"
+                  : "text-slate-400 hover:text-slate-600 font-normal"
               }`}
             >
-              {tab.icon(isActive)}
-              <span className="text-[11px] leading-none tracking-tight">
+              <div
+                className={`flex items-center justify-center rounded-full px-3 py-1 transition-all ${
+                  isActive ? "bg-emerald-100/70 text-pfram-primary shadow-2xs" : "text-slate-400"
+                }`}
+              >
+                {tab.icon(isActive)}
+              </div>
+              <span
+                className={`text-[10px] leading-none tracking-tight ${
+                  isActive ? "font-bold text-pfram-primary" : "text-slate-500 font-medium"
+                }`}
+              >
                 {tab.label}
               </span>
             </Link>

@@ -356,7 +356,7 @@ export function MotherMonitoringPage() {
         {/* A. CLINICAL SAFETY & EMERGENCY ADVISORY */}
         <div
           role="alert"
-          className="rounded-2xl border border-rose-200/90 bg-rose-50/80 p-4 text-rose-900 shadow-sm"
+          className="rounded-2xl border border-rose-200/90 bg-rose-50/80 p-4 text-rose-900 shadow-xs"
         >
           <div className="flex items-start gap-3">
             <span className="text-xl" aria-hidden="true">
@@ -366,7 +366,7 @@ export function MotherMonitoringPage() {
               <h2 className="text-xs font-bold uppercase tracking-wider text-rose-800">
                 Peringatan Medis & Kedaruratan
               </h2>
-              <p className="text-xs text-rose-700 leading-relaxed font-medium">
+              <p className="text-xs text-rose-900 leading-relaxed font-medium">
                 Segera menuju fasilitas kesehatan. Jangan menunggu balasan melalui aplikasi jika mengalami tanda bahaya seperti perdarahan, nyeri perut hebat, atau sakit kepala berat.
               </p>
             </div>
@@ -377,7 +377,7 @@ export function MotherMonitoringPage() {
         {createSuccessMsg && (
           <div
             role="status"
-            className="flex items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-xs font-semibold text-emerald-800"
+            className="flex items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-xs font-semibold text-emerald-800 shadow-2xs"
           >
             <span>{createSuccessMsg}</span>
             <button
@@ -393,7 +393,7 @@ export function MotherMonitoringPage() {
 
         {/* B. LATEST SUMMARY CARD */}
         <section aria-label="Ringkasan Pemantauan" aria-labelledby="monitoring-summary-heading">
-          <Card className="border border-slate-200/90 bg-white p-5 shadow-sm space-y-3.5">
+          <Card className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-xs space-y-3.5">
             <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
               <div className="flex items-center gap-2">
                 <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-emerald-50 text-sm text-pfram-primary ring-1 ring-emerald-200/50">
@@ -406,7 +406,7 @@ export function MotherMonitoringPage() {
                   Ringkasan Pemantauan
                 </h2>
               </div>
-              <span className="text-[11px] font-semibold text-slate-500">
+              <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-[11px] font-semibold text-slate-600 border border-slate-200/60">
                 {summary ? `${summary.totalEntries} Catatan` : "0 Catatan"}
               </span>
             </div>
@@ -416,7 +416,7 @@ export function MotherMonitoringPage() {
                 Memuat ringkasan pemantauan…
               </div>
             ) : summaryQuery.isError ? (
-              <div className="rounded-xl border border-amber-200 bg-amber-50/50 p-3 text-xs text-amber-800 flex items-center justify-between">
+              <div className="rounded-xl border border-amber-200 bg-amber-50/60 p-3 text-xs text-amber-800 flex items-center justify-between">
                 <span>Data pemantauan belum dapat dimuat saat ini.</span>
                 <Button
                   type="button"
@@ -431,14 +431,14 @@ export function MotherMonitoringPage() {
               <div className="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
                   {/* Weight Box */}
-                  <div className="rounded-xl border border-slate-200/90 bg-slate-50/50 p-3">
-                    <span className="text-[11px] font-medium text-slate-500 block">
+                  <div className="rounded-xl border border-slate-200/80 bg-gradient-to-b from-white to-slate-50/80 p-3.5 shadow-2xs">
+                    <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block">
                       Berat Badan Terakhir
                     </span>
-                    <span className="mt-1 text-base font-bold text-slate-900 block">
+                    <span className="mt-1 text-2xl font-black text-slate-900 block tracking-tight">
                       {formatWeightKg(summary.latestWeight)}
                     </span>
-                    <span className="mt-0.5 text-[10px] text-slate-400 block truncate">
+                    <span className="mt-1 text-[10px] text-slate-400 block truncate">
                       {summary.latestWeightRecordedAt
                         ? formatIndonesianDate(summary.latestWeightRecordedAt)
                         : "-"}
@@ -446,11 +446,11 @@ export function MotherMonitoringPage() {
                   </div>
 
                   {/* Blood Pressure Box */}
-                  <div className="rounded-xl border border-slate-200/90 bg-slate-50/50 p-3">
-                    <span className="text-[11px] font-medium text-slate-500 block">
+                  <div className="rounded-xl border border-slate-200/80 bg-gradient-to-b from-white to-slate-50/80 p-3.5 shadow-2xs">
+                    <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block">
                       Tekanan Darah Terakhir
                     </span>
-                    <span className="mt-1 text-base font-bold text-slate-900 block">
+                    <span className="mt-1 text-2xl font-black text-slate-900 block tracking-tight">
                       {summary.latestBloodPressure
                         ? formatBp(
                             summary.latestBloodPressure.systolic,
@@ -458,7 +458,7 @@ export function MotherMonitoringPage() {
                           )
                         : "-"}
                     </span>
-                    <span className="mt-0.5 text-[10px] text-slate-400 block truncate">
+                    <span className="mt-1 text-[10px] text-slate-400 block truncate">
                       {summary.latestBloodPressureRecordedAt
                         ? formatIndonesianDate(
                             summary.latestBloodPressureRecordedAt,
@@ -469,7 +469,7 @@ export function MotherMonitoringPage() {
                 </div>
 
                 {summary.weightChange !== null && summary.weightChange !== undefined && (
-                  <div className="rounded-lg bg-emerald-50/60 border border-emerald-100 px-3 py-1.5 text-xs text-emerald-800 flex items-center justify-between">
+                  <div className="rounded-xl bg-emerald-50/80 border border-emerald-200/70 px-3.5 py-2 text-xs text-emerald-900 flex items-center justify-between">
                     <span className="text-slate-600 font-medium">Perubahan dari catatan sebelumnya:</span>
                     <span className="font-bold text-emerald-900">
                       {formatWeightChange(summary.weightChange)}
@@ -493,7 +493,7 @@ export function MotherMonitoringPage() {
               <Button
                 type="button"
                 variant={showCreateForm ? "secondary" : "primary"}
-                className="w-full min-h-11 font-bold shadow-sm"
+                className="w-full min-h-[44px] rounded-xl font-bold shadow-sm transition-all"
                 onClick={() => {
                   setShowCreateForm((prev) => !prev);
                   setCreateSuccessMsg("");
@@ -723,8 +723,8 @@ export function MotherMonitoringPage() {
 
         {/* E. HISTORY SECTION */}
         <section aria-labelledby="monitoring-history-heading">
-          <Card className="border border-slate-200/90 bg-white p-5 shadow-sm space-y-4">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 pb-3">
+          <Card className="rounded-2xl border border-slate-200/80 bg-white p-4 sm:p-5 shadow-xs space-y-4">
+            <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between border-b border-slate-100 pb-3">
               <div>
                 <h2
                   id="monitoring-history-heading"
@@ -741,7 +741,7 @@ export function MotherMonitoringPage() {
               <div
                 role="tablist"
                 aria-label="Filter Tipe Riwayat"
-                className="flex items-center gap-1.5 overflow-x-auto"
+                className="inline-flex rounded-xl bg-slate-100 p-1 border border-slate-200/70 shadow-2xs gap-1"
               >
                 {(
                   [
@@ -761,10 +761,10 @@ export function MotherMonitoringPage() {
                         setHistoryType(tab.id);
                         setHistoryPage(1);
                       }}
-                      className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition ${
+                      className={`rounded-lg px-3 py-1 text-xs font-semibold transition-all ${
                         isActive
-                          ? "bg-pfram-primary text-white shadow-sm"
-                          : "border border-slate-200 bg-slate-50 text-slate-600 hover:bg-slate-100"
+                          ? "bg-white text-pfram-primary shadow-xs font-bold"
+                          : "text-slate-600 hover:text-slate-900 font-medium"
                       }`}
                     >
                       {tab.label}
@@ -804,7 +804,7 @@ export function MotherMonitoringPage() {
                     type="button"
                     variant="primary"
                     size="sm"
-                    className="mt-3 font-semibold"
+                    className="mt-3 font-semibold min-h-[40px] rounded-xl"
                     onClick={() => setShowCreateForm(true)}
                   >
                     + Catat Pemantauan Pertama
@@ -821,13 +821,13 @@ export function MotherMonitoringPage() {
                   return (
                     <div
                       key={item.publicId}
-                      className="rounded-xl border border-slate-200/80 bg-white p-3.5 shadow-sm transition hover:border-pfram-primary/40 space-y-2"
+                      className="rounded-xl border border-slate-200/80 bg-white p-3.5 shadow-2xs transition hover:border-slate-300 space-y-2.5"
                     >
                       <div className="flex items-center justify-between border-b border-slate-100 pb-2">
                         <span className="text-xs font-bold text-slate-800">
                           {formatIndonesianDateTime(item.recordedAt)}
                         </span>
-                        <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-700">
+                        <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-[10px] font-semibold text-slate-700 border border-slate-200/60">
                           {sourceLabel}
                         </span>
                       </div>
@@ -838,7 +838,7 @@ export function MotherMonitoringPage() {
                             <span className="text-[10px] text-slate-500 block">
                               Berat Badan
                             </span>
-                            <span className="font-bold text-slate-900">
+                            <span className="font-bold text-slate-900 text-sm">
                               {formatWeightKg(item.weightKg)}
                             </span>
                           </div>
@@ -849,7 +849,7 @@ export function MotherMonitoringPage() {
                             <span className="text-[10px] text-slate-500 block">
                               Tekanan Darah
                             </span>
-                            <span className="font-bold text-slate-900">
+                            <span className="font-bold text-slate-900 text-sm">
                               {item.systolicBp}/{item.diastolicBp} mmHg
                             </span>
                           </div>
@@ -857,7 +857,7 @@ export function MotherMonitoringPage() {
                       </div>
 
                       {item.notes && (
-                        <div className="rounded-lg bg-slate-50 p-2 text-[11px] text-slate-600">
+                        <div className="rounded-xl bg-slate-50/80 border border-slate-100 p-2.5 text-[11px] text-slate-600">
                           <span className="font-semibold text-slate-700">Catatan: </span>
                           {item.notes}
                         </div>
@@ -869,14 +869,14 @@ export function MotherMonitoringPage() {
                           <button
                             type="button"
                             onClick={() => startEdit(item)}
-                            className="text-[11px] font-bold text-pfram-primary hover:underline px-2 py-1"
+                            className="text-[11px] font-bold text-pfram-primary hover:underline px-2.5 py-1"
                           >
                             Edit
                           </button>
                           <button
                             type="button"
                             onClick={() => setArchivingItem(item)}
-                            className="text-[11px] font-semibold text-rose-600 hover:underline px-2 py-1"
+                            className="text-[11px] font-semibold text-rose-600 hover:underline px-2.5 py-1"
                           >
                             Arsipkan
                           </button>
@@ -895,6 +895,7 @@ export function MotherMonitoringPage() {
                       size="sm"
                       disabled={historyPage <= 1}
                       onClick={() => setHistoryPage((p) => Math.max(1, p - 1))}
+                      className="min-h-[40px] rounded-xl px-3.5"
                     >
                       Sebelumnya
                     </Button>
@@ -909,6 +910,7 @@ export function MotherMonitoringPage() {
                       onClick={() =>
                         setHistoryPage((p) => Math.min(historyTotalPages, p + 1))
                       }
+                      className="min-h-[40px] rounded-xl px-3.5"
                     >
                       Selanjutnya
                     </Button>
