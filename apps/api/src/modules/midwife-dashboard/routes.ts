@@ -17,6 +17,7 @@ import {
   listMotherHomeVisits,
   updateMidwifeHomeVisit,
 } from "./service.js";
+import { formatZodErrorMessage } from "../../shared/validation.js";
 
 const invalid = (
   reply: FastifyReply,
@@ -27,7 +28,12 @@ const invalid = (
   reply
     .code(400)
     .send(
-      app.fail(req, "VALIDATION_ERROR", "Data tidak valid", error.flatten()),
+      app.fail(
+        req,
+        "VALIDATION_ERROR",
+        formatZodErrorMessage(error),
+        error.flatten(),
+      ),
     );
 
 const actor = (req: FastifyRequest) => ({

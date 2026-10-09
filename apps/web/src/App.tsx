@@ -46,6 +46,7 @@ import { MidwifeMissedAncPage } from "./MidwifeMissedAncPage";
 import { MidwifeConsultationPage } from "./MidwifeConsultationPage";
 import { AdminEducationListPage } from "./AdminEducationListPage";
 import { AdminUsersPage } from "./AdminUsersPage";
+import { extractAndMapError } from "./error-mapping";
 import {
   PwaUpdateNotification,
   MotherRouter,
@@ -66,6 +67,7 @@ function Login() {
   const {
     register,
     handleSubmit,
+    setError: setFieldError,
     formState: { errors, isSubmitting },
   } = useForm<z.input<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -142,14 +144,20 @@ function Login() {
                   nav("/dashboard");
                 }
               } catch (e) {
-                setError(e instanceof Error ? e.message : "Login gagal");
+                const mapped = extractAndMapError(e);
+                setError(mapped.message || "Login gagal");
+                if (mapped.fieldErrors) {
+                  Object.entries(mapped.fieldErrors).forEach(([field, msg]) => {
+                    setFieldError(field as keyof z.input<typeof loginSchema>, { type: "server", message: msg });
+                  });
+                }
               }
             })}
           >
             <Input
               id="phone"
               label="Nomor Handphone"
-              placeholder="Contoh: 081234567890"
+              placeholder="Contoh: 0853xxxxxxxx"
               autoComplete="tel"
               error={errors.phoneNumber?.message}
               {...register("phoneNumber")}

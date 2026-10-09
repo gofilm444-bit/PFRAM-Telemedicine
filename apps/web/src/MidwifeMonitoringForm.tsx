@@ -3,6 +3,7 @@ import { monitoringCreateSchema } from "@pfram/validation";
 import type { MonitoringSource } from "@pfram/shared-types";
 import { MONITORING_SOURCES } from "./monitoring-api";
 import { useCreateMidwifeMonitoring } from "./monitoring-queries";
+import { extractAndMapError } from "./error-mapping";
 
 export function MidwifeMonitoringForm({
   motherPublicId,
@@ -119,11 +120,13 @@ export function MidwifeMonitoringForm({
       await createMutation.mutateAsync(parsed.data);
       onSuccess();
     } catch (err: unknown) {
-      const msg =
-        err instanceof Error
-          ? err.message
-          : "Terdapat masalah saat menyimpan data pengukuran.";
-      setFormError(msg);
+      const mapped = extractAndMapError(err);
+      setFormError(
+        mapped.message || "Terdapat masalah saat menyimpan data pengukuran.",
+      );
+      if (mapped.fieldErrors && Object.keys(mapped.fieldErrors).length > 0) {
+        setFieldErrors(mapped.fieldErrors);
+      }
     }
   };
 

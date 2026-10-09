@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const normalizeIndonesianPhone = (value: string) => {
   const digits = value.replace(/\D/g, "");
+  if (!digits) return "";
   if (digits.startsWith("62")) return digits;
   if (digits.startsWith("0")) return `62${digits.slice(1)}`;
   return `62${digits}`;
@@ -11,9 +12,64 @@ export const phoneSchema = z
   .string()
   .trim()
   .transform(normalizeIndonesianPhone)
-  .pipe(z.string().regex(/^628\d{8,11}$/, "Nomor HP Indonesia tidak valid"));
+  .pipe(
+    z
+      .string()
+      .regex(
+        /^628\d{8,11}$/,
+        "Masukkan nomor handphone Indonesia yang valid, misalnya 0853xxxxxxxx.",
+      ),
+  );
 export const optionalPhoneSchema = z
   .union([z.literal(""), phoneSchema])
+  .optional()
+  .transform((value) => value || undefined);
+
+export const facilityPhoneSchema = z
+  .string()
+  .trim()
+  .transform((value) => {
+    const digits = value.replace(/\D/g, "");
+    if (!digits) return "";
+    if (digits.startsWith("62")) return digits;
+    if (digits.startsWith("0")) return `62${digits.slice(1)}`;
+    return `62${digits}`;
+  })
+  .pipe(
+    z
+      .string()
+      .regex(
+        /^62\d{7,12}$/,
+        "Masukkan nomor telepon Indonesia yang valid, misalnya 0853xxxxxxxx.",
+      ),
+  );
+
+export const optionalFacilityPhoneSchema = z
+  .union([z.literal(""), facilityPhoneSchema])
+  .optional()
+  .transform((value) => value || undefined);
+
+export const emergencyPhoneSchema = z
+  .string()
+  .trim()
+  .refine(
+    (val) => {
+      const stripped = val.replace(/[\s-]/g, "");
+      return (
+        /^(119|112|110|113|118)$/.test(stripped) ||
+        /^(\+?62|0)\d{7,13}$/.test(stripped)
+      );
+    },
+    "Masukkan nomor telepon darurat yang valid, misalnya 119 atau 0853xxxxxxxx.",
+  )
+  .transform((val) => {
+    const stripped = val.replace(/[\s-]/g, "");
+    if (/^(119|112|110|113|118)$/.test(stripped)) return stripped;
+    return normalizeIndonesianPhone(stripped);
+  });
+
+export const optionalEmergencyPhoneSchema = z
+  .union([z.literal(""), emergencyPhoneSchema])
   .optional()
   .transform((value) => value || undefined);
 export const passwordSchema = z
@@ -24,7 +80,7 @@ export const passwordSchema = z
   .regex(/[a-z]/, "Harus memiliki huruf kecil")
   .regex(/\d/, "Harus memiliki angka");
 export const publicIdSchema = z.string().uuid("ID publik tidak valid");
-export const nameSchema = z.string().trim().min(2, "Nama wajib diisi").max(120);
+export const nameSchema = z.string().trim().min(1, "Nama wajib diisi").max(120);
 
 export const parseDateOnly = (value: string) => {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value))
@@ -113,7 +169,7 @@ export const calculateGestationalAge = (
 export const trimesterFromWeeks = (weeks: number): 1 | 2 | 3 =>
   weeks < 14 ? 1 : weeks < 28 ? 2 : 3;
 
-const dateOnlySchema = z.string().refine((value) => {
+export const dateOnlySchema = z.string().refine((value) => {
   try {
     parseDateOnly(value);
     return true;
@@ -121,18 +177,44 @@ const dateOnlySchema = z.string().refine((value) => {
     return false;
   }
 }, "Tanggal tidak valid");
+
+export const dateOfBirthSchema = dateOnlySchema.superRefine((val, ctx) => {
+  try {
+    const birth = parseDateOnly(val);
+    const age = calculateAge(birth);
+    if (birth > todayDateOnly()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Tanggal lahir tidak boleh berada di masa depan",
+      });
+    } else if (age > 120) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Tanggal lahir tidak masuk akal",
+      });
+    }
+  } catch {
+    // If parseDateOnly fails, dateOnlySchema already produces "Tanggal tidak valid"
+  }
+});
+
 export const loginSchema = z.object({
   phoneNumber: phoneSchema,
-  password: z.string().min(1),
+  password: z.string().min(1, "Kata sandi wajib diisi"),
   clientType: z.enum(["web", "mobile"]).default("web"),
 });
 export const motherRegistrationSchema = z
   .object({
     phoneNumber: phoneSchema,
     password: passwordSchema,
-    passwordConfirmation: z.string(),
+    passwordConfirmation: z.string().min(1, "Konfirmasi kata sandi wajib diisi"),
     fullName: nameSchema,
-    consentDocumentIds: z.array(z.string().uuid()).min(1),
+    consentDocumentIds: z
+      .array(z.string().uuid("ID dokumen persetujuan tidak valid"))
+      .min(
+        1,
+        "Silakan setujui dokumen persetujuan layanan untuk melanjutkan pendaftaran.",
+      ),
     clientType: z.enum(["web", "mobile"]).default("mobile"),
   })
   .superRefine((v, ctx) => {
@@ -190,16 +272,20 @@ export const facilityTypeSchema = z.enum([
   "OTHER",
 ]);
 export const healthFacilitySchema = z.object({
-  name: nameSchema,
+  name: z.string().trim().min(1, "Nama fasilitas wajib diisi").max(120),
   type: facilityTypeSchema,
-  address: z.string().trim().min(5, "Alamat wajib diisi").max(500),
+  address: z
+    .string()
+    .trim()
+    .min(1, "Alamat fasilitas kesehatan wajib diisi")
+    .max(500),
   provincePublicId: publicIdSchema,
   regencyPublicId: publicIdSchema,
   districtPublicId: publicIdSchema,
   villagePublicId: publicIdSchema.optional(),
-  phoneNumber: optionalPhoneSchema,
+  phoneNumber: optionalFacilityPhoneSchema,
   whatsappNumber: optionalPhoneSchema,
-  emergencyPhone: optionalPhoneSchema,
+  emergencyPhone: optionalEmergencyPhoneSchema,
   openingHours: z.record(z.unknown()).optional(),
   latitude: z.coerce.number().min(-90).max(90).optional(),
   longitude: z.coerce.number().min(-180).max(180).optional(),
@@ -241,8 +327,8 @@ export const midwifeRegionsSchema = z.object({ regionPublicIds: z.array(publicId
 export const motherProfileFieldsSchema = z.object({
   fullName: nameSchema,
   preferredName: z.string().trim().max(80).optional(),
-  dateOfBirth: dateOnlySchema,
-  address: z.string().trim().min(5, "Alamat wajib diisi").max(500),
+  dateOfBirth: dateOfBirthSchema,
+  address: z.string().trim().min(1, "Alamat wajib diisi").max(500),
   provincePublicId: publicIdSchema,
   regencyPublicId: publicIdSchema,
   districtPublicId: publicIdSchema,
@@ -254,24 +340,7 @@ export const motherProfileFieldsSchema = z.object({
   emergencyContactPhone: optionalPhoneSchema,
   emergencyContactRelationship: z.string().trim().max(80).optional(),
 });
-export const motherProfileSchema = motherProfileFieldsSchema.superRefine(
-  (v, ctx) => {
-    const birth = parseDateOnly(v.dateOfBirth);
-    const age = calculateAge(birth);
-    if (birth > todayDateOnly())
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["dateOfBirth"],
-        message: "Tanggal lahir tidak boleh di masa depan",
-      });
-    if (age > 120)
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["dateOfBirth"],
-        message: "Tanggal lahir tidak masuk akal",
-      });
-  },
-);
+export const motherProfileSchema = motherProfileFieldsSchema;
 const pregnancyBase = z.object({
   lastMenstrualPeriod: dateOnlySchema.optional(),
   gestationalAgeSource: z.enum(["LMP", "HEALTH_WORKER_ASSESSMENT"]),
@@ -324,23 +393,23 @@ export const pregnancySchema = pregnancyBase.superRefine((v, ctx) => {
 });
 export const pregnancyUpdateSchema = pregnancyBase.partial().extend({
   estimatedDueDate: dateOnlySchema.optional(),
-  correctionReason: z.string().trim().min(5).max(500).optional(),
+  correctionReason: z.string().trim().min(2, "Alasan koreksi minimal 2 karakter").max(500).optional(),
 });
 export const assignmentSchema = z.object({
   motherPublicId: publicIdSchema,
   pregnancyPublicId: publicIdSchema,
   midwifePublicId: publicIdSchema,
   facilityPublicId: publicIdSchema,
-  overrideReason: z.string().trim().min(5).max(500).optional(),
+  overrideReason: z.string().trim().min(2, "Alasan pengalihan minimal 2 karakter").max(500).optional(),
   notes: z.string().trim().max(500).optional(),
 });
 export const replacementSchema = z.object({
   midwifePublicId: publicIdSchema,
-  reason: z.string().trim().min(5, "Alasan pergantian wajib diisi").max(500),
-  overrideReason: z.string().trim().min(5).max(500).optional(),
+  reason: z.string().trim().min(2, "Alasan pergantian minimal 2 karakter").max(500),
+  overrideReason: z.string().trim().min(2, "Alasan pengalihan minimal 2 karakter").max(500).optional(),
 });
 export const assignmentActionSchema = z.object({
-  reason: z.string().trim().min(3).max(500).optional(),
+  reason: z.string().trim().min(2, "Alasan minimal 2 karakter").max(500).optional(),
 });
 
 export const monitoringSourceSchema = z.enum([
@@ -624,13 +693,13 @@ export const educationArticleCreateSchema = z.object({
       /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
       "Format slug harus berupa huruf kecil, angka, dan tanda hubung (-)",
     ),
-  title: z.string().trim().min(3, "Judul artikel minimal 3 karakter").max(200),
+  title: z.string().trim().min(2, "Judul artikel minimal 2 karakter").max(200),
   summary: z.string().trim().min(10, "Ringkasan artikel minimal 10 karakter").max(500),
   content: z.string().trim().min(20, "Konten artikel minimal 20 karakter"),
   category: educationCategorySchema,
   trimester: educationTrimesterSchema.default("ALL"),
   featured: z.boolean().default(false),
-  sourceName: z.string().trim().min(2, "Nama sumber wajib diisi"),
+  sourceName: z.string().trim().min(2, "Nama sumber wajib diisi").max(100),
   sourceReference: z.string().trim().nullable().optional(),
   published: z.boolean().default(true),
   sortOrder: z.number().int().default(0),
@@ -825,7 +894,7 @@ export const videoConsultationCreateSchema = z.object({
   title: z
     .string()
     .trim()
-    .min(3, "Judul video call minimal 3 karakter")
+    .min(2, "Judul video call minimal 2 karakter")
     .max(150, "Judul video call maksimal 150 karakter")
     .default("Konsultasi Video Ibu Hamil"),
   notes: z.string().trim().max(1000).nullable().optional(),
@@ -834,7 +903,7 @@ export const videoConsultationCreateSchema = z.object({
 export const videoConsultationUpdateSchema = z.object({
   scheduledAt: z.string().datetime({ message: "Format waktu jadwal tidak valid" }).optional(),
   meetingUrl: safeMeetingUrlSchema.optional(),
-  title: z.string().trim().min(3).max(150).optional(),
+  title: z.string().trim().min(2, "Judul video call minimal 2 karakter").max(150).optional(),
   notes: z.string().trim().max(1000).nullable().optional(),
   status: videoConsultationStatusSchema.optional(),
 });
@@ -884,7 +953,7 @@ export const homeVisitCreateSchema = z.object({
   purpose: z
     .string()
     .trim()
-    .min(3, "Tujuan kunjungan minimal 3 karakter")
+    .min(2, "Tujuan kunjungan minimal 2 karakter")
     .max(200, "Tujuan kunjungan maksimal 200 karakter"),
   notes: z.string().trim().max(1000).nullable().optional(),
 });
@@ -894,7 +963,7 @@ export const homeVisitUpdateSchema = z.object({
     .string()
     .datetime({ message: "Format waktu jadwal tidak valid" })
     .optional(),
-  purpose: z.string().trim().min(3).max(200).optional(),
+  purpose: z.string().trim().min(2, "Tujuan kunjungan minimal 2 karakter").max(200).optional(),
   notes: z.string().trim().max(1000).nullable().optional(),
   status: homeVisitStatusSchema.optional(),
 });

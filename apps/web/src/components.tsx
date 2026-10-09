@@ -93,7 +93,7 @@ export const Input = ({
       <span>{label}</span>
       <input
         id={inputId}
-        className={`min-h-11 rounded-xl border border-slate-300 bg-white px-3.5 text-slate-900 shadow-sm transition-colors focus:border-pfram-primary focus:outline-none focus:ring-2 focus:ring-pfram-primary/20 ${className}`}
+        className={`min-h-11 rounded-xl border ${error ? "border-rose-500 ring-1 ring-rose-500/20" : "border-slate-300"} bg-white px-3.5 text-slate-900 shadow-sm transition-colors focus:border-pfram-primary focus:outline-none focus:ring-2 focus:ring-pfram-primary/20 ${className}`}
         aria-invalid={!!error}
         aria-describedby={error ? `${inputId}-error` : undefined}
         {...p}
@@ -131,7 +131,7 @@ export const Select = ({
       <span>{label}</span>
       <select
         id={selectId}
-        className={`min-h-11 rounded-xl border border-slate-300 bg-white px-3.5 text-slate-900 shadow-sm transition-colors focus:border-pfram-primary focus:outline-none focus:ring-2 focus:ring-pfram-primary/20 ${className}`}
+        className={`min-h-11 rounded-xl border ${error ? "border-rose-500 ring-1 ring-rose-500/20" : "border-slate-300"} bg-white px-3.5 text-slate-900 shadow-sm transition-colors focus:border-pfram-primary focus:outline-none focus:ring-2 focus:ring-pfram-primary/20 ${className}`}
         aria-invalid={!!error}
         aria-describedby={error ? `${selectId}-error` : undefined}
         {...props}
@@ -198,7 +198,7 @@ export function PasswordInput({
           id={inputId}
           type={visible ? "text" : "password"}
           autoComplete="current-password"
-          className={`min-h-11 w-full rounded-xl border border-slate-300 bg-white px-3.5 pr-12 text-slate-900 shadow-sm transition-colors focus:border-pfram-primary focus:outline-none focus:ring-2 focus:ring-pfram-primary/20 ${className}`}
+          className={`min-h-11 w-full rounded-xl border ${error ? "border-rose-500 ring-1 ring-rose-500/20" : "border-slate-300"} bg-white px-3.5 pr-12 text-slate-900 shadow-sm transition-colors focus:border-pfram-primary focus:outline-none focus:ring-2 focus:ring-pfram-primary/20 ${className}`}
           aria-invalid={!!error}
           aria-describedby={error ? `${inputId}-error` : undefined}
         />

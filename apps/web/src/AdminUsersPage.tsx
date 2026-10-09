@@ -15,6 +15,7 @@ import {
   formatUserRole,
   formatUserStatus,
 } from "./components";
+import { extractAndMapError } from "./error-mapping";
 
 interface FacilityOption {
   publicId: string;
@@ -81,11 +82,13 @@ export function AdminUsersPage() {
   const [createStrNumber, setCreateStrNumber] = useState("");
   const [createFacilityId, setCreateFacilityId] = useState("");
   const [createFormError, setCreateFormError] = useState("");
+  const [createFieldErrors, setCreateFieldErrors] = useState<Record<string, string>>({});
 
   // Reset Password Form State
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [resetFormError, setResetFormError] = useState("");
+  const [resetFieldErrors, setResetFieldErrors] = useState<Record<string, string>>({});
 
   // Load summary counts
   const loadSummary = useCallback(() => {
@@ -146,25 +149,26 @@ export function AdminUsersPage() {
   const handleCreateSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setCreateFormError("");
+    setCreateFieldErrors({});
 
+    const fieldErrs: Record<string, string> = {};
     if (!createFullName.trim()) {
-      setCreateFormError("Nama lengkap wajib diisi.");
-      return;
+      fieldErrs.fullName = "Nama lengkap wajib diisi.";
     }
     if (!createPhone.trim()) {
-      setCreateFormError("Nomor HP wajib diisi.");
-      return;
+      fieldErrs.phoneNumber = "Nomor HP wajib diisi.";
     }
     if (createPassword.length < 10) {
-      setCreateFormError("Kata sandi minimal 10 karakter.");
-      return;
-    }
-    if (!/[A-Z]/.test(createPassword) || !/[a-z]/.test(createPassword) || !/\d/.test(createPassword)) {
-      setCreateFormError("Kata sandi harus mengandung huruf besar, huruf kecil, dan angka.");
-      return;
+      fieldErrs.password = "Kata sandi minimal 10 karakter.";
+    } else if (!/[A-Z]/.test(createPassword) || !/[a-z]/.test(createPassword) || !/\d/.test(createPassword)) {
+      fieldErrs.password = "Kata sandi harus mengandung huruf besar, huruf kecil, dan angka.";
     }
     if (createPassword !== createConfirmPassword) {
-      setCreateFormError("Konfirmasi kata sandi tidak cocok.");
+      fieldErrs.confirmPassword = "Konfirmasi kata sandi tidak cocok.";
+    }
+
+    if (Object.keys(fieldErrs).length > 0) {
+      setCreateFieldErrors(fieldErrs);
       return;
     }
 
@@ -201,9 +205,9 @@ export function AdminUsersPage() {
       loadUsers();
       loadSummary();
     } catch (err) {
-      setCreateFormError(
-        err instanceof Error ? err.message : "Gagal membuat akun pengguna",
-      );
+      const mapped = extractAndMapError(err);
+      setCreateFormError(mapped.message || "Gagal membuat akun pengguna");
+      setCreateFieldErrors(mapped.fieldErrors);
     } finally {
       setActionLoading(false);
     }
@@ -214,17 +218,20 @@ export function AdminUsersPage() {
     e.preventDefault();
     if (!resetTarget) return;
     setResetFormError("");
+    setResetFieldErrors({});
 
+    const fieldErrs: Record<string, string> = {};
     if (newPassword.length < 10) {
-      setResetFormError("Kata sandi baru minimal 10 karakter.");
-      return;
-    }
-    if (!/[A-Z]/.test(newPassword) || !/[a-z]/.test(newPassword) || !/\d/.test(newPassword)) {
-      setResetFormError("Kata sandi harus mengandung huruf besar, huruf kecil, dan angka.");
-      return;
+      fieldErrs.newPassword = "Kata sandi baru minimal 10 karakter.";
+    } else if (!/[A-Z]/.test(newPassword) || !/[a-z]/.test(newPassword) || !/\d/.test(newPassword)) {
+      fieldErrs.newPassword = "Kata sandi harus mengandung huruf besar, huruf kecil, dan angka.";
     }
     if (newPassword !== confirmNewPassword) {
-      setResetFormError("Konfirmasi kata sandi baru tidak cocok.");
+      fieldErrs.confirmNewPassword = "Konfirmasi kata sandi baru tidak cocok.";
+    }
+
+    if (Object.keys(fieldErrs).length > 0) {
+      setResetFieldErrors(fieldErrs);
       return;
     }
 
@@ -244,9 +251,9 @@ export function AdminUsersPage() {
       setConfirmNewPassword("");
       loadUsers();
     } catch (err) {
-      setResetFormError(
-        err instanceof Error ? err.message : "Gagal mereset kata sandi",
-      );
+      const mapped = extractAndMapError(err);
+      setResetFormError(mapped.message || "Gagal mereset kata sandi");
+      setResetFieldErrors(mapped.fieldErrors);
     } finally {
       setActionLoading(false);
     }
@@ -737,16 +744,18 @@ export function AdminUsersPage() {
                 required
                 value={createFullName}
                 onChange={(e) => setCreateFullName(e.target.value)}
+                error={createFieldErrors.fullName}
               />
 
               {/* Phone Number */}
               <div>
                 <Input
                   label="Nomor Handphone"
-                  placeholder="Contoh: 081234567890 atau 6281234567890"
+                  placeholder="Contoh: 0853xxxxxxxx"
                   required
                   value={createPhone}
                   onChange={(e) => setCreatePhone(e.target.value)}
+                  error={createFieldErrors.phoneNumber || createFieldErrors.phone}
                 />
                 <p className="mt-1 text-[11px] text-slate-500">
                   Gunakan format nomor seluler aktif Indonesia (minimal 10 digit).
@@ -762,6 +771,7 @@ export function AdminUsersPage() {
                     required
                     value={createPassword}
                     onChange={(e) => setCreatePassword(e.target.value)}
+                    error={createFieldErrors.password}
                   />
                 </div>
                 <div>
@@ -771,6 +781,7 @@ export function AdminUsersPage() {
                     required
                     value={createConfirmPassword}
                     onChange={(e) => setCreateConfirmPassword(e.target.value)}
+                    error={createFieldErrors.confirmPassword}
                   />
                 </div>
               </div>
@@ -789,14 +800,18 @@ export function AdminUsersPage() {
                     placeholder="Contoh: 19 02 5 2 1 20-1234567"
                     value={createStrNumber}
                     onChange={(e) => setCreateStrNumber(e.target.value)}
+                    error={createFieldErrors.professionalRegistrationNumber}
                   />
 
                   <label className="grid gap-1.5 text-sm font-medium text-slate-800">
                     <span>Fasilitas Kesehatan Penugasan Utama (Opsional)</span>
                     <select
-                      className="min-h-11 rounded-xl border border-slate-300 bg-white px-3 text-slate-900 shadow-sm focus:border-pfram-primary focus:outline-none focus:ring-2 focus:ring-pfram-primary/20"
+                      className={`min-h-11 rounded-xl border ${
+                        createFieldErrors.primaryFacilityPublicId ? "border-rose-500 ring-1 ring-rose-500/20" : "border-slate-300"
+                      } bg-white px-3 text-slate-900 shadow-sm focus:border-pfram-primary focus:outline-none focus:ring-2 focus:ring-pfram-primary/20`}
                       value={createFacilityId}
                       onChange={(e) => setCreateFacilityId(e.target.value)}
+                      aria-invalid={Boolean(createFieldErrors.primaryFacilityPublicId)}
                     >
                       <option value="">-- Pilih Fasilitas Kesehatan --</option>
                       {facilities.map((f) => (
@@ -805,6 +820,11 @@ export function AdminUsersPage() {
                         </option>
                       ))}
                     </select>
+                    {createFieldErrors.primaryFacilityPublicId && (
+                      <span role="alert" className="text-xs font-semibold text-rose-600">
+                        {createFieldErrors.primaryFacilityPublicId}
+                      </span>
+                    )}
                   </label>
                 </div>
               )}
@@ -898,6 +918,7 @@ export function AdminUsersPage() {
                 required
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
+                error={resetFieldErrors.newPassword || resetFieldErrors.password}
               />
 
               <PasswordInput
@@ -906,6 +927,7 @@ export function AdminUsersPage() {
                 required
                 value={confirmNewPassword}
                 onChange={(e) => setConfirmNewPassword(e.target.value)}
+                error={resetFieldErrors.confirmNewPassword || resetFieldErrors.confirmPassword}
               />
 
               <p className="text-[11px] text-slate-500">

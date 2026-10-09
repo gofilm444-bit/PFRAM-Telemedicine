@@ -7,6 +7,7 @@ import {
   adminUserPasswordResetSchema,
 } from "@pfram/validation";
 import { audit } from "../auth/service.js";
+import { formatZodErrorMessage } from "../../shared/validation.js";
 
 export async function userRoutes(app: FastifyInstance) {
   // 1. GET /summary - System overview summary
@@ -75,7 +76,7 @@ export async function userRoutes(app: FastifyInstance) {
             app.fail(
               req,
               "VALIDATION_ERROR",
-              "Parameter query tidak valid",
+              formatZodErrorMessage(parsed.error),
               parsed.error.flatten(),
             ),
           );
@@ -166,7 +167,7 @@ export async function userRoutes(app: FastifyInstance) {
             app.fail(
               req,
               "VALIDATION_ERROR",
-              "Data akun tidak valid",
+              formatZodErrorMessage(parsed.error),
               parsed.error.flatten(),
             ),
           );
@@ -534,7 +535,7 @@ export async function userRoutes(app: FastifyInstance) {
             app.fail(
               req,
               "VALIDATION_ERROR",
-              "Kata sandi baru tidak memenuhi syarat keamanan",
+              formatZodErrorMessage(parsed.error),
               parsed.error.flatten(),
             ),
           );

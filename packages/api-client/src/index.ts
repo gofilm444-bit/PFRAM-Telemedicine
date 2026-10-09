@@ -66,6 +66,7 @@ export class PframApiError extends Error {
     message: string,
     public status: number,
     public details?: unknown,
+    public fieldErrors?: Record<string, string[]>,
   ) {
     super(message);
   }
@@ -119,11 +120,22 @@ export function createApiClient(options: {
           if (ok) return raw<T>(path, init, false);
         }
         const e = body as ApiError;
+        const fieldErrors =
+          e.error?.fieldErrors ??
+          (e.error?.details &&
+          typeof e.error.details === "object" &&
+          "fieldErrors" in e.error.details &&
+          typeof (e.error.details as { fieldErrors: unknown }).fieldErrors ===
+            "object"
+            ? (e.error.details as { fieldErrors: Record<string, string[]> })
+                .fieldErrors
+            : undefined);
         throw new PframApiError(
           e.error?.code ?? "REQUEST_FAILED",
           e.error?.message ?? "Permintaan gagal",
           res.status,
           e.error?.details,
+          fieldErrors,
         );
       }
       const data = (body as ApiSuccess<T>).data;

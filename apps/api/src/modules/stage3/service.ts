@@ -42,33 +42,125 @@ export async function resolveRegionHierarchy(
   const village = ids.villagePublicId
     ? byPublic.get(ids.villagePublicId)
     : undefined;
-  if (
-    !province ||
-    province.level !== "PROVINCE" ||
-    !regency ||
-    regency.level !== "REGENCY" ||
-    regency.parentId !== province.id ||
-    !district ||
-    district.level !== "DISTRICT" ||
-    district.parentId !== regency.id ||
-    (ids.villagePublicId &&
-      (!village ||
-        village.level !== "VILLAGE" ||
-        village.parentId !== district.id))
-  )
-    throw Object.assign(new Error("Hierarki wilayah tidak konsisten"), {
+  if (!province || province.level !== "PROVINCE") {
+    throw Object.assign(new Error("Provinsi yang dipilih tidak valid"), {
       statusCode: 400,
       code: "REGION_HIERARCHY_INVALID",
+      fieldErrors: { provincePublicId: ["Provinsi yang dipilih tidak valid"] },
     });
-  if (
-    [province, regency, district, village]
-      .filter(Boolean)
-      .some((r) => !r?.active)
-  )
-    throw Object.assign(new Error("Wilayah yang dipilih tidak aktif"), {
+  }
+  if (!regency || regency.level !== "REGENCY") {
+    throw Object.assign(new Error("Kabupaten/Kota yang dipilih tidak valid"), {
+      statusCode: 400,
+      code: "REGION_HIERARCHY_INVALID",
+      fieldErrors: { regencyPublicId: ["Kabupaten/Kota yang dipilih tidak valid"] },
+    });
+  }
+  if (regency.parentId !== province.id) {
+    throw Object.assign(
+      new Error("Kabupaten/Kota tidak berada di bawah provinsi yang dipilih"),
+      {
+        statusCode: 400,
+        code: "REGION_HIERARCHY_INVALID",
+        fieldErrors: {
+          regencyPublicId: [
+            "Kabupaten/Kota tidak berada di bawah provinsi yang dipilih",
+          ],
+        },
+      },
+    );
+  }
+  if (!district || district.level !== "DISTRICT") {
+    throw Object.assign(new Error("Kecamatan yang dipilih tidak valid"), {
+      statusCode: 400,
+      code: "REGION_HIERARCHY_INVALID",
+      fieldErrors: { districtPublicId: ["Kecamatan yang dipilih tidak valid"] },
+    });
+  }
+  if (district.parentId !== regency.id) {
+    throw Object.assign(
+      new Error("Kecamatan tidak berada di bawah kabupaten/kota yang dipilih"),
+      {
+        statusCode: 400,
+        code: "REGION_HIERARCHY_INVALID",
+        fieldErrors: {
+          districtPublicId: [
+            "Kecamatan tidak berada di bawah kabupaten/kota yang dipilih",
+          ],
+        },
+      },
+    );
+  }
+  if (ids.villagePublicId) {
+    if (!village || village.level !== "VILLAGE") {
+      throw Object.assign(new Error("Kelurahan/Desa yang dipilih tidak valid"), {
+        statusCode: 400,
+        code: "REGION_HIERARCHY_INVALID",
+        fieldErrors: {
+          villagePublicId: ["Kelurahan/Desa yang dipilih tidak valid"],
+        },
+      });
+    }
+    if (village.parentId !== district.id) {
+      throw Object.assign(
+        new Error(
+          "Kelurahan/Desa tidak berada di bawah kecamatan yang dipilih",
+        ),
+        {
+          statusCode: 400,
+          code: "REGION_HIERARCHY_INVALID",
+          fieldErrors: {
+            villagePublicId: [
+              "Kelurahan/Desa tidak berada di bawah kecamatan yang dipilih",
+            ],
+          },
+        },
+      );
+    }
+  }
+
+  if (!province.active) {
+    throw Object.assign(new Error("Provinsi yang dipilih sedang tidak aktif"), {
       statusCode: 409,
       code: "REGION_INACTIVE",
+      fieldErrors: {
+        provincePublicId: ["Provinsi yang dipilih sedang tidak aktif"],
+      },
     });
+  }
+  if (!regency.active) {
+    throw Object.assign(
+      new Error("Kabupaten/Kota yang dipilih sedang tidak aktif"),
+      {
+        statusCode: 409,
+        code: "REGION_INACTIVE",
+        fieldErrors: {
+          regencyPublicId: ["Kabupaten/Kota yang dipilih sedang tidak aktif"],
+        },
+      },
+    );
+  }
+  if (!district.active) {
+    throw Object.assign(new Error("Kecamatan yang dipilih sedang tidak aktif"), {
+      statusCode: 409,
+      code: "REGION_INACTIVE",
+      fieldErrors: {
+        districtPublicId: ["Kecamatan yang dipilih sedang tidak aktif"],
+      },
+    });
+  }
+  if (village && !village.active) {
+    throw Object.assign(
+      new Error("Kelurahan/Desa yang dipilih sedang tidak aktif"),
+      {
+        statusCode: 409,
+        code: "REGION_INACTIVE",
+        fieldErrors: {
+          villagePublicId: ["Kelurahan/Desa yang dipilih sedang tidak aktif"],
+        },
+      },
+    );
+  }
   return { province, regency, district, village };
 }
 

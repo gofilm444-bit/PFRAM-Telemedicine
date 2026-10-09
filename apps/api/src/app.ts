@@ -71,7 +71,12 @@ declare module "fastify" {
       details?: unknown,
     ) => {
       success: false;
-      error: { code: string; message: string; details?: unknown };
+      error: {
+        code: string;
+        message: string;
+        details?: unknown;
+        fieldErrors?: Record<string, string[]>;
+      };
       requestId: string;
     };
   }
@@ -116,11 +121,28 @@ export function buildApp(
     data,
     requestId: req.id,
   }));
-  app.decorate("fail", (req, code, message, details) => ({
-    success: false,
-    error: { code, message, ...(details === undefined ? {} : { details }) },
-    requestId: req.id,
-  }));
+  app.decorate("fail", (req, code, message, details) => {
+    let fieldErrors: Record<string, string[]> | undefined;
+    if (details && typeof details === "object") {
+      if (
+        "fieldErrors" in details &&
+        details.fieldErrors &&
+        typeof details.fieldErrors === "object"
+      ) {
+        fieldErrors = details.fieldErrors as Record<string, string[]>;
+      }
+    }
+    return {
+      success: false,
+      error: {
+        code,
+        message,
+        ...(details === undefined ? {} : { details }),
+        ...(fieldErrors ? { fieldErrors } : {}),
+      },
+      requestId: req.id,
+    };
+  });
   app.register(cookie);
   app.register(cors, {
     origin: (origin, cb) => {
@@ -186,23 +208,63 @@ export function buildApp(
   app.register(motherHomeVisitRoutes, { prefix: "/api/mother" });
   app.setErrorHandler((error, req, reply) => {
     req.log.error({ err: error }, "request_failed");
-    const status = (error as { statusCode?: number }).statusCode ?? 500;
-    const code =
-      (error as { code?: string }).code ??
-      (status === 500 ? "INTERNAL_ERROR" : "REQUEST_ERROR");
-    reply
-      .code(status)
-      .send(
-        app.fail(
-          req,
-          code,
-          status === 500 && env.NODE_ENV === "production"
-            ? "Terjadi kesalahan internal"
-            : error instanceof Error
-              ? error.message
-              : "Permintaan gagal",
-        ),
-      );
+
+    const rawMessage = error instanceof Error ? error.message : String(error);
+    const errorCode = (error as { code?: string }).code;
+    let status = (error as { statusCode?: number }).statusCode ?? 500;
+    let code = errorCode ?? (status === 500 ? "INTERNAL_ERROR" : "REQUEST_ERROR");
+    let safeMessage = rawMessage;
+
+    // Detect Prisma and database errors
+    const isPrismaError =
+      errorCode?.startsWith("P") ||
+      rawMessage.toLowerCase().includes("prisma") ||
+      rawMessage.includes("PrismaClient") ||
+      Boolean((error as { constructor?: { name?: string } })?.constructor?.name?.includes("Prisma"));
+
+    if (
+      errorCode === "P2025" ||
+      errorCode === "P2001" ||
+      rawMessage.includes("No record was found") ||
+      rawMessage.includes("Record to update not found")
+    ) {
+      status = 404;
+      code = "NOT_FOUND";
+      safeMessage = "Data yang diminta tidak ditemukan.";
+    } else if (
+      errorCode === "P2002" ||
+      rawMessage.includes("Unique constraint failed")
+    ) {
+      status = 409;
+      code = "CONFLICT";
+      safeMessage = "Data tersebut sudah terdaftar di sistem.";
+    } else if (
+      errorCode === "P2003" ||
+      rawMessage.includes("Foreign key constraint")
+    ) {
+      status = 400;
+      code = "FOREIGN_KEY_VIOLATION";
+      safeMessage =
+        "Relasi data tidak valid atau data masih digunakan oleh entitas lain.";
+    } else if (
+      isPrismaError ||
+      rawMessage.toLowerCase().includes("sql") ||
+      rawMessage.toLowerCase().includes("postgres")
+    ) {
+      status = 500;
+      code = "DATABASE_ERROR";
+      safeMessage = "Data belum berhasil diproses. Silakan coba kembali.";
+    } else if (status === 500) {
+      safeMessage = "Data belum berhasil diproses. Silakan coba kembali.";
+    }
+
+    const details =
+      (error as { details?: unknown }).details ??
+      ((error as { fieldErrors?: unknown }).fieldErrors
+        ? { fieldErrors: (error as { fieldErrors: unknown }).fieldErrors }
+        : undefined);
+
+    reply.code(status).send(app.fail(req, code, safeMessage, details));
   });
   app.addHook("onClose", async () => prisma.$disconnect());
   return app;

@@ -7,6 +7,7 @@ import {
 } from "@pfram/validation";
 import { audit, authenticatedUserView, issueSession, verifyPassword } from "./service.js";
 import { hashToken, newOpaqueToken, safeEqual } from "../../shared/security.js";
+import { formatZodErrorMessage } from "../../shared/validation.js";
 const profileInclude = {
   motherProfile: true,
   midwifeProfile: true,
@@ -84,7 +85,7 @@ export async function authRoutes(app: FastifyInstance) {
             app.fail(
               req,
               "VALIDATION_ERROR",
-              "Data registrasi tidak valid",
+              formatZodErrorMessage(parsed.error),
               parsed.error.flatten(),
             ),
           );
@@ -165,7 +166,7 @@ export async function authRoutes(app: FastifyInstance) {
             app.fail(
               req,
               "VALIDATION_ERROR",
-              "Data login tidak valid",
+              formatZodErrorMessage(parsed.error),
               parsed.error.flatten(),
             ),
           );

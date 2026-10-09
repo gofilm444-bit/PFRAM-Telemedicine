@@ -17,6 +17,7 @@ import {
   useCreateEducationArticle,
   useUpdateEducationArticle,
 } from "./education-queries";
+import { extractAndMapError } from "./error-mapping";
 
 export function AdminEducationListPage() {
   const [search, setSearch] = useState("");
@@ -407,11 +408,8 @@ function ArticleFormModal({
       }
       onSuccess();
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setErrorMessage(err.message);
-      } else {
-        setErrorMessage("Gagal menyimpan artikel");
-      }
+      const mapped = extractAndMapError(err);
+      setErrorMessage(mapped.message || "Gagal menyimpan artikel");
     }
   };
 
