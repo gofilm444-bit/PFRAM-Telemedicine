@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "prepare:dev": "node infrastructure/scripts/prepare-dev.mjs",
-    "predev": "npm run prepare:dev && npm run infra:up && npm run db:generate && npm run db:migrate && npm run db:seed",
+    "predev": "npm run prepare:dev && npm run infra:up && npm run db:generate && npm run db:migrate",
     "dev": "concurrently -n api,web,mobile -c green,cyan,magenta \"npm run dev:api\" \"npm run dev:web\" \"npm run dev:mobile\"",
     "dev:mobile": "dotenv -e .env -- npm run start -w @pfram/mobile",
     "dev:web": "dotenv -e .env -- npm run dev -w @pfram/web",
@@ -28,6 +28,9 @@
     "db:generate": "dotenv -e .env -- npm run db:generate -w @pfram/api",
     "db:migrate": "dotenv -e .env -- npm run db:migrate -w @pfram/api",
     "db:seed": "dotenv -e .env -- npm run db:seed -w @pfram/api",
+    "db:seed:demo": "dotenv -e .env -- npm run db:seed:demo -w @pfram/api",
+    "db:bootstrap:consents": "dotenv -e .env -- npm run db:bootstrap:consents -w @pfram/api",
+    "db:bootstrap:facilities:ternate": "dotenv -e .env -- npm run db:bootstrap:facilities:ternate -w @pfram/api",
     "db:studio": "dotenv -e .env -- npm run db:studio -w @pfram/api",
     "infra:up": "docker compose -f infrastructure/docker/docker-compose.yml up -d --wait postgres minio && docker compose -f infrastructure/docker/docker-compose.yml --profile bootstrap run --rm minio-bootstrap",
     "infra:down": "docker compose -f infrastructure/docker/docker-compose.yml down",

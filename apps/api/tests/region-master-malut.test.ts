@@ -17,6 +17,9 @@ describe("Provinsi Maluku Utara — Real Region Master & Database Isolation", ()
   let app: ReturnType<typeof buildApp>;
   let prisma: PrismaClient;
   let devPrisma: PrismaClient | null = null;
+  let initialDevRegionCount = 1314;
+  let initialDevUsersCount = 8;
+  let initialDevFacilityCount = 4;
   let adminToken: string;
   let userToken: string;
 
@@ -75,6 +78,11 @@ describe("Provinsi Maluku Utara — Real Region Master & Database Isolation", ()
     devPrisma = new PrismaClient({
       datasources: { db: { url: devUrl } },
     });
+    if (devPrisma) {
+      initialDevRegionCount = await devPrisma.region.count();
+      initialDevUsersCount = await devPrisma.user.count();
+      initialDevFacilityCount = await devPrisma.healthFacility.count();
+    }
   });
 
   afterAll(async () => {
@@ -389,13 +397,16 @@ describe("Provinsi Maluku Utara — Real Region Master & Database Isolation", ()
       // 2. Verifikasi dev database tidak terpengaruh
       if (devPrisma) {
         const devRegionCount = await devPrisma.region.count();
-        expect(devRegionCount).toBe(1314);
+        expect(devRegionCount).toBe(initialDevRegionCount);
+        expect(devRegionCount).toBeGreaterThanOrEqual(1314);
 
         const devUsersCount = await devPrisma.user.count();
-        expect(devUsersCount).toBe(8);
+        expect(devUsersCount).toBe(initialDevUsersCount);
+        expect(devUsersCount).toBeGreaterThanOrEqual(8);
 
         const devFacilityCount = await devPrisma.healthFacility.count();
-        expect(devFacilityCount).toBe(4);
+        expect(devFacilityCount).toBe(initialDevFacilityCount);
+        expect(devFacilityCount).toBeGreaterThanOrEqual(4);
       }
     });
   });

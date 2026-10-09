@@ -1,26 +1,28 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { pregnancySchema } from "@pfram/validation";
+import { formatDateOnly, pregnancySchema, todayDateOnly } from "@pfram/validation";
 import type { z } from "zod";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth";
 import { onboardingDraft } from "../onboarding-draft";
 import { MotherAppShell } from "../MotherAppShell";
 import { Button, Card, ErrorState, Input, StatusBadge } from "../../components";
+import { extractAndMapError } from "../../error-mapping";
 
 type Values = z.input<typeof pregnancySchema>;
 
 export function MotherPregnancyProfilePage() {
   const { request, refreshProfile } = useAuth();
   const navigate = useNavigate();
-  const [error, setError] = useState("");
+  const [formError, setFormError] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
 
   const {
     register,
     handleSubmit,
     watch,
+    setError: setFieldError,
     formState: { errors, isSubmitting },
   } = useForm<Values>({
     resolver: zodResolver(pregnancySchema),
@@ -46,10 +48,10 @@ export function MotherPregnancyProfilePage() {
 
   const onSubmit = async (values: Values) => {
     if (!agreeTerms) {
-      setError("Harap centang persetujuan informasi kehamilan.");
+      setFormError("Harap centang persetujuan informasi kehamilan.");
       return;
     }
-    setError("");
+    setFormError("");
     try {
       await request("/mother/pregnancies", {
         method: "POST",
@@ -59,11 +61,15 @@ export function MotherPregnancyProfilePage() {
       await refreshProfile();
       navigate("/m/home");
     } catch (e) {
-      setError(
-        e instanceof Error
-          ? e.message
-          : "Gagal menyimpan data kehamilan. Periksa kembali isian.",
+      const mapped = extractAndMapError(e);
+      setFormError(
+        mapped.message || "Gagal menyimpan data kehamilan. Periksa kembali isian.",
       );
+      if (mapped.fieldErrors) {
+        Object.entries(mapped.fieldErrors).forEach(([field, msg]) => {
+          setFieldError(field as keyof Values, { type: "server", message: msg });
+        });
+      }
     }
   };
 
@@ -81,7 +87,7 @@ export function MotherPregnancyProfilePage() {
       }
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {error && <ErrorState message={error} />}
+        {formError && <ErrorState message={formError} />}
 
         {/* Gestational Age Calculation Source */}
         <Card className="border border-slate-200/90 bg-white p-5 shadow-sm space-y-4">
@@ -143,6 +149,7 @@ export function MotherPregnancyProfilePage() {
               id="lastMenstrualPeriod"
               type="date"
               label="Hari Pertama Haid Terakhir (HPHT) *"
+              max={formatDateOnly(todayDateOnly())}
               error={errors.lastMenstrualPeriod?.message}
               {...register("lastMenstrualPeriod")}
             />
@@ -152,6 +159,7 @@ export function MotherPregnancyProfilePage() {
                 id="assessmentDate"
                 type="date"
                 label="Tanggal Pemeriksaan Nakes *"
+                max={formatDateOnly(todayDateOnly())}
                 error={errors.assessmentDate?.message}
                 {...register("assessmentDate")}
               />

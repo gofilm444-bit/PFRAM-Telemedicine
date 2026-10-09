@@ -6,6 +6,7 @@ import { PrismaClient, type UserRole } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { calculateEstimatedDueDate, parseDateOnly } from "@pfram/validation";
 import { importMalukuUtaraRegions } from "../src/modules/regions/importer.js";
+import { bootstrapConsentDocuments } from "../src/modules/auth/consent-bootstrap.js";
 
 const IDS = {
   facility1: "32000000-0000-4000-8000-000000000001",
@@ -266,6 +267,17 @@ export async function seedDevelopmentData(prisma: PrismaClient) {
   if (process.env.NODE_ENV === "production")
     throw new Error("Seed development tidak boleh dijalankan pada production");
 
+  const dbUrl = process.env.DATABASE_URL || "";
+  if (
+    dbUrl.includes("production") ||
+    dbUrl.includes("prod_db") ||
+    dbUrl.includes("rds.amazonaws.com")
+  ) {
+    throw new Error(
+      "[SAFETY GUARD] Seed development ditolak pada basis data berlabel production",
+    );
+  }
+
   console.log("Menjalankan impor master wilayah Maluku Utara...");
   const regionResult = await importMalukuUtaraRegions(prisma);
   console.log(
@@ -308,32 +320,10 @@ export async function seedDevelopmentData(prisma: PrismaClient) {
     villageId: villageKalumata.id,
   });
 
-  const privacy = await prisma.consentDocument.upsert({
+  await bootstrapConsentDocuments(prisma);
+  const privacy = await prisma.consentDocument.findUniqueOrThrow({
     where: {
       documentType_version: { documentType: "PRIVACY_POLICY", version: "1.0" },
-    },
-    update: { active: true },
-    create: {
-      documentType: "PRIVACY_POLICY",
-      version: "1.0",
-      title: "Kebijakan Privasi PFRAM",
-      content:
-        "Dokumen development. Tinjauan legal diperlukan sebelum produksi.",
-      active: true,
-      effectiveAt: new Date(),
-    },
-  });
-  await prisma.consentDocument.upsert({
-    where: { documentType_version: { documentType: "TERMS", version: "1.0" } },
-    update: { active: true },
-    create: {
-      documentType: "TERMS",
-      version: "1.0",
-      title: "Syarat Penggunaan PFRAM",
-      content:
-        "Dokumen development. PFRAM tidak menggantikan tenaga kesehatan.",
-      active: true,
-      effectiveAt: new Date(),
     },
   });
 

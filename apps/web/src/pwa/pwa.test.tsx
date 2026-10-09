@@ -1,12 +1,26 @@
 // @vitest-environment jsdom
 import "@testing-library/jest-dom/vitest";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { cleanup, render, screen, act, waitFor, within, fireEvent } from "@testing-library/react";
+import {
+  cleanup,
+  render,
+  screen,
+  act,
+  waitFor,
+  within,
+  fireEvent,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import fs from "node:fs";
 import path from "node:path";
-import { usePwaInstall, _resetPwaInstallStateForTesting } from "./usePwaInstall";
-import { PwaUpdateNotification, _triggerNeedRefreshForTesting } from "./PwaUpdateNotification";
+import {
+  usePwaInstall,
+  _resetPwaInstallStateForTesting,
+} from "./usePwaInstall";
+import {
+  PwaUpdateNotification,
+  _triggerNeedRefreshForTesting,
+} from "./PwaUpdateNotification";
 import { _setOnlineForTesting } from "./useOnlineStatus";
 import { MotherAppShell } from "./MotherAppShell";
 import { MotherBottomNav } from "./MotherBottomNav";
@@ -17,6 +31,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MemoryRouter } from "react-router-dom";
 import { WebWeightLineChart } from "../web-monitoring-charts";
 import { isValidMeetingUrl } from "@pfram/validation";
+import { PframApiError } from "@pfram/api-client";
 
 let mockUser: AuthenticatedUser | null = null;
 let mockLoading = false;
@@ -39,11 +54,17 @@ vi.mock("../auth", () => ({
   }),
   api: {
     request: (...args: unknown[]) => mockRequest(...args),
-    fetchBlob: vi.fn().mockImplementation(() => Promise.resolve(new Blob(["mock-blob"], { type: "image/jpeg" }))),
+    fetchBlob: vi
+      .fn()
+      .mockImplementation(() =>
+        Promise.resolve(new Blob(["mock-blob"], { type: "image/jpeg" })),
+      ),
     setAccessToken: vi.fn(),
     refresh: vi.fn().mockResolvedValue(true),
   },
-  AuthProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  AuthProvider: ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
+  ),
 }));
 
 import App from "../App";
@@ -94,18 +115,20 @@ describe("PWA-1 Infrastructure & App Identity", () => {
       mockUser = null;
     });
 
-    mockRegisterMother.mockImplementation(async (data: Record<string, unknown>) => {
-      mockUser = {
-        publicId: "USR-NEW-01",
-        phoneNumber: String(data.phoneNumber || "081234567890"),
-        role: "MOTHER",
-        displayName: String(data.fullName || "Ibu Baru"),
-        status: "ACTIVE",
-        phoneVerifiedAt: null,
-        profileCompletionStatus: "ACCOUNT_READY",
-      };
-      return mockUser;
-    });
+    mockRegisterMother.mockImplementation(
+      async (data: Record<string, unknown>) => {
+        mockUser = {
+          publicId: "USR-NEW-01",
+          phoneNumber: String(data.phoneNumber || "081234567890"),
+          role: "MOTHER",
+          displayName: String(data.fullName || "Ibu Baru"),
+          status: "ACTIVE",
+          phoneVerifiedAt: null,
+          profileCompletionStatus: "ACCOUNT_READY",
+        };
+        return mockUser;
+      },
+    );
 
     mockRequest.mockImplementation((url: string) => {
       if (typeof url === "string" && url.includes("/users/summary")) {
@@ -121,15 +144,16 @@ describe("PWA-1 Infrastructure & App Identity", () => {
           },
         ]);
       }
-      if (typeof url === "string" && url.includes("/reference/regions?level=PROVINCE")) {
+      if (
+        typeof url === "string" &&
+        url.includes("/reference/regions?level=PROVINCE")
+      ) {
         return Promise.resolve({
           items: [{ publicId: "reg-prov-01", name: "Maluku Utara" }],
         });
       }
       if (typeof url === "string" && url.includes("/children")) {
-        return Promise.resolve([
-          { publicId: "reg-child-01", name: "Ternate" },
-        ]);
+        return Promise.resolve([{ publicId: "reg-child-01", name: "Ternate" }]);
       }
       if (typeof url === "string" && url.includes("/reference/facilities")) {
         return Promise.resolve({
@@ -161,7 +185,9 @@ describe("PWA-1 Infrastructure & App Identity", () => {
       );
       expect(manifestContent.name).toBe("PFRAM Telemedicine");
       expect(manifestContent.short_name).toBe("PFRAM");
-      expect(manifestContent.description).toBe("Pantau Kehamilan, Lindungi Ibu dan Bayi");
+      expect(manifestContent.description).toBe(
+        "Pantau Kehamilan, Lindungi Ibu dan Bayi",
+      );
       expect(manifestContent.start_url).toBe("/m");
       expect(manifestContent.scope).toBe("/");
       expect(manifestContent.display).toBe("standalone");
@@ -254,10 +280,16 @@ describe("PWA-1 Infrastructure & App Identity", () => {
       const promptSpy = vi.fn().mockResolvedValue(undefined);
       const mockEvent = new Event("beforeinstallprompt") as Event & {
         prompt: () => Promise<void>;
-        userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
+        userChoice: Promise<{
+          outcome: "accepted" | "dismissed";
+          platform: string;
+        }>;
       };
       mockEvent.prompt = promptSpy;
-      mockEvent.userChoice = Promise.resolve({ outcome: "accepted", platform: "web" });
+      mockEvent.userChoice = Promise.resolve({
+        outcome: "accepted",
+        platform: "web",
+      });
 
       act(() => {
         window.dispatchEvent(mockEvent as unknown as Event);
@@ -298,7 +330,9 @@ describe("PWA-1 Infrastructure & App Identity", () => {
         phoneVerifiedAt: null,
       };
       renderAppAt("/m");
-      expect(screen.getByRole("heading", { name: "Dashboard Administrator" })).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Dashboard Administrator" }),
+      ).toBeInTheDocument();
       expect(screen.queryByText(/404/)).toBeNull();
     });
 
@@ -312,8 +346,12 @@ describe("PWA-1 Infrastructure & App Identity", () => {
         phoneVerifiedAt: null,
       };
       renderAppAt("/m");
-      expect(screen.getByRole("heading", { name: /Dashboard Bidan/ })).toBeInTheDocument();
-      expect(screen.getAllByRole("link", { name: /Ibu Binaan/ }).length).toBeGreaterThan(0);
+      expect(
+        screen.getByRole("heading", { name: /Dashboard Bidan/ }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getAllByRole("link", { name: /Ibu Binaan/ }).length,
+      ).toBeGreaterThan(0);
       expect(screen.queryByText(/404/)).toBeNull();
     });
 
@@ -329,7 +367,9 @@ describe("PWA-1 Infrastructure & App Identity", () => {
       };
       renderAppAt("/m");
       expect(screen.getByText(/Halo, Ibu Rahmawati/)).toBeInTheDocument();
-      expect(screen.getByText(/Selamat datang di PFRAM Telemedicine/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Selamat datang di PFRAM Telemedicine/),
+      ).toBeInTheDocument();
       expect(screen.queryByText(/404/)).toBeNull();
     });
   });
@@ -374,18 +414,20 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       mockUser = null;
     });
 
-    mockRegisterMother.mockImplementation(async (data: Record<string, unknown>) => {
-      mockUser = {
-        publicId: "USR-NEW-01",
-        phoneNumber: String(data.phoneNumber || "081234567890"),
-        role: "MOTHER",
-        displayName: String(data.fullName || "Ibu Baru"),
-        status: "ACTIVE",
-        phoneVerifiedAt: null,
-        profileCompletionStatus: "ACCOUNT_READY",
-      };
-      return mockUser;
-    });
+    mockRegisterMother.mockImplementation(
+      async (data: Record<string, unknown>) => {
+        mockUser = {
+          publicId: "USR-NEW-01",
+          phoneNumber: String(data.phoneNumber || "081234567890"),
+          role: "MOTHER",
+          displayName: String(data.fullName || "Ibu Baru"),
+          status: "ACTIVE",
+          phoneVerifiedAt: null,
+          profileCompletionStatus: "ACCOUNT_READY",
+        };
+        return mockUser;
+      },
+    );
 
     mockRequest.mockImplementation((url: string, init?: RequestInit) => {
       if (typeof url === "string" && url.includes("/users/summary")) {
@@ -401,24 +443,51 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
           },
         ]);
       }
-      if (typeof url === "string" && url.includes("/reference/regions?level=PROVINCE")) {
+      if (
+        typeof url === "string" &&
+        url.includes("/reference/regions?level=PROVINCE")
+      ) {
         return Promise.resolve({
-          items: [{ publicId: "11111111-1111-4111-8111-111111111111", name: "Maluku Utara" }],
+          items: [
+            {
+              publicId: "11111111-1111-4111-8111-111111111111",
+              name: "Maluku Utara",
+            },
+          ],
         });
       }
-      if (typeof url === "string" && url.includes("/reference/regions/11111111-1111-4111-8111-111111111111/children")) {
+      if (
+        typeof url === "string" &&
+        url.includes(
+          "/reference/regions/11111111-1111-4111-8111-111111111111/children",
+        )
+      ) {
         return Promise.resolve([
-          { publicId: "22222222-2222-4222-8222-222222222222", name: "Kota Ternate" },
+          {
+            publicId: "22222222-2222-4222-8222-222222222222",
+            name: "Kota Ternate",
+          },
         ]);
       }
-      if (typeof url === "string" && url.includes("/reference/regions/22222222-2222-4222-8222-222222222222/children")) {
+      if (
+        typeof url === "string" &&
+        url.includes(
+          "/reference/regions/22222222-2222-4222-8222-222222222222/children",
+        )
+      ) {
         return Promise.resolve([
-          { publicId: "33333333-3333-4333-8333-333333333333", name: "Ternate Selatan" },
+          {
+            publicId: "33333333-3333-4333-8333-333333333333",
+            name: "Ternate Selatan",
+          },
         ]);
       }
       if (typeof url === "string" && url.includes("/children")) {
         return Promise.resolve([
-          { publicId: "33333333-3333-4333-8333-333333333333", name: "Ternate Selatan" },
+          {
+            publicId: "33333333-3333-4333-8333-333333333333",
+            name: "Ternate Selatan",
+          },
         ]);
       }
       if (typeof url === "string" && url.includes("/reference/facilities")) {
@@ -433,12 +502,18 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
           ],
         });
       }
-      if (typeof url === "string" && url.includes("/mother/anc-schedules/upcoming")) {
+      if (
+        typeof url === "string" &&
+        url.includes("/mother/anc-schedules/upcoming")
+      ) {
         return Promise.resolve({
           publicId: "anc-sch-01",
           motherPublicId: "USR-MOTHER-01",
           pregnancyPublicId: "preg-01",
-          facility: { publicId: "44444444-4444-4444-8444-444444444444", name: "Puskesmas Kalumata" },
+          facility: {
+            publicId: "44444444-4444-4444-8444-444444444444",
+            name: "Puskesmas Kalumata",
+          },
           scheduledAt: "2026-10-15T09:00:00Z",
           visitType: "ANC",
           doctorRequired: false,
@@ -449,7 +524,10 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
           updatedAt: "2026-09-01T08:00:00Z",
         });
       }
-      if (typeof url === "string" && url.includes("/mother/monitoring/summary")) {
+      if (
+        typeof url === "string" &&
+        url.includes("/mother/monitoring/summary")
+      ) {
         return Promise.resolve({
           latestWeight: 58.5,
           latestWeightRecordedAt: "2026-10-01T08:30:00Z",
@@ -529,7 +607,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
       const phoneInput = screen.getByLabelText("Nomor Handphone");
       const passwordInput = screen.getByLabelText("Kata Sandi");
-      const submitBtn = screen.getByRole("button", { name: "Masuk ke Dashboard" });
+      const submitBtn = screen.getByRole("button", {
+        name: "Masuk ke Dashboard",
+      });
 
       await userEvent.type(phoneInput, "081333333333");
       await userEvent.type(passwordInput, "Rahasia1234");
@@ -551,8 +631,12 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         profileCompletionStatus: "COMPLETE",
       };
       renderAppAt("/dashboard");
-      expect(screen.queryByRole("heading", { name: "Dashboard Administrator" })).toBeNull();
-      expect(screen.queryByRole("heading", { name: /Dashboard Bidan/ })).toBeNull();
+      expect(
+        screen.queryByRole("heading", { name: "Dashboard Administrator" }),
+      ).toBeNull();
+      expect(
+        screen.queryByRole("heading", { name: /Dashboard Bidan/ }),
+      ).toBeNull();
       expect(screen.getByText(/Halo, Ibu Rahmawati!/)).toBeInTheDocument();
     });
 
@@ -566,13 +650,17 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         phoneVerifiedAt: null,
       };
       renderAppAt("/m/home");
-      expect(screen.getByRole("heading", { name: "Dashboard Administrator" })).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Dashboard Administrator" }),
+      ).toBeInTheDocument();
     });
 
     it("14. session restoration displays AppLoadingScreen while loading is true", () => {
       mockLoading = true;
       renderAppAt("/m");
-      expect(screen.getByText("Memulihkan sesi dan memuat data…")).toBeInTheDocument();
+      expect(
+        screen.getByText("Memulihkan sesi dan memuat data…"),
+      ).toBeInTheDocument();
     });
   });
 
@@ -671,10 +759,14 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         </MemoryRouter>,
       );
 
-      expect(screen.getByRole("heading", { name: "Beranda" })).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Beranda" }),
+      ).toBeInTheDocument();
       expect(screen.getByText("Subjudul")).toBeInTheDocument();
       expect(screen.getByText("Konten Utama")).toBeInTheDocument();
-      expect(screen.getByRole("navigation", { name: "Navigasi aplikasi ibu" })).toBeInTheDocument();
+      expect(
+        screen.getByRole("navigation", { name: "Navigasi aplikasi ibu" }),
+      ).toBeInTheDocument();
     });
 
     it("21. bottom nav contains exactly 5 tabs with min 48px touch targets", () => {
@@ -684,7 +776,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         </MemoryRouter>,
       );
 
-      const nav = screen.getByRole("navigation", { name: "Navigasi aplikasi ibu" });
+      const nav = screen.getByRole("navigation", {
+        name: "Navigasi aplikasi ibu",
+      });
       expect(nav).toBeInTheDocument();
       const links = screen.getAllByRole("link");
       expect(links.length).toBe(5);
@@ -736,7 +830,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       u2();
 
       const { unmount: u3 } = renderAppAt("/m/education");
-      expect(screen.getByText(/Edukasi Kehamilan|Materi Edukasi/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Edukasi Kehamilan|Materi Edukasi/),
+      ).toBeInTheDocument();
       u3();
     });
 
@@ -754,9 +850,13 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       renderAppAt("/m/account");
       expect(screen.getByText("Ibu Rahmawati")).toBeInTheDocument();
       expect(screen.getByText("081333333333")).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: "Keluar dari Akun" })).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Keluar dari Akun" }),
+      ).toBeInTheDocument();
 
-      const logoutBtn = screen.getByRole("button", { name: "Keluar dari Akun" });
+      const logoutBtn = screen.getByRole("button", {
+        name: "Keluar dari Akun",
+      });
       await userEvent.click(logoutBtn);
 
       await waitFor(() => {
@@ -768,21 +868,43 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
   describe("Mother Registration Flow", () => {
     it("25. /register renders registration form with active consents", () => {
       renderAppAt("/register");
-      expect(screen.getByRole("heading", { name: "Daftar Akun Ibu Hamil" })).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Daftar Akun Ibu Hamil" }),
+      ).toBeInTheDocument();
       expect(screen.getByLabelText("Nama Lengkap *")).toBeInTheDocument();
       expect(screen.getByLabelText("Nomor Handphone *")).toBeInTheDocument();
       expect(screen.getByLabelText("Kata Sandi *")).toBeInTheDocument();
-      expect(screen.getByLabelText("Konfirmasi Kata Sandi *")).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: "Daftar Akun Ibu" })).toBeDisabled();
+      expect(
+        screen.getByLabelText("Konfirmasi Kata Sandi *"),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Daftar Akun Ibu" }),
+      ).toBeDisabled();
     });
 
-    it("26. /register enables submit when consent is checked and submits data", async () => {
+    it("26. /register enables submit when consent is checked and submits canonical payload with consentDocumentIds", async () => {
       renderAppAt("/register");
 
-      await userEvent.type(screen.getByLabelText("Nama Lengkap *"), "Ibu Siti Aisyah");
-      await userEvent.type(screen.getByLabelText("Nomor Handphone *"), "081298765432");
-      await userEvent.type(screen.getByLabelText("Kata Sandi *"), "RahasiaKuat123");
-      await userEvent.type(screen.getByLabelText("Konfirmasi Kata Sandi *"), "RahasiaKuat123");
+      await waitFor(() => {
+        expect(screen.getByRole("checkbox")).toBeInTheDocument();
+      });
+
+      await userEvent.type(
+        screen.getByLabelText("Nama Lengkap *"),
+        "Ibu Siti Aisyah",
+      );
+      await userEvent.type(
+        screen.getByLabelText("Nomor Handphone *"),
+        "081298765432",
+      );
+      await userEvent.type(
+        screen.getByLabelText("Kata Sandi *"),
+        "RahasiaKuat123",
+      );
+      await userEvent.type(
+        screen.getByLabelText("Konfirmasi Kata Sandi *"),
+        "RahasiaKuat123",
+      );
 
       const consentCheck = screen.getByRole("checkbox");
       await userEvent.click(consentCheck);
@@ -793,14 +915,283 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       await userEvent.click(submitBtn);
 
       await waitFor(() => {
+        expect(mockRegisterMother).toHaveBeenCalledWith({
+          fullName: "Ibu Siti Aisyah",
+          phoneNumber: "081298765432",
+          password: "RahasiaKuat123",
+          passwordConfirmation: "RahasiaKuat123",
+          consentDocumentIds: ["00000000-0000-0000-0000-000000000001"],
+          clientType: "web",
+        });
+      });
+    });
+
+    it("26b. unchecked consent keeps submit disabled and toggling off re-disables submit", async () => {
+      renderAppAt("/register");
+
+      await waitFor(() => {
+        expect(screen.getByRole("checkbox")).toBeInTheDocument();
+      });
+
+      const consentCheck = screen.getByRole("checkbox");
+      const submitBtn = screen.getByRole("button", { name: "Daftar Akun Ibu" });
+      expect(submitBtn).toBeDisabled();
+
+      await userEvent.click(consentCheck);
+      expect(submitBtn).not.toBeDisabled();
+
+      await userEvent.click(consentCheck);
+      expect(submitBtn).toBeDisabled();
+    });
+
+    it("26c. displays loading state while consents are loading and prevents submission", async () => {
+      let resolveConsents: (v: unknown) => void;
+      mockRequest.mockImplementationOnce(
+        () =>
+          new Promise((resolve) => {
+            resolveConsents = resolve;
+          }),
+      );
+
+      renderAppAt("/register");
+
+      expect(
+        screen.getByText("Memuat dokumen persetujuan layanan…"),
+      ).toBeInTheDocument();
+      const submitBtn = screen.getByRole("button", { name: "Daftar Akun Ibu" });
+      expect(submitBtn).toBeDisabled();
+
+      await act(async () => {
+        resolveConsents!([
+          {
+            id: "00000000-0000-0000-0000-000000000001",
+            title: "Persetujuan Layanan Telemedicine",
+          },
+        ]);
+      });
+
+      await waitFor(() => {
+        expect(screen.getByRole("checkbox")).toBeInTheDocument();
+      });
+    });
+
+    it("26d. shows friendly error and retry button when consent loading fails", async () => {
+      mockRequest.mockImplementationOnce(() =>
+        Promise.reject(new Error("Network failure")),
+      );
+
+      renderAppAt("/register");
+
+      await waitFor(() => {
+        expect(
+          screen.getByText("Dokumen persetujuan layanan belum dapat dimuat."),
+        ).toBeInTheDocument();
+      });
+
+      const retryBtn = screen.getByRole("button", { name: "Coba Lagi" });
+      expect(retryBtn).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Daftar Akun Ibu" }),
+      ).toBeDisabled();
+
+      // Clicking retry refetches
+      mockRequest.mockImplementationOnce(() =>
+        Promise.resolve([
+          {
+            id: "00000000-0000-0000-0000-000000000001",
+            title: "Persetujuan Layanan Telemedicine",
+          },
+        ]),
+      );
+      await userEvent.click(retryBtn);
+
+      await waitFor(() => {
+        expect(screen.getByRole("checkbox")).toBeInTheDocument();
+      });
+    });
+
+    it("26e. shows unavailable notice when no active consents returned from backend", async () => {
+      mockRequest.mockImplementationOnce(() => Promise.resolve([]));
+
+      renderAppAt("/register");
+
+      await waitFor(() => {
+        expect(
+          screen.getByText(
+            "Dokumen persetujuan layanan saat ini belum tersedia. Pendaftaran akun belum dapat diproses.",
+          ),
+        ).toBeInTheDocument();
+      });
+
+      expect(
+        screen.getByRole("button", { name: "Daftar Akun Ibu" }),
+      ).toBeDisabled();
+    });
+
+    it("26f. handles multiple active consents and ensures all are accepted into canonical payload", async () => {
+      mockRequest.mockImplementationOnce(() =>
+        Promise.resolve([
+          {
+            id: "11111111-1111-1111-1111-111111111111",
+            title: "Kebijakan Privasi PFRAM",
+            version: "1.0",
+          },
+          {
+            id: "22222222-2222-2222-2222-222222222222",
+            title: "Syarat Penggunaan PFRAM",
+            version: "1.0",
+          },
+        ]),
+      );
+
+      renderAppAt("/register");
+
+      await waitFor(() => {
+        expect(screen.getByText(/Kebijakan Privasi PFRAM/)).toBeInTheDocument();
+        expect(screen.getByText(/Syarat Penggunaan PFRAM/)).toBeInTheDocument();
+      });
+
+      await userEvent.type(
+        screen.getByLabelText("Nama Lengkap *"),
+        "Ibu Rahma",
+      );
+      await userEvent.type(
+        screen.getByLabelText("Nomor Handphone *"),
+        "081298765432",
+      );
+      await userEvent.type(
+        screen.getByLabelText("Kata Sandi *"),
+        "RahasiaKuat123",
+      );
+      await userEvent.type(
+        screen.getByLabelText("Konfirmasi Kata Sandi *"),
+        "RahasiaKuat123",
+      );
+
+      const submitBtn = screen.getByRole("button", { name: "Daftar Akun Ibu" });
+      expect(submitBtn).toBeDisabled();
+
+      // Check all using master checkbox
+      const checkAll = screen.getByRole("checkbox", {
+        name: /Saya menyetujui seluruh ketentuan layanan/i,
+      });
+      await userEvent.click(checkAll);
+
+      expect(submitBtn).not.toBeDisabled();
+      await userEvent.click(submitBtn);
+
+      await waitFor(() => {
         expect(mockRegisterMother).toHaveBeenCalledWith(
           expect.objectContaining({
-            fullName: "Ibu Siti Aisyah",
-            phoneNumber: "081298765432",
+            fullName: "Ibu Rahma",
+            consentDocumentIds: [
+              "11111111-1111-1111-1111-111111111111",
+              "22222222-2222-2222-2222-222222222222",
+            ],
             clientType: "web",
           }),
         );
       });
+    });
+
+    it("26g. maps server error PHONE_ALREADY_REGISTERED and never displays raw Zod or technical error", async () => {
+      mockRegisterMother.mockRejectedValueOnce(
+        new PframApiError(
+          "PHONE_ALREADY_REGISTERED",
+          "Nomor HP sudah terdaftar",
+          409,
+        ),
+      );
+
+      renderAppAt("/register");
+
+      await waitFor(() => {
+        expect(screen.getByRole("checkbox")).toBeInTheDocument();
+      });
+
+      await userEvent.type(
+        screen.getByLabelText("Nama Lengkap *"),
+        "Ibu Siti Aisyah",
+      );
+      await userEvent.type(
+        screen.getByLabelText("Nomor Handphone *"),
+        "081298765432",
+      );
+      await userEvent.type(
+        screen.getByLabelText("Kata Sandi *"),
+        "RahasiaKuat123",
+      );
+      await userEvent.type(
+        screen.getByLabelText("Konfirmasi Kata Sandi *"),
+        "RahasiaKuat123",
+      );
+
+      await userEvent.click(screen.getByRole("checkbox"));
+      await userEvent.click(
+        screen.getByRole("button", { name: "Daftar Akun Ibu" }),
+      );
+
+      await waitFor(() => {
+        expect(
+          screen.getByText(
+            "Nomor handphone sudah terdaftar. Silakan gunakan nomor lain atau masuk ke akun Anda.",
+          ),
+        ).toBeInTheDocument();
+      });
+
+      expect(
+        screen.queryByText(/Array must contain at least 1 element/i),
+      ).not.toBeInTheDocument();
+    });
+
+    it("26h. maps server error CONSENT_INVALID to clear Indonesian message", async () => {
+      mockRegisterMother.mockRejectedValueOnce(
+        new PframApiError(
+          "CONSENT_INVALID",
+          "Dokumen persetujuan tidak aktif",
+          400,
+        ),
+      );
+
+      renderAppAt("/register");
+
+      await waitFor(() => {
+        expect(screen.getByRole("checkbox")).toBeInTheDocument();
+      });
+
+      await userEvent.type(
+        screen.getByLabelText("Nama Lengkap *"),
+        "Ibu Siti Aisyah",
+      );
+      await userEvent.type(
+        screen.getByLabelText("Nomor Handphone *"),
+        "081298765432",
+      );
+      await userEvent.type(
+        screen.getByLabelText("Kata Sandi *"),
+        "RahasiaKuat123",
+      );
+      await userEvent.type(
+        screen.getByLabelText("Konfirmasi Kata Sandi *"),
+        "RahasiaKuat123",
+      );
+
+      await userEvent.click(screen.getByRole("checkbox"));
+      await userEvent.click(
+        screen.getByRole("button", { name: "Daftar Akun Ibu" }),
+      );
+
+      await waitFor(() => {
+        expect(
+          screen.getByText(
+            "Dokumen persetujuan layanan tidak aktif atau telah diperbarui. Silakan muat ulang halaman.",
+          ),
+        ).toBeInTheDocument();
+      });
+
+      expect(
+        screen.queryByText(/Array must contain at least 1 element/i),
+      ).not.toBeInTheDocument();
     });
   });
 
@@ -830,7 +1221,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
       renderAppAt("/m/onboarding/personal");
 
-      const submitBtn = screen.getByRole("button", { name: "Lanjut Pilih Fasilitas" });
+      const submitBtn = screen.getByRole("button", {
+        name: "Lanjut Pilih Fasilitas",
+      });
       await userEvent.click(submitBtn);
 
       await waitFor(() => {
@@ -851,13 +1244,24 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
       renderAppAt("/m/onboarding/personal");
 
-      await userEvent.type(screen.getByLabelText("Nama Lengkap *"), "Ibu Rahmawati");
-      await userEvent.type(screen.getByLabelText("Tanggal Lahir *"), "1995-05-15");
-      await userEvent.type(screen.getByLabelText("Alamat Domisili *"), "Jl. Merdeka No. 10");
+      await userEvent.type(
+        screen.getByLabelText("Nama Lengkap *"),
+        "Ibu Rahmawati",
+      );
+      await userEvent.type(
+        screen.getByLabelText("Tanggal Lahir *"),
+        "1995-05-15",
+      );
+      await userEvent.type(
+        screen.getByLabelText("Alamat Domisili *"),
+        "Jl. Merdeka No. 10",
+      );
 
       // Wait for province options
       await waitFor(() => {
-        expect(screen.getByRole("option", { name: "Maluku Utara" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("option", { name: "Maluku Utara" }),
+        ).toBeInTheDocument();
       });
 
       await userEvent.selectOptions(
@@ -867,7 +1271,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
       // Wait for regency options
       await waitFor(() => {
-        expect(screen.getByRole("option", { name: "Kota Ternate" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("option", { name: "Kota Ternate" }),
+        ).toBeInTheDocument();
       });
 
       await userEvent.selectOptions(
@@ -877,7 +1283,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
       // Wait for district options
       await waitFor(() => {
-        expect(screen.getByRole("option", { name: "Ternate Selatan" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("option", { name: "Ternate Selatan" }),
+        ).toBeInTheDocument();
       });
 
       await userEvent.selectOptions(
@@ -885,11 +1293,15 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         "33333333-3333-4333-8333-333333333333",
       );
 
-      const submitBtn = screen.getByRole("button", { name: "Lanjut Pilih Fasilitas" });
+      const submitBtn = screen.getByRole("button", {
+        name: "Lanjut Pilih Fasilitas",
+      });
       await userEvent.click(submitBtn);
 
       await waitFor(() => {
-        expect(screen.getByText("Fasilitas Pelayanan Primer")).toBeInTheDocument();
+        expect(
+          screen.getByText("Fasilitas Pelayanan Primer"),
+        ).toBeInTheDocument();
       });
     });
   });
@@ -961,17 +1373,25 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
       await waitFor(() => {
         expect(screen.getByText(/15 Oktober 2026/)).toBeInTheDocument();
-        expect(screen.getByText(/Pemeriksaan Bidan \(ANC\)/)).toBeInTheDocument();
+        expect(
+          screen.getByText(/Pemeriksaan Bidan \(ANC\)/),
+        ).toBeInTheDocument();
         expect(screen.getByText(/Puskesmas Kalumata/)).toBeInTheDocument();
       });
     });
 
     it("32. upcoming ANC displays calm friendly empty state when no upcoming visit exists", async () => {
       mockRequest.mockImplementation((url: string) => {
-        if (typeof url === "string" && url.includes("/mother/anc-schedules/upcoming")) {
+        if (
+          typeof url === "string" &&
+          url.includes("/mother/anc-schedules/upcoming")
+        ) {
           return Promise.resolve(null);
         }
-        if (typeof url === "string" && url.includes("/mother/monitoring/summary")) {
+        if (
+          typeof url === "string" &&
+          url.includes("/mother/monitoring/summary")
+        ) {
           return Promise.resolve({
             latestWeight: null,
             latestWeightRecordedAt: null,
@@ -999,7 +1419,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       renderAppAt("/m/home");
 
       await waitFor(() => {
-        expect(screen.getByText("Belum ada jadwal ANC mendatang")).toBeInTheDocument();
+        expect(
+          screen.getByText("Belum ada jadwal ANC mendatang"),
+        ).toBeInTheDocument();
       });
     });
 
@@ -1024,7 +1446,10 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
     it("34. health snapshot displays friendly empty state when no entries exist", async () => {
       mockRequest.mockImplementation((url: string) => {
-        if (typeof url === "string" && url.includes("/mother/monitoring/summary")) {
+        if (
+          typeof url === "string" &&
+          url.includes("/mother/monitoring/summary")
+        ) {
           return Promise.resolve({
             latestWeight: null,
             latestWeightRecordedAt: null,
@@ -1052,7 +1477,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       renderAppAt("/m/home");
 
       await waitFor(() => {
-        expect(screen.getByText("Belum ada catatan pemantauan")).toBeInTheDocument();
+        expect(
+          screen.getByText("Belum ada catatan pemantauan"),
+        ).toBeInTheDocument();
       });
     });
 
@@ -1084,7 +1511,10 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       renderAppAt("/m/home");
       expect(screen.getByText("Puskesmas Kalumata")).toBeInTheDocument();
       expect(screen.getByText("Bidan Sri Wahyuni")).toBeInTheDocument();
-      expect(screen.getByRole("link", { name: /0921-123456/ })).toHaveAttribute("href", "tel:0921123456");
+      expect(screen.getByRole("link", { name: /0921-123456/ })).toHaveAttribute(
+        "href",
+        "tel:0921123456",
+      );
       expect(screen.queryByText("fac-01")).toBeNull();
       expect(screen.queryByText("mid-01")).toBeNull();
     });
@@ -1109,7 +1539,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       renderAppAt("/m/home");
       expect(screen.getByText("Puskesmas Kalumata")).toBeInTheDocument();
       expect(screen.getByText("Sedang Diproses")).toBeInTheDocument();
-      expect(screen.getByText(/Bidan pendamping sedang diproses/)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Bidan pendamping sedang diproses/),
+      ).toBeInTheDocument();
     });
 
     it("37. quick action cards link to monitoring, consultation, education, and account", () => {
@@ -1125,10 +1557,18 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
       renderAppAt("/m/home");
       const quickActions = screen.getByLabelText("Aksi Cepat");
-      expect(within(quickActions).getByRole("link", { name: /Pantau Fisik/ })).toHaveAttribute("href", "/m/monitoring");
-      expect(within(quickActions).getByRole("link", { name: /Konsultasi/ })).toHaveAttribute("href", "/m/consultation");
-      expect(within(quickActions).getByRole("link", { name: /Edukasi KIA/ })).toHaveAttribute("href", "/m/education");
-      expect(within(quickActions).getByRole("link", { name: /Akun & Profil/ })).toHaveAttribute("href", "/m/account");
+      expect(
+        within(quickActions).getByRole("link", { name: /Pantau Fisik/ }),
+      ).toHaveAttribute("href", "/m/monitoring");
+      expect(
+        within(quickActions).getByRole("link", { name: /Konsultasi/ }),
+      ).toHaveAttribute("href", "/m/consultation");
+      expect(
+        within(quickActions).getByRole("link", { name: /Edukasi KIA/ }),
+      ).toHaveAttribute("href", "/m/education");
+      expect(
+        within(quickActions).getByRole("link", { name: /Akun & Profil/ }),
+      ).toHaveAttribute("href", "/m/account");
     });
 
     it("38. clinical safety advisory renders warning to immediately visit health facility", () => {
@@ -1143,9 +1583,13 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       };
 
       renderAppAt("/m/home");
-      expect(screen.getByText("Peringatan Medis & Kedaruratan")).toBeInTheDocument();
       expect(
-        screen.getByText("Segera menuju fasilitas kesehatan. Jangan menunggu balasan melalui aplikasi."),
+        screen.getByText("Peringatan Medis & Kedaruratan"),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          "Segera menuju fasilitas kesehatan. Jangan menunggu balasan melalui aplikasi.",
+        ),
       ).toBeInTheDocument();
     });
 
@@ -1182,11 +1626,19 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       };
 
       renderAppAt("/m/account");
-      expect(screen.queryByText("12345678-1234-4234-8234-123456789012")).toBeNull();
+      expect(
+        screen.queryByText("12345678-1234-4234-8234-123456789012"),
+      ).toBeNull();
       expect(screen.queryByText("Versi PWA: 0.1.0")).toBeNull();
-      expect(screen.getByText(/Sistem Terintegrasi Buku KIA Kemenkes RI · Versi 0.1.0/)).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          /Sistem Terintegrasi Buku KIA Kemenkes RI · Versi 0.1.0/,
+        ),
+      ).toBeInTheDocument();
       expect(screen.getByText("Keamanan Akun")).toBeInTheDocument();
-      expect(screen.getByText("Sesi masuk dilindungi sistem autentikasi aman")).toBeInTheDocument();
+      expect(
+        screen.getByText("Sesi masuk dilindungi sistem autentikasi aman"),
+      ).toBeInTheDocument();
     });
   });
 
@@ -1214,10 +1666,18 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       mockUser = defaultMotherUser;
       renderAppAt("/m/monitoring");
 
-      expect(screen.getByRole("heading", { name: "Pemantauan Fisik" })).toBeInTheDocument();
-      expect(screen.getByText("Catat dan pantau perubahan selama kehamilan")).toBeInTheDocument();
-      expect(screen.getByText("Peringatan Medis & Kedaruratan")).toBeInTheDocument();
-      expect(screen.getByText(/Segera menuju fasilitas kesehatan/)).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: "Pemantauan Fisik" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("Catat dan pantau perubahan selama kehamilan"),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("Peringatan Medis & Kedaruratan"),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/Segera menuju fasilitas kesehatan/),
+      ).toBeInTheDocument();
 
       const pantauLink = screen.getByRole("link", { name: /Pantau/i });
       expect(pantauLink).toHaveAttribute("aria-current", "page");
@@ -1231,7 +1691,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       await waitFor(() => {
         const summaryCard = screen.getByLabelText("Ringkasan Pemantauan");
         expect(within(summaryCard).getByText("58,5 kg")).toBeInTheDocument();
-        expect(within(summaryCard).getByText("118/78 mmHg")).toBeInTheDocument();
+        expect(
+          within(summaryCard).getByText("118/78 mmHg"),
+        ).toBeInTheDocument();
         expect(within(summaryCard).getByText("4 Catatan")).toBeInTheDocument();
         expect(within(summaryCard).getByText("+1,5 kg")).toBeInTheDocument();
       });
@@ -1239,7 +1701,10 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
       // Empty summary state
       mockRequest.mockImplementation((url: string) => {
-        if (typeof url === "string" && url.includes("/mother/monitoring/summary")) {
+        if (
+          typeof url === "string" &&
+          url.includes("/mother/monitoring/summary")
+        ) {
           return Promise.resolve({
             latestWeight: null,
             latestWeightRecordedAt: null,
@@ -1251,15 +1716,26 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
             activePregnancyPublicId: null,
           });
         }
-        if (typeof url === "string" && (url === "/mother/monitoring" || url.startsWith("/mother/monitoring?"))) {
-          return Promise.resolve({ items: [], total: 0, page: 1, pageSize: 10 });
+        if (
+          typeof url === "string" &&
+          (url === "/mother/monitoring" ||
+            url.startsWith("/mother/monitoring?"))
+        ) {
+          return Promise.resolve({
+            items: [],
+            total: 0,
+            page: 1,
+            pageSize: 10,
+          });
         }
         return Promise.resolve({});
       });
 
       renderAppAt("/m/monitoring");
       await waitFor(() => {
-        expect(screen.getAllByText("Belum ada catatan pemantauan").length).toBeGreaterThanOrEqual(1);
+        expect(
+          screen.getAllByText("Belum ada catatan pemantauan").length,
+        ).toBeGreaterThanOrEqual(1);
         expect(screen.getByText("0 Catatan")).toBeInTheDocument();
       });
     });
@@ -1270,12 +1746,18 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
       expect(screen.queryByText("Catat Pemantauan Mandiri")).toBeNull();
 
-      const toggleBtn = screen.getByRole("button", { name: "+ Catat Pemantauan" });
+      const toggleBtn = screen.getByRole("button", {
+        name: "+ Catat Pemantauan",
+      });
       await userEvent.click(toggleBtn);
 
       expect(screen.getByText("Catat Pemantauan Mandiri")).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: "Simpan Catatan" })).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: "Tutup Formulir" })).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Simpan Catatan" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Tutup Formulir" }),
+      ).toBeInTheDocument();
 
       const cancelBtn = screen.getByRole("button", { name: "Batal" });
       await userEvent.click(cancelBtn);
@@ -1287,7 +1769,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       mockUser = defaultMotherUser;
       renderAppAt("/m/monitoring");
 
-      await userEvent.click(screen.getByRole("button", { name: "+ Catat Pemantauan" }));
+      await userEvent.click(
+        screen.getByRole("button", { name: "+ Catat Pemantauan" }),
+      );
 
       const weightInput = screen.getByLabelText("Berat Badan (kg) — Opsional");
       await userEvent.type(weightInput, "59,2");
@@ -1310,7 +1794,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       mockUser = defaultMotherUser;
       renderAppAt("/m/monitoring");
 
-      await userEvent.click(screen.getByRole("button", { name: "+ Catat Pemantauan" }));
+      await userEvent.click(
+        screen.getByRole("button", { name: "+ Catat Pemantauan" }),
+      );
 
       const systolicInput = screen.getByPlaceholderText("Sistolik (120)");
       const diastolicInput = screen.getByPlaceholderText("Diastolik (80)");
@@ -1336,7 +1822,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       mockUser = defaultMotherUser;
       renderAppAt("/m/monitoring");
 
-      await userEvent.click(screen.getByRole("button", { name: "+ Catat Pemantauan" }));
+      await userEvent.click(
+        screen.getByRole("button", { name: "+ Catat Pemantauan" }),
+      );
 
       const weightInput = screen.getByLabelText("Berat Badan (kg) — Opsional");
       const systolicInput = screen.getByPlaceholderText("Sistolik (120)");
@@ -1354,7 +1842,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
           "/mother/monitoring",
           expect.objectContaining({
             method: "POST",
-            body: expect.stringMatching(/"weightKg":60.*"systolicBp":125.*"diastolicBp":82/),
+            body: expect.stringMatching(
+              /"weightKg":60.*"systolicBp":125.*"diastolicBp":82/,
+            ),
           }),
         );
       });
@@ -1364,14 +1854,18 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       mockUser = defaultMotherUser;
       renderAppAt("/m/monitoring");
 
-      await userEvent.click(screen.getByRole("button", { name: "+ Catat Pemantauan" }));
+      await userEvent.click(
+        screen.getByRole("button", { name: "+ Catat Pemantauan" }),
+      );
 
       const submitBtn = screen.getByRole("button", { name: "Simpan Catatan" });
       await userEvent.click(submitBtn);
 
       await waitFor(() => {
         expect(
-          screen.getByText("Minimal salah satu harus diisi: berat badan atau tekanan darah"),
+          screen.getByText(
+            "Minimal salah satu harus diisi: berat badan atau tekanan darah",
+          ),
         ).toBeInTheDocument();
       });
     });
@@ -1380,7 +1874,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       mockUser = defaultMotherUser;
       renderAppAt("/m/monitoring");
 
-      await userEvent.click(screen.getByRole("button", { name: "+ Catat Pemantauan" }));
+      await userEvent.click(
+        screen.getByRole("button", { name: "+ Catat Pemantauan" }),
+      );
 
       const weightInput = screen.getByLabelText("Berat Badan (kg) — Opsional");
       await userEvent.type(weightInput, "15");
@@ -1399,7 +1895,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       mockUser = defaultMotherUser;
       renderAppAt("/m/monitoring");
 
-      await userEvent.click(screen.getByRole("button", { name: "+ Catat Pemantauan" }));
+      await userEvent.click(
+        screen.getByRole("button", { name: "+ Catat Pemantauan" }),
+      );
 
       const systolicInput = screen.getByPlaceholderText("Sistolik (120)");
       await userEvent.type(systolicInput, "120");
@@ -1409,7 +1907,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
       await waitFor(() => {
         expect(
-          screen.getByText("Tekanan diastolik wajib diisi jika tekanan sistolik diisi"),
+          screen.getByText(
+            "Tekanan diastolik wajib diisi jika tekanan sistolik diisi",
+          ),
         ).toBeInTheDocument();
       });
     });
@@ -1418,7 +1918,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       mockUser = defaultMotherUser;
       renderAppAt("/m/monitoring");
 
-      await userEvent.click(screen.getByRole("button", { name: "+ Catat Pemantauan" }));
+      await userEvent.click(
+        screen.getByRole("button", { name: "+ Catat Pemantauan" }),
+      );
 
       const systolicInput = screen.getByPlaceholderText("Sistolik (120)");
       const diastolicInput = screen.getByPlaceholderText("Diastolik (80)");
@@ -1446,7 +1948,10 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
             resolveApi = res;
           });
         }
-        if (typeof url === "string" && url.includes("/mother/monitoring/summary")) {
+        if (
+          typeof url === "string" &&
+          url.includes("/mother/monitoring/summary")
+        ) {
           return Promise.resolve({
             latestWeight: 58.5,
             latestWeightRecordedAt: "2026-10-01T08:30:00Z",
@@ -1462,7 +1967,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       });
 
       renderAppAt("/m/monitoring");
-      await userEvent.click(screen.getByRole("button", { name: "+ Catat Pemantauan" }));
+      await userEvent.click(
+        screen.getByRole("button", { name: "+ Catat Pemantauan" }),
+      );
 
       const weightInput = screen.getByLabelText("Berat Badan (kg) — Opsional");
       await userEvent.type(weightInput, "59");
@@ -1505,15 +2012,21 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       // There are 2 records in mock: mon-01 (SELF) and mon-02 (MIDWIFE)
       // Exactly ONE edit button and ONE archive button should exist (only for SELF)
       expect(screen.getAllByRole("button", { name: "Edit" })).toHaveLength(1);
-      expect(screen.getAllByRole("button", { name: "Arsipkan" })).toHaveLength(1);
+      expect(screen.getAllByRole("button", { name: "Arsipkan" })).toHaveLength(
+        1,
+      );
 
       // Clicking archive opens confirmation dialog
       const archiveBtn = screen.getByRole("button", { name: "Arsipkan" });
       await userEvent.click(archiveBtn);
 
-      expect(screen.getByRole("heading", { name: "Arsipkan Catatan?" })).toBeInTheDocument();
       expect(
-        screen.getByText(/Catatan ini tidak akan tampil lagi dalam riwayat aktif/),
+        screen.getByRole("heading", { name: "Arsipkan Catatan?" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          /Catatan ini tidak akan tampil lagi dalam riwayat aktif/,
+        ),
       ).toBeInTheDocument();
     });
 
@@ -1522,12 +2035,26 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       renderAppAt("/m/monitoring");
 
       await waitFor(() => {
-        expect(screen.getByRole("heading", { name: "Grafik Perkembangan" })).toBeInTheDocument();
-        expect(screen.getByRole("heading", { name: "Grafik Perkembangan Berat Badan" })).toBeInTheDocument();
-        expect(screen.getByRole("heading", { name: "Grafik Perkembangan Tekanan Darah" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("heading", { name: "Grafik Perkembangan" }),
+        ).toBeInTheDocument();
+        expect(
+          screen.getByRole("heading", {
+            name: "Grafik Perkembangan Berat Badan",
+          }),
+        ).toBeInTheDocument();
+        expect(
+          screen.getByRole("heading", {
+            name: "Grafik Perkembangan Tekanan Darah",
+          }),
+        ).toBeInTheDocument();
         expect(screen.getByRole("tab", { name: "7 Hari" })).toBeInTheDocument();
-        expect(screen.getByRole("tab", { name: "30 Hari" })).toBeInTheDocument();
-        expect(screen.getByRole("tab", { name: "Kehamilan Ini" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("tab", { name: "30 Hari" }),
+        ).toBeInTheDocument();
+        expect(
+          screen.getByRole("tab", { name: "Kehamilan Ini" }),
+        ).toBeInTheDocument();
       });
     });
 
@@ -1538,13 +2065,17 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       // Verify localStorage does not contain clinical monitoring data
       const localKeys = Object.keys(window.localStorage);
       for (const k of localKeys) {
-        expect(k).not.toMatch(/monitoring|weight|bloodPressure|systolic|diastolic/i);
+        expect(k).not.toMatch(
+          /monitoring|weight|bloodPressure|systolic|diastolic/i,
+        );
       }
 
       // Verify sessionStorage does not contain clinical monitoring data
       const sessionKeys = Object.keys(window.sessionStorage);
       for (const k of sessionKeys) {
-        expect(k).not.toMatch(/monitoring|weight|bloodPressure|systolic|diastolic/i);
+        expect(k).not.toMatch(
+          /monitoring|weight|bloodPressure|systolic|diastolic/i,
+        );
       }
     });
 
@@ -1552,16 +2083,22 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       mockUser = defaultMotherUser;
       renderAppAt("/m/monitoring");
 
-      await userEvent.click(screen.getByRole("button", { name: "+ Catat Pemantauan" }));
+      await userEvent.click(
+        screen.getByRole("button", { name: "+ Catat Pemantauan" }),
+      );
 
-      const formSection = screen.getByText("Catat Pemantauan Mandiri").closest("section")!;
+      const formSection = screen
+        .getByText("Catat Pemantauan Mandiri")
+        .closest("section")!;
 
       // Form must not contain editable source dropdown/combobox
       expect(within(formSection).queryByRole("combobox")).toBeNull();
       expect(within(formSection).queryByLabelText(/sumber/i)).toBeNull();
 
       // Displays subtle non-editable badge indicating self-recording
-      expect(within(formSection).getByText("Dicatat sendiri")).toBeInTheDocument();
+      expect(
+        within(formSection).getByText("Dicatat sendiri"),
+      ).toBeInTheDocument();
 
       // Enter weight and submit
       const weightInput = screen.getByLabelText("Berat Badan (kg) — Opsional");
@@ -1597,14 +2134,20 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         },
       ];
 
-      const { rerender } = render(<WebWeightLineChart points={initialPoints} />);
+      const { rerender } = render(
+        <WebWeightLineChart points={initialPoints} />,
+      );
 
       // Initially, the latest point (pt-2, 58.5 kg) is selected in the tooltip card
-      const tooltip = screen.getByRole("region", { name: "Rincian titik berat badan terpilih" });
+      const tooltip = screen.getByRole("region", {
+        name: "Rincian titik berat badan terpilih",
+      });
       expect(within(tooltip).getByText("58,5 kg")).toBeInTheDocument();
 
       // User manually clicks the earlier point (pt-1, 58 kg)
-      const firstPointBtn = screen.getByRole("button", { name: /Titik berat 58 kg/i });
+      const firstPointBtn = screen.getByRole("button", {
+        name: /Titik berat 58 kg/i,
+      });
       await userEvent.click(firstPointBtn);
       expect(within(tooltip).getByText("58 kg")).toBeInTheDocument();
 
@@ -1684,7 +2227,10 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
       mockRequest.mockImplementation((url: string, init?: RequestInit) => {
         // 1. ANC upcoming
-        if (typeof url === "string" && url.includes("/mother/anc-schedules/upcoming")) {
+        if (
+          typeof url === "string" &&
+          url.includes("/mother/anc-schedules/upcoming")
+        ) {
           return Promise.resolve({
             publicId: "anc-01",
             motherPublicId: "USR-MOTHER-01",
@@ -1726,14 +2272,18 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         }
 
         // 3. ANC recommendations
-        if (typeof url === "string" && url.includes("/mother/anc-recommendations")) {
+        if (
+          typeof url === "string" &&
+          url.includes("/mother/anc-recommendations")
+        ) {
           return Promise.resolve({
             estimatedDueDate: "2027-01-18",
             recommendations: [
               {
                 id: "rec-1",
                 title: "USG Trimester 1",
-                description: "Pemeriksaan USG oleh dokter obstetri atau umum terlatih",
+                description:
+                  "Pemeriksaan USG oleh dokter obstetri atau umum terlatih",
                 isDoctorVisit: true,
               },
             ],
@@ -1753,7 +2303,8 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         // 5. ANC schedules list
         if (
           typeof url === "string" &&
-          (url.includes("/mother/anc-schedules") || url.startsWith("/mother/anc-schedules?"))
+          (url.includes("/mother/anc-schedules") ||
+            url.startsWith("/mother/anc-schedules?"))
         ) {
           return Promise.resolve({
             items: [
@@ -1801,7 +2352,8 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
                 code: "BLEEDING",
                 title: "Perdarahan",
                 question: "Apakah Ibu mengalami perdarahan dari jalan lahir?",
-                questionText: "Apakah Ibu mengalami perdarahan dari jalan lahir?",
+                questionText:
+                  "Apakah Ibu mengalami perdarahan dari jalan lahir?",
                 trimesterApplicability: [1, 2, 3],
                 severityCategory: "URGENT",
                 sortOrder: 1,
@@ -1811,8 +2363,10 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
                 publicId: "rule-2",
                 code: "SEVERE_HEADACHE",
                 title: "Sakit Kepala Hebat",
-                question: "Apakah Ibu mengalami sakit kepala hebat yang tidak mereda?",
-                questionText: "Apakah Ibu mengalami sakit kepala hebat yang tidak mereda?",
+                question:
+                  "Apakah Ibu mengalami sakit kepala hebat yang tidak mereda?",
+                questionText:
+                  "Apakah Ibu mengalami sakit kepala hebat yang tidak mereda?",
                 trimesterApplicability: [1, 2, 3],
                 severityCategory: "URGENT",
                 sortOrder: 2,
@@ -1827,7 +2381,10 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         }
 
         // 7. Danger Screenings (create or list)
-        if (typeof url === "string" && url.includes("/mother/danger-screenings")) {
+        if (
+          typeof url === "string" &&
+          url.includes("/mother/danger-screenings")
+        ) {
           if (init?.method === "POST") {
             const body = JSON.parse(String(init.body || "{}"));
             const hasUrgent = body.responses?.some(
@@ -1838,7 +2395,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
               motherPublicId: "USR-MOTHER-01",
               pregnancyPublicId: "preg-01",
               screenedAt: new Date().toISOString(),
-              status: hasUrgent ? "REQUIRES_IMMEDIATE_CARE" : "NO_DANGER_REPORTED",
+              status: hasUrgent
+                ? "REQUIRES_IMMEDIATE_CARE"
+                : "NO_DANGER_REPORTED",
               followUpStatus: hasUrgent ? "PENDING" : "RESOLVED",
               reportedSignsCount: hasUrgent ? 1 : 0,
               ruleSetVersion: "1.0",
@@ -1916,12 +2475,16 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
               pregnancyPublicId: "preg-01",
               destinationFacility: {
                 publicId: "fac-ref-01",
-                name: body.customDestinationFacilityName || "RSUD Dr. H. Chasan Boesoirie Ternate",
+                name:
+                  body.customDestinationFacilityName ||
+                  "RSUD Dr. H. Chasan Boesoirie Ternate",
               },
               customDestinationFacilityName:
-                body.customDestinationFacilityName || "RSUD Dr. H. Chasan Boesoirie Ternate",
+                body.customDestinationFacilityName ||
+                "RSUD Dr. H. Chasan Boesoirie Ternate",
               transportType: body.transportType || "Speedboat Ambulans",
-              transportContactNumber: body.transportContactNumber || "08123444555 (Pak Ali)",
+              transportContactNumber:
+                body.transportContactNumber || "08123444555 (Pak Ali)",
               rtkName: body.rtkName || "RTK Kota Ternate",
               estimatedTravelTimeMinutes: body.estimatedTravelTimeMinutes ?? 45,
               createdAt: "2026-09-01T08:00:00Z",
@@ -1936,7 +2499,8 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
               publicId: "fac-ref-01",
               name: "RSUD Dr. H. Chasan Boesoirie Ternate",
             },
-            customDestinationFacilityName: "RSUD Dr. H. Chasan Boesoirie Ternate",
+            customDestinationFacilityName:
+              "RSUD Dr. H. Chasan Boesoirie Ternate",
             transportType: "Speedboat Ambulans",
             transportContactNumber: "08123444555 (Pak Ali)",
             rtkName: "RTK Kota Ternate",
@@ -1946,7 +2510,10 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
           });
         }
 
-        if (typeof url === "string" && (url === "/mother/p4k" || url.startsWith("/mother/p4k?"))) {
+        if (
+          typeof url === "string" &&
+          (url === "/mother/p4k" || url.startsWith("/mother/p4k?"))
+        ) {
           if (init?.method === "PUT") {
             const body = JSON.parse(String(init.body || "{}"));
             return Promise.resolve({
@@ -1954,7 +2521,8 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
               motherPublicId: "USR-MOTHER-01",
               pregnancyPublicId: "preg-01",
               deliveryAttendant: body.deliveryAttendant || "Bidan Siti",
-              customDeliveryFacilityName: body.customDeliveryFacilityName || "Puskesmas Kalumata",
+              customDeliveryFacilityName:
+                body.customDeliveryFacilityName || "Puskesmas Kalumata",
               birthCompanionName: body.birthCompanionName || "Suami (Budi)",
               bloodDonors: body.bloodDonors || [
                 { name: "Ahmad", bloodType: "O", phone: "08123456789" },
@@ -1970,7 +2538,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
             deliveryAttendant: "Bidan Siti",
             customDeliveryFacilityName: "Puskesmas Kalumata",
             birthCompanionName: "Suami (Budi)",
-            bloodDonors: [{ name: "Ahmad", bloodType: "O", phone: "08123456789" }],
+            bloodDonors: [
+              { name: "Ahmad", bloodType: "O", phone: "08123456789" },
+            ],
             estimatedDueDate: "2027-01-18",
             createdAt: "2026-09-01T08:00:00Z",
             updatedAt: "2026-09-01T08:00:00Z",
@@ -1978,7 +2548,10 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         }
 
         // Monitoring fallback
-        if (typeof url === "string" && url.includes("/mother/monitoring/summary")) {
+        if (
+          typeof url === "string" &&
+          url.includes("/mother/monitoring/summary")
+        ) {
           return Promise.resolve({
             latestWeight: 58.5,
             latestWeightRecordedAt: "2026-10-01T08:30:00Z",
@@ -1999,12 +2572,16 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       renderAppAt("/m/anc");
 
       await waitFor(() => {
-        expect(screen.getByRole("heading", { name: "Jadwal & Kepatuhan ANC" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("heading", { name: "Jadwal & Kepatuhan ANC" }),
+        ).toBeInTheDocument();
         expect(screen.getByText("50%")).toBeInTheDocument();
       });
 
       expect(screen.getByText(/Kepatuhan TTD:/)).toBeInTheDocument();
-      expect(screen.getByText("Target Kemenkes RI (6 Kunjungan)")).toBeInTheDocument();
+      expect(
+        screen.getByText("Target Kemenkes RI (6 Kunjungan)"),
+      ).toBeInTheDocument();
       expect(screen.getByText("Trimester 1")).toBeInTheDocument();
       expect(screen.getByText("Trimester 2")).toBeInTheDocument();
       expect(screen.getByText("Trimester 3")).toBeInTheDocument();
@@ -2015,10 +2592,18 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
       await waitFor(() => {
         const upcomingCard = screen.getByLabelText("Kunjungan Berikutnya");
-        expect(within(upcomingCard).getByText("Kontak ke-1")).toBeInTheDocument();
-        expect(within(upcomingCard).getByText("Wajib Dokter + USG")).toBeInTheDocument();
-        expect(within(upcomingCard).getByText(/Puskesmas Kalumata/)).toBeInTheDocument();
-        expect(within(upcomingCard).getAllByText(/USG Trimester 1/).length).toBeGreaterThanOrEqual(1);
+        expect(
+          within(upcomingCard).getByText("Kontak ke-1"),
+        ).toBeInTheDocument();
+        expect(
+          within(upcomingCard).getByText("Wajib Dokter + USG"),
+        ).toBeInTheDocument();
+        expect(
+          within(upcomingCard).getByText(/Puskesmas Kalumata/),
+        ).toBeInTheDocument();
+        expect(
+          within(upcomingCard).getAllByText(/USG Trimester 1/).length,
+        ).toBeGreaterThanOrEqual(1);
       });
     });
 
@@ -2031,8 +2616,12 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       });
 
       expect(screen.getByRole("button", { name: "Semua" })).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: "Mendatang" })).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: "Selesai" })).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Mendatang" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Selesai" }),
+      ).toBeInTheDocument();
 
       await userEvent.click(screen.getByRole("button", { name: "Selesai" }));
 
@@ -2042,7 +2631,10 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
     it("61. /m/anc allows mother to confirm attendance for scheduled ANC visit on appointment day", async () => {
       mockRequest.mockImplementation((url: string) => {
-        if (typeof url === "string" && url.includes("/mother/anc-schedules/upcoming")) {
+        if (
+          typeof url === "string" &&
+          url.includes("/mother/anc-schedules/upcoming")
+        ) {
           return Promise.resolve({
             publicId: "anc-01",
             motherPublicId: "USR-MOTHER-01",
@@ -2066,7 +2658,11 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
             completedAt: new Date().toISOString(),
           });
         }
-        if (typeof url === "string" && (url.includes("/mother/anc-schedules") || url.startsWith("/mother/anc-schedules?"))) {
+        if (
+          typeof url === "string" &&
+          (url.includes("/mother/anc-schedules") ||
+            url.startsWith("/mother/anc-schedules?"))
+        ) {
           return Promise.resolve({
             items: [
               {
@@ -2090,10 +2686,16 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       renderAppAt("/m/anc");
 
       await waitFor(() => {
-        expect(screen.getAllByRole("button", { name: "Konfirmasi Saya Sudah Datang" }).length).toBeGreaterThanOrEqual(1);
+        expect(
+          screen.getAllByRole("button", {
+            name: "Konfirmasi Saya Sudah Datang",
+          }).length,
+        ).toBeGreaterThanOrEqual(1);
       });
 
-      const confirmBtn = screen.getAllByRole("button", { name: "Konfirmasi Saya Sudah Datang" })[0]!;
+      const confirmBtn = screen.getAllByRole("button", {
+        name: "Konfirmasi Saya Sudah Datang",
+      })[0]!;
       await userEvent.click(confirmBtn);
 
       await waitFor(() => {
@@ -2106,10 +2708,17 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
     it("62. /m/anc displays friendly empty state when no schedules exist", async () => {
       mockRequest.mockImplementation((url: string) => {
-        if (typeof url === "string" && url.includes("/mother/anc-schedules/upcoming")) {
+        if (
+          typeof url === "string" &&
+          url.includes("/mother/anc-schedules/upcoming")
+        ) {
           return Promise.resolve(null);
         }
-        if (typeof url === "string" && (url.includes("/mother/anc-schedules") || url.startsWith("/mother/anc-schedules?"))) {
+        if (
+          typeof url === "string" &&
+          (url.includes("/mother/anc-schedules") ||
+            url.startsWith("/mother/anc-schedules?"))
+        ) {
           return Promise.resolve({ items: [], total: 0, page: 1, limit: 20 });
         }
         return Promise.resolve({});
@@ -2120,7 +2729,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       await waitFor(() => {
         expect(screen.getByText("Belum Ada Jadwal ANC")).toBeInTheDocument();
         expect(
-          screen.getByText(/Jadwal pemeriksaan kehamilan akan dibuat oleh bidan/),
+          screen.getByText(
+            /Jadwal pemeriksaan kehamilan akan dibuat oleh bidan/,
+          ),
         ).toBeInTheDocument();
       });
     });
@@ -2129,8 +2740,12 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       renderAppAt("/m/danger-screening");
 
       await waitFor(() => {
-        expect(screen.getByRole("heading", { name: "Skrining Tanda Bahaya" })).toBeInTheDocument();
-        expect(screen.getByText("Apakah Ibu mengalami perdarahan dari jalan lahir?")).toBeInTheDocument();
+        expect(
+          screen.getByRole("heading", { name: "Skrining Tanda Bahaya" }),
+        ).toBeInTheDocument();
+        expect(
+          screen.getByText("Apakah Ibu mengalami perdarahan dari jalan lahir?"),
+        ).toBeInTheDocument();
       });
 
       expect(screen.getByText(/Pertanyaan 1 dari 2/)).toBeInTheDocument();
@@ -2146,19 +2761,25 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       renderAppAt("/m/danger-screening");
 
       await waitFor(() => {
-        expect(screen.getByText("Apakah Ibu mengalami perdarahan dari jalan lahir?")).toBeInTheDocument();
+        expect(
+          screen.getByText("Apakah Ibu mengalami perdarahan dari jalan lahir?"),
+        ).toBeInTheDocument();
       });
 
       await userEvent.click(screen.getByRole("button", { name: "Lanjut" }));
 
-      expect(screen.getByText("Pilih salah satu jawaban untuk melanjutkan.")).toBeInTheDocument();
+      expect(
+        screen.getByText("Pilih salah satu jawaban untuk melanjutkan."),
+      ).toBeInTheDocument();
     });
 
     it("65. /m/danger-screening urgent outcome displays exact locked emergency guidance and emergency call action without diagnosis", async () => {
       renderAppAt("/m/danger-screening");
 
       await waitFor(() => {
-        expect(screen.getByText("Apakah Ibu mengalami perdarahan dari jalan lahir?")).toBeInTheDocument();
+        expect(
+          screen.getByText("Apakah Ibu mengalami perdarahan dari jalan lahir?"),
+        ).toBeInTheDocument();
       });
 
       await userEvent.click(screen.getByRole("button", { name: "Ya" }));
@@ -2166,37 +2787,51 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
       await waitFor(() => {
         expect(
-          screen.getByText("Apakah Ibu mengalami sakit kepala hebat yang tidak mereda?"),
+          screen.getByText(
+            "Apakah Ibu mengalami sakit kepala hebat yang tidak mereda?",
+          ),
         ).toBeInTheDocument();
       });
 
       await userEvent.click(screen.getByRole("button", { name: "Tidak" }));
-      await userEvent.click(screen.getByRole("button", { name: "Kirim Hasil Skrining" }));
+      await userEvent.click(
+        screen.getByRole("button", { name: "Kirim Hasil Skrining" }),
+      );
 
       await waitFor(() => {
-        expect(screen.getByRole("region", { name: "Hasil Skrining" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("region", { name: "Hasil Skrining" }),
+        ).toBeInTheDocument();
       });
 
       const resultCard = screen.getByRole("region", { name: "Hasil Skrining" });
-      expect(within(resultCard).getByText("Segera ke Fasilitas Kesehatan")).toBeInTheDocument();
+      expect(
+        within(resultCard).getByText("Segera ke Fasilitas Kesehatan"),
+      ).toBeInTheDocument();
       expect(
         within(resultCard).getByText(
           "Segera menuju fasilitas kesehatan. Jangan menunggu balasan melalui aplikasi.",
         ),
       ).toBeInTheDocument();
       expect(
-        within(resultCard).getByRole("link", { name: /Hubungi Faskes \/ Bidan Sekarang/ }),
+        within(resultCard).getByRole("link", {
+          name: /Hubungi Faskes \/ Bidan Sekarang/,
+        }),
       ).toBeInTheDocument();
 
       // Diagnostic negative assertions: strictly no diagnosis claims
-      expect(screen.queryByText(/preeklamsia|solusio|abortus|diagnosis klinis/i)).toBeNull();
+      expect(
+        screen.queryByText(/preeklamsia|solusio|abortus|diagnosis klinis/i),
+      ).toBeNull();
     });
 
     it("66. /m/danger-screening non-urgent outcome displays neutral confirmation without safety claim", async () => {
       renderAppAt("/m/danger-screening");
 
       await waitFor(() => {
-        expect(screen.getByText("Apakah Ibu mengalami perdarahan dari jalan lahir?")).toBeInTheDocument();
+        expect(
+          screen.getByText("Apakah Ibu mengalami perdarahan dari jalan lahir?"),
+        ).toBeInTheDocument();
       });
 
       await userEvent.click(screen.getByRole("button", { name: "Tidak" }));
@@ -2204,22 +2839,32 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
       await waitFor(() => {
         expect(
-          screen.getByText("Apakah Ibu mengalami sakit kepala hebat yang tidak mereda?"),
+          screen.getByText(
+            "Apakah Ibu mengalami sakit kepala hebat yang tidak mereda?",
+          ),
         ).toBeInTheDocument();
       });
 
       await userEvent.click(screen.getByRole("button", { name: "Tidak" }));
-      await userEvent.click(screen.getByRole("button", { name: "Kirim Hasil Skrining" }));
+      await userEvent.click(
+        screen.getByRole("button", { name: "Kirim Hasil Skrining" }),
+      );
 
       await waitFor(() => {
-        expect(screen.getByRole("region", { name: "Hasil Skrining" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("region", { name: "Hasil Skrining" }),
+        ).toBeInTheDocument();
       });
 
       const resultCard = screen.getByRole("region", { name: "Hasil Skrining" });
-      expect(within(resultCard).getByText("Hasil skrining telah dicatat.")).toBeInTheDocument();
+      expect(
+        within(resultCard).getByText("Hasil skrining telah dicatat."),
+      ).toBeInTheDocument();
 
       // Safety claim negative assertions: strictly no absolute reassurance
-      expect(screen.queryByText(/bebas risiko|pasti aman|tidak ada risiko/i)).toBeNull();
+      expect(
+        screen.queryByText(/bebas risiko|pasti aman|tidak ada risiko/i),
+      ).toBeNull();
     });
 
     it("67. /m/danger-screening renders past screening history and midwife follow-up badges", async () => {
@@ -2236,12 +2881,20 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       renderAppAt("/m/p4k");
 
       await waitFor(() => {
-        expect(screen.getByRole("heading", { name: "Perencanaan Persalinan (P4K)" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("heading", { name: "Perencanaan Persalinan (P4K)" }),
+        ).toBeInTheDocument();
       });
 
-      expect(screen.getByRole("button", { name: "Rencana Persalinan" })).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: "Rujukan & Laut" })).toBeInTheDocument();
-      expect(screen.getByRole("button", { name: "Checklist" })).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Rencana Persalinan" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Rujukan & Laut" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Checklist" }),
+      ).toBeInTheDocument();
       expect(screen.getByText("P4K Aktif")).toBeInTheDocument();
       expect(screen.getByText("Transportasi Laut")).toBeInTheDocument();
     });
@@ -2250,16 +2903,22 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       renderAppAt("/m/p4k");
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "Ubah Rencana Persalinan" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "Ubah Rencana Persalinan" }),
+        ).toBeInTheDocument();
       });
 
-      await userEvent.click(screen.getByRole("button", { name: "Ubah Rencana Persalinan" }));
+      await userEvent.click(
+        screen.getByRole("button", { name: "Ubah Rencana Persalinan" }),
+      );
 
       const placeInput = screen.getByLabelText("Tempat Bersalin *");
       await userEvent.clear(placeInput);
       await userEvent.type(placeInput, "RSUD Dr. H. Chasan Boesoirie");
 
-      await userEvent.click(screen.getByRole("button", { name: "Simpan Rencana" }));
+      await userEvent.click(
+        screen.getByRole("button", { name: "Simpan Rencana" }),
+      );
 
       await waitFor(() => {
         expect(mockRequest).toHaveBeenCalledWith(
@@ -2275,19 +2934,29 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
     it("70. /m/p4k edits and saves island referral plan (transportasi laut, motoris, RTK, waktu tempuh)", async () => {
       renderAppAt("/m/p4k");
 
-      await userEvent.click(screen.getByRole("button", { name: "Rujukan & Laut" }));
+      await userEvent.click(
+        screen.getByRole("button", { name: "Rujukan & Laut" }),
+      );
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "Ubah Rencana Rujukan" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "Ubah Rencana Rujukan" }),
+        ).toBeInTheDocument();
       });
 
-      await userEvent.click(screen.getByRole("button", { name: "Ubah Rencana Rujukan" }));
+      await userEvent.click(
+        screen.getByRole("button", { name: "Ubah Rencana Rujukan" }),
+      );
 
-      const motorisInput = screen.getByLabelText("Kontak Motoris / Sopir Ambulans Laut");
+      const motorisInput = screen.getByLabelText(
+        "Kontak Motoris / Sopir Ambulans Laut",
+      );
       await userEvent.clear(motorisInput);
       await userEvent.type(motorisInput, "081299998888 (Pak Harun)");
 
-      await userEvent.click(screen.getByRole("button", { name: "Simpan Rencana Rujukan" }));
+      await userEvent.click(
+        screen.getByRole("button", { name: "Simpan Rencana Rujukan" }),
+      );
 
       await waitFor(() => {
         expect(mockRequest).toHaveBeenCalledWith(
@@ -2327,42 +2996,62 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       renderAppAt("/m/p4k");
 
       await waitFor(() => {
-        expect(screen.getByRole("button", { name: "Ubah Rencana Persalinan" })).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "Ubah Rencana Persalinan" }),
+        ).toBeInTheDocument();
       });
 
-      await userEvent.click(screen.getByRole("button", { name: "Ubah Rencana Persalinan" }));
+      await userEvent.click(
+        screen.getByRole("button", { name: "Ubah Rencana Persalinan" }),
+      );
 
       const attendantInput = screen.getByLabelText("Penolong Persalinan *");
       await userEvent.clear(attendantInput);
       await userEvent.type(attendantInput, "Bidan Fatimah");
 
-      mockRequest.mockImplementationOnce(() => Promise.reject(new Error("Network Error")));
+      mockRequest.mockImplementationOnce(() =>
+        Promise.reject(new Error("Network Error")),
+      );
 
-      await userEvent.click(screen.getByRole("button", { name: "Simpan Rencana" }));
+      await userEvent.click(
+        screen.getByRole("button", { name: "Simpan Rencana" }),
+      );
 
       await waitFor(() => {
         expect(
-          screen.getByText("Gagal menyimpan rencana persalinan. Silakan coba kembali."),
+          screen.getByText(
+            "Gagal menyimpan rencana persalinan. Silakan coba kembali.",
+          ),
         ).toBeInTheDocument();
       });
 
-      expect(screen.getByLabelText("Penolong Persalinan *")).toHaveValue("Bidan Fatimah");
+      expect(screen.getByLabelText("Penolong Persalinan *")).toHaveValue(
+        "Bidan Fatimah",
+      );
     });
 
     it("73. /m/home quick action grid provides clickable navigation to /m/anc, /m/danger-screening, and /m/p4k", async () => {
       renderAppAt("/m/home");
 
       await waitFor(() => {
-        expect(screen.getByRole("link", { name: /Jadwal ANC/ })).toBeInTheDocument();
+        expect(
+          screen.getByRole("link", { name: /Jadwal ANC/ }),
+        ).toBeInTheDocument();
       });
 
-      expect(screen.getByRole("link", { name: /Jadwal ANC/ })).toHaveAttribute("href", "/m/anc");
-      expect(screen.getByRole("link", { name: /Tanda Bahaya/ })).toHaveAttribute(
+      expect(screen.getByRole("link", { name: /Jadwal ANC/ })).toHaveAttribute(
         "href",
-        "/m/danger-screening",
+        "/m/anc",
       );
-      expect(screen.getByRole("link", { name: /P4K & Rujukan/ })).toHaveAttribute("href", "/m/p4k");
-      expect(screen.getByRole("link", { name: /Lihat Jadwal/ })).toHaveAttribute("href", "/m/anc");
+      expect(
+        screen.getByRole("link", { name: /Tanda Bahaya/ }),
+      ).toHaveAttribute("href", "/m/danger-screening");
+      expect(
+        screen.getByRole("link", { name: /P4K & Rujukan/ }),
+      ).toHaveAttribute("href", "/m/p4k");
+      expect(
+        screen.getByRole("link", { name: /Lihat Jadwal/ }),
+      ).toHaveAttribute("href", "/m/anc");
     });
 
     it("74. role guard blocks and redirects non-MOTHER users (MIDWIFE / ADMIN) away from /m/anc, /m/danger-screening, and /m/p4k", () => {
@@ -2376,7 +3065,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       };
 
       const { unmount: u1 } = renderAppAt("/m/anc");
-      expect(screen.queryByRole("heading", { name: "Jadwal & Kepatuhan ANC" })).toBeNull();
+      expect(
+        screen.queryByRole("heading", { name: "Jadwal & Kepatuhan ANC" }),
+      ).toBeNull();
       u1();
 
       mockUser = {
@@ -2389,7 +3080,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       };
 
       const { unmount: u2 } = renderAppAt("/m/danger-screening");
-      expect(screen.queryByRole("heading", { name: "Skrining Tanda Bahaya" })).toBeNull();
+      expect(
+        screen.queryByRole("heading", { name: "Skrining Tanda Bahaya" }),
+      ).toBeNull();
       u2();
     });
 
@@ -2408,14 +3101,18 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i) || "";
-        expect(key).not.toMatch(/anc|screening|danger|p4k|referral|gestational/i);
+        expect(key).not.toMatch(
+          /anc|screening|danger|p4k|referral|gestational/i,
+        );
         const val = localStorage.getItem(key) || "";
         expect(val).not.toMatch(/BLEEDING|USG|Speedboat|Chasan/i);
       }
 
       for (let i = 0; i < sessionStorage.length; i++) {
         const key = sessionStorage.key(i) || "";
-        expect(key).not.toMatch(/anc|screening|danger|p4k|referral|gestational/i);
+        expect(key).not.toMatch(
+          /anc|screening|danger|p4k|referral|gestational/i,
+        );
         const val = sessionStorage.getItem(key) || "";
         expect(val).not.toMatch(/BLEEDING|USG|Speedboat|Chasan/i);
       }
@@ -2430,7 +3127,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
         const phoneInput = screen.getByLabelText("Nomor Handphone");
         const passwordInput = screen.getByLabelText("Kata Sandi");
-        const submitBtn = screen.getByRole("button", { name: "Masuk ke Dashboard" });
+        const submitBtn = screen.getByRole("button", {
+          name: "Masuk ke Dashboard",
+        });
 
         await userEvent.type(phoneInput, "081333333333");
         await userEvent.type(passwordInput, "Rahasia1234");
@@ -2466,7 +3165,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         mockLoading = true;
         mockUser = null;
         const { unmount } = renderAppAt("/m");
-        expect(screen.getByText("Memulihkan sesi dan memuat data…")).toBeInTheDocument();
+        expect(
+          screen.getByText("Memulihkan sesi dan memuat data…"),
+        ).toBeInTheDocument();
         unmount();
 
         mockLoading = false;
@@ -2484,10 +3185,14 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         renderAppAt("/m/account");
 
         await waitFor(() => {
-          expect(screen.getByRole("button", { name: /Keluar dari Akun/ })).toBeInTheDocument();
+          expect(
+            screen.getByRole("button", { name: /Keluar dari Akun/ }),
+          ).toBeInTheDocument();
         });
 
-        const logoutBtn = screen.getByRole("button", { name: /Keluar dari Akun/ });
+        const logoutBtn = screen.getByRole("button", {
+          name: /Keluar dari Akun/,
+        });
         await userEvent.click(logoutBtn);
 
         expect(mockLogout).toHaveBeenCalled();
@@ -2520,7 +3225,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         };
         mockLoading = false;
         renderAppAt("/dashboard");
-        expect(screen.getByRole("heading", { name: /Dashboard Bidan/ })).toBeInTheDocument();
+        expect(
+          screen.getByRole("heading", { name: /Dashboard Bidan/ }),
+        ).toBeInTheDocument();
 
         expect(localStorage.getItem("pfram_token")).toBeNull();
         expect(localStorage.getItem("pfram_user")).toBeNull();
@@ -2549,7 +3256,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         });
 
         // T1 and T3 require min. 2 visits, 1x Doctor + USG
-        expect(screen.getAllByText("Min. 2 kunjungan").length).toBeGreaterThanOrEqual(3);
+        expect(
+          screen.getAllByText("Min. 2 kunjungan").length,
+        ).toBeGreaterThanOrEqual(3);
         expect(screen.getAllByText("1x Dokter + USG").length).toBe(2);
 
         // Verify T2 does not demand Doctor + USG
@@ -2563,7 +3272,10 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
       it("85. /m/anc prevents premature confirmation for future appointments and renders availability notice", async () => {
         mockRequest.mockImplementation((url: string) => {
-          if (typeof url === "string" && url.includes("/mother/anc-schedules/upcoming")) {
+          if (
+            typeof url === "string" &&
+            url.includes("/mother/anc-schedules/upcoming")
+          ) {
             return Promise.resolve({
               publicId: "anc-future-01",
               motherPublicId: "USR-MOTHER-01",
@@ -2578,7 +3290,11 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
               completedAt: null,
             });
           }
-          if (typeof url === "string" && (url.includes("/mother/anc-schedules") || url.startsWith("/mother/anc-schedules?"))) {
+          if (
+            typeof url === "string" &&
+            (url.includes("/mother/anc-schedules") ||
+              url.startsWith("/mother/anc-schedules?"))
+          ) {
             return Promise.resolve({
               items: [
                 {
@@ -2602,11 +3318,19 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         renderAppAt("/m/anc");
 
         await waitFor(() => {
-          expect(screen.getByText(/Konfirmasi kehadiran mandiri akan tersedia pada hari pemeriksaan/)).toBeInTheDocument();
+          expect(
+            screen.getByText(
+              /Konfirmasi kehadiran mandiri akan tersedia pada hari pemeriksaan/,
+            ),
+          ).toBeInTheDocument();
         });
 
         // Confirmation button must NOT be rendered for future appointments
-        expect(screen.queryByRole("button", { name: "Konfirmasi Saya Sudah Datang" })).toBeNull();
+        expect(
+          screen.queryByRole("button", {
+            name: "Konfirmasi Saya Sudah Datang",
+          }),
+        ).toBeNull();
         expect(screen.getByText("Terjadwal")).toBeInTheDocument();
       });
 
@@ -2614,28 +3338,40 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         renderAppAt("/m/anc");
 
         await waitFor(() => {
-          expect(screen.getByText("Jadwal & Kepatuhan ANC")).toBeInTheDocument();
+          expect(
+            screen.getByText("Jadwal & Kepatuhan ANC"),
+          ).toBeInTheDocument();
         });
 
         // Routine ANC page must NOT render alert role banner
         expect(screen.queryByRole("alert")).toBeNull();
-        const ancSafetyNote = screen.getByRole("note", { name: "Catatan Keselamatan Medis" });
+        const ancSafetyNote = screen.getByRole("note", {
+          name: "Catatan Keselamatan Medis",
+        });
         expect(ancSafetyNote).toBeInTheDocument();
-        expect(ancSafetyNote.textContent).toContain("Segera menuju fasilitas kesehatan. Jangan menunggu balasan melalui aplikasi.");
+        expect(ancSafetyNote.textContent).toContain(
+          "Segera menuju fasilitas kesehatan. Jangan menunggu balasan melalui aplikasi.",
+        );
 
         cleanup();
 
         renderAppAt("/m/p4k");
 
         await waitFor(() => {
-          expect(screen.getByText("Perencanaan Persalinan (P4K)")).toBeInTheDocument();
+          expect(
+            screen.getByText("Perencanaan Persalinan (P4K)"),
+          ).toBeInTheDocument();
         });
 
         // Routine P4K page must NOT render alert role banner
         expect(screen.queryByRole("alert")).toBeNull();
-        const p4kSafetyNote = screen.getByRole("note", { name: "Catatan Keselamatan Medis" });
+        const p4kSafetyNote = screen.getByRole("note", {
+          name: "Catatan Keselamatan Medis",
+        });
         expect(p4kSafetyNote).toBeInTheDocument();
-        expect(p4kSafetyNote.textContent).toContain("Segera menuju fasilitas kesehatan. Jangan menunggu balasan melalui aplikasi.");
+        expect(p4kSafetyNote.textContent).toContain(
+          "Segera menuju fasilitas kesehatan. Jangan menunggu balasan melalui aplikasi.",
+        );
       });
 
       it("87. /m/danger-screening strictly retains prominent red emergency banner with role='alert'", async () => {
@@ -2647,15 +3383,23 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
         const alertBanner = screen.getByRole("alert");
         expect(alertBanner).toBeInTheDocument();
-        expect(alertBanner.textContent).toContain("Peringatan Medis & Kedaruratan");
-        expect(alertBanner.textContent).toContain("Segera menuju fasilitas kesehatan. Jangan menunggu balasan melalui aplikasi.");
+        expect(alertBanner.textContent).toContain(
+          "Peringatan Medis & Kedaruratan",
+        );
+        expect(alertBanner.textContent).toContain(
+          "Segera menuju fasilitas kesehatan. Jangan menunggu balasan melalui aplikasi.",
+        );
       });
 
       it("88. /m/p4k renders 'Rencana Persalinan Tersusun' and contains no false-assurance wording ('Aman')", async () => {
         renderAppAt("/m/p4k");
 
         await waitFor(() => {
-          expect(screen.getByRole("heading", { name: "Rencana Persalinan Tersusun" })).toBeInTheDocument();
+          expect(
+            screen.getByRole("heading", {
+              name: "Rencana Persalinan Tersusun",
+            }),
+          ).toBeInTheDocument();
         });
 
         expect(screen.queryByText(/Rencana Persalinan Aman/i)).toBeNull();
@@ -2663,7 +3407,10 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
       it("89. ANC time display strictly shows WIT and formats consistently across /m/home and /m/anc", async () => {
         mockRequest.mockImplementation((url: string) => {
-          if (typeof url === "string" && url.includes("/mother/anc-schedules/upcoming")) {
+          if (
+            typeof url === "string" &&
+            url.includes("/mother/anc-schedules/upcoming")
+          ) {
             return Promise.resolve({
               publicId: "anc-wit-01",
               motherPublicId: "USR-MOTHER-01",
@@ -2678,7 +3425,11 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
               completedAt: null,
             });
           }
-          if (typeof url === "string" && (url.includes("/mother/anc-schedules") || url.startsWith("/mother/anc-schedules?"))) {
+          if (
+            typeof url === "string" &&
+            (url.includes("/mother/anc-schedules") ||
+              url.startsWith("/mother/anc-schedules?"))
+          ) {
             return Promise.resolve({
               items: [
                 {
@@ -2711,7 +3462,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         // 2. Verify /m/anc
         const { unmount: unmountAnc } = renderAppAt("/m/anc");
         await waitFor(() => {
-          expect(screen.getAllByText(/15 Oktober 2026 · 08\.00 WIT/).length).toBeGreaterThanOrEqual(1);
+          expect(
+            screen.getAllByText(/15 Oktober 2026 · 08\.00 WIT/).length,
+          ).toBeGreaterThanOrEqual(1);
         });
         expect(screen.queryByText(/WIB/)).toBeNull();
         unmountAnc();
@@ -2720,14 +3473,22 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       it("90. /m/anc evaluates appointment-day eligibility using canonical WIT calendar date regardless of client/browser timezone", async () => {
         // Current WIT date calculation
         const now = new Date();
-        const witDateFormatter = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Jayapura", year: "numeric", month: "2-digit", day: "2-digit" });
+        const witDateFormatter = new Intl.DateTimeFormat("en-CA", {
+          timeZone: "Asia/Jayapura",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        });
         const todayWitStr = witDateFormatter.format(now);
         const todayScheduledAt = `${todayWitStr}T08:30:00+09:00`;
         const futureScheduledAt = "2029-12-31T08:30:00+09:00";
 
         // 1. Future appointment in WIT: button not shown, availability notice shown
         mockRequest.mockImplementation((url: string) => {
-          if (typeof url === "string" && url.includes("/mother/anc-schedules/upcoming")) {
+          if (
+            typeof url === "string" &&
+            url.includes("/mother/anc-schedules/upcoming")
+          ) {
             return Promise.resolve({
               publicId: "anc-wit-future",
               motherPublicId: "USR-MOTHER-01",
@@ -2742,7 +3503,11 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
               completedAt: null,
             });
           }
-          if (typeof url === "string" && (url.includes("/mother/anc-schedules") || url.startsWith("/mother/anc-schedules?"))) {
+          if (
+            typeof url === "string" &&
+            (url.includes("/mother/anc-schedules") ||
+              url.startsWith("/mother/anc-schedules?"))
+          ) {
             return Promise.resolve({
               items: [
                 {
@@ -2765,14 +3530,25 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
         const { unmount: u1 } = renderAppAt("/m/anc");
         await waitFor(() => {
-          expect(screen.getByText(/Konfirmasi kehadiran mandiri akan tersedia pada hari pemeriksaan/)).toBeInTheDocument();
+          expect(
+            screen.getByText(
+              /Konfirmasi kehadiran mandiri akan tersedia pada hari pemeriksaan/,
+            ),
+          ).toBeInTheDocument();
         });
-        expect(screen.queryByRole("button", { name: "Konfirmasi Saya Sudah Datang" })).toBeNull();
+        expect(
+          screen.queryByRole("button", {
+            name: "Konfirmasi Saya Sudah Datang",
+          }),
+        ).toBeNull();
         u1();
 
         // 2. Same-day appointment in WIT: button IS available
         mockRequest.mockImplementation((url: string) => {
-          if (typeof url === "string" && url.includes("/mother/anc-schedules/upcoming")) {
+          if (
+            typeof url === "string" &&
+            url.includes("/mother/anc-schedules/upcoming")
+          ) {
             return Promise.resolve({
               publicId: "anc-wit-today",
               motherPublicId: "USR-MOTHER-01",
@@ -2787,7 +3563,11 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
               completedAt: null,
             });
           }
-          if (typeof url === "string" && (url.includes("/mother/anc-schedules") || url.startsWith("/mother/anc-schedules?"))) {
+          if (
+            typeof url === "string" &&
+            (url.includes("/mother/anc-schedules") ||
+              url.startsWith("/mother/anc-schedules?"))
+          ) {
             return Promise.resolve({
               items: [
                 {
@@ -2810,7 +3590,11 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
         const { unmount: u2 } = renderAppAt("/m/anc");
         await waitFor(() => {
-          expect(screen.getAllByRole("button", { name: "Konfirmasi Saya Sudah Datang" }).length).toBeGreaterThanOrEqual(1);
+          expect(
+            screen.getAllByRole("button", {
+              name: "Konfirmasi Saya Sudah Datang",
+            }).length,
+          ).toBeGreaterThanOrEqual(1);
         });
         u2();
       });
@@ -2878,10 +3662,16 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         _resetPwaInstallStateForTesting();
         mockUser = defaultMotherUser;
         mockRequest.mockImplementation((url: string, init?: RequestInit) => {
-          if (typeof url === "string" && url.includes("/mother/consultation/thread")) {
+          if (
+            typeof url === "string" &&
+            url.includes("/mother/consultation/thread")
+          ) {
             return Promise.resolve(mockThreadData);
           }
-          if (typeof url === "string" && url.includes("/mother/consultation/messages")) {
+          if (
+            typeof url === "string" &&
+            url.includes("/mother/consultation/messages")
+          ) {
             if (init?.method === "POST") {
               const parsed = JSON.parse((init.body as string) || "{}");
               return Promise.resolve({
@@ -2897,7 +3687,10 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
             }
             return Promise.resolve(mockMessagesData);
           }
-          if (typeof url === "string" && url.includes("/mother/video-consultations/upcoming")) {
+          if (
+            typeof url === "string" &&
+            url.includes("/mother/video-consultations/upcoming")
+          ) {
             return Promise.resolve({
               publicId: "vc-01",
               scheduledAt: "2026-10-15T01:00:00.000Z", // 10.00 WIT
@@ -2910,7 +3703,10 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
               },
             });
           }
-          if (typeof url === "string" && url.includes("/mother/video-consultations")) {
+          if (
+            typeof url === "string" &&
+            url.includes("/mother/video-consultations")
+          ) {
             return Promise.resolve({ items: [], total: 0 });
           }
           return Promise.resolve({});
@@ -2921,32 +3717,46 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         renderAppAt("/m/consultation");
 
         await waitFor(() => {
-          expect(screen.getByRole("heading", { name: "Telekonsultasi Bidan" })).toBeInTheDocument();
+          expect(
+            screen.getByRole("heading", { name: "Telekonsultasi Bidan" }),
+          ).toBeInTheDocument();
         });
 
-        const alertNote = screen.getByRole("note", { name: "Perhatian Keselamatan Maternal" });
+        const alertNote = screen.getByRole("note", {
+          name: "Perhatian Keselamatan Maternal",
+        });
         expect(alertNote).toBeInTheDocument();
-        expect(alertNote.textContent).toContain("Segera menuju fasilitas kesehatan. Jangan menunggu balasan melalui aplikasi.");
-        expect(alertNote.textContent).toContain("Konsultasi ini bukan saluran darurat medis");
+        expect(alertNote.textContent).toContain(
+          "Segera menuju fasilitas kesehatan. Jangan menunggu balasan melalui aplikasi.",
+        );
+        expect(alertNote.textContent).toContain(
+          "Konsultasi ini bukan saluran darurat medis",
+        );
       });
 
       it("92. /m/consultation renders assigned Midwife profile card with WIT working hours and SLA estimate", async () => {
         renderAppAt("/m/consultation");
 
         await waitFor(() => {
-          expect(screen.getByText("Bidan Siti Rahayu, S.Tr.Keb")).toBeInTheDocument();
+          expect(
+            screen.getByText("Bidan Siti Rahayu, S.Tr.Keb"),
+          ).toBeInTheDocument();
         });
 
         expect(screen.getByText(/Puskesmas Kalumata/)).toBeInTheDocument();
         expect(screen.getByText(/08\.00–16\.00 WIT/)).toBeInTheDocument();
-        expect(screen.getByText(/Estimasi balasan: 1-2 jam kerja/)).toBeInTheDocument();
+        expect(
+          screen.getByText(/Estimasi balasan: 1-2 jam kerja/),
+        ).toBeInTheDocument();
       });
 
       it("93. assigned Midwife card provides verified WhatsApp fallback and phone call links", async () => {
         renderAppAt("/m/consultation");
 
         await waitFor(() => {
-          expect(screen.getByText("Bidan Siti Rahayu, S.Tr.Keb")).toBeInTheDocument();
+          expect(
+            screen.getByText("Bidan Siti Rahayu, S.Tr.Keb"),
+          ).toBeInTheDocument();
         });
 
         const waLink = screen.getByRole("link", { name: /WhatsApp Bidan/i });
@@ -2959,7 +3769,10 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
       it("94. /m/consultation handles MIDWIFE_NOT_ASSIGNED with neutral non-alarmist message and retry", async () => {
         mockRequest.mockImplementation((url: string) => {
-          if (typeof url === "string" && url.includes("/mother/consultation/thread")) {
+          if (
+            typeof url === "string" &&
+            url.includes("/mother/consultation/thread")
+          ) {
             return Promise.reject({
               code: "MIDWIFE_NOT_ASSIGNED",
               message: "Bidan pendamping belum ditetapkan",
@@ -2972,21 +3785,37 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         renderAppAt("/m/consultation");
 
         await waitFor(() => {
-          expect(screen.getByText("Bidan pendamping sedang diproses oleh puskesmas.")).toBeInTheDocument();
+          expect(
+            screen.getByText(
+              "Bidan pendamping sedang diproses oleh puskesmas.",
+            ),
+          ).toBeInTheDocument();
         });
 
-        expect(screen.getByText("Bidan Pendamping Belum Ditugaskan")).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: /Coba Lagi/i })).toBeInTheDocument();
+        expect(
+          screen.getByText("Bidan Pendamping Belum Ditugaskan"),
+        ).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: /Coba Lagi/i }),
+        ).toBeInTheDocument();
       });
 
       it("95. message thread renders role-differentiated chat messages and timestamps", async () => {
         renderAppAt("/m/consultation");
 
         await waitFor(() => {
-          expect(screen.getByText("Halo Ibu Rahma, bagaimana kondisi janin hari ini?")).toBeInTheDocument();
+          expect(
+            screen.getByText(
+              "Halo Ibu Rahma, bagaimana kondisi janin hari ini?",
+            ),
+          ).toBeInTheDocument();
         });
 
-        expect(screen.getByText("Alhamdulillah gerakan janin aktif dan sehat bidan.")).toBeInTheDocument();
+        expect(
+          screen.getByText(
+            "Alhamdulillah gerakan janin aktif dan sehat bidan.",
+          ),
+        ).toBeInTheDocument();
         expect(screen.getAllByText(/WIT/).length).toBeGreaterThanOrEqual(2);
       });
 
@@ -2994,17 +3823,24 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         renderAppAt("/m/consultation");
 
         await waitFor(() => {
-          expect(screen.getByPlaceholderText("Tulis pesan untuk bidan…")).toBeInTheDocument();
+          expect(
+            screen.getByPlaceholderText("Tulis pesan untuk bidan…"),
+          ).toBeInTheDocument();
         });
 
-        const textarea = screen.getByPlaceholderText("Tulis pesan untuk bidan…");
+        const textarea = screen.getByPlaceholderText(
+          "Tulis pesan untuk bidan…",
+        );
         const sendBtn = screen.getByRole("button", { name: "Kirim pesan" });
 
         // Empty message cannot be sent (send button disabled when empty and no attachment)
         expect(sendBtn).toBeDisabled();
 
         // Type valid message
-        await userEvent.type(textarea, "Selamat pagi bidan, mau tanya jadwal vitamin");
+        await userEvent.type(
+          textarea,
+          "Selamat pagi bidan, mau tanya jadwal vitamin",
+        );
         expect(sendBtn).not.toBeDisabled();
 
         await userEvent.click(sendBtn);
@@ -3014,7 +3850,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
             expect.stringContaining("/mother/consultation/messages"),
             expect.objectContaining({
               method: "POST",
-              body: expect.stringContaining("Selamat pagi bidan, mau tanya jadwal vitamin"),
+              body: expect.stringContaining(
+                "Selamat pagi bidan, mau tanya jadwal vitamin",
+              ),
             }),
           );
         });
@@ -3022,13 +3860,25 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
       it("97. composer retains entered message text upon failure allowing mother to retry", async () => {
         mockRequest.mockImplementation((url: string, init?: RequestInit) => {
-          if (typeof url === "string" && url.includes("/mother/consultation/messages") && init?.method === "POST") {
-            return Promise.reject(new Error("Jaringan terputus saat mengirim pesan"));
+          if (
+            typeof url === "string" &&
+            url.includes("/mother/consultation/messages") &&
+            init?.method === "POST"
+          ) {
+            return Promise.reject(
+              new Error("Jaringan terputus saat mengirim pesan"),
+            );
           }
-          if (typeof url === "string" && url.includes("/mother/consultation/thread")) {
+          if (
+            typeof url === "string" &&
+            url.includes("/mother/consultation/thread")
+          ) {
             return Promise.resolve(mockThreadData);
           }
-          if (typeof url === "string" && url.includes("/mother/consultation/messages")) {
+          if (
+            typeof url === "string" &&
+            url.includes("/mother/consultation/messages")
+          ) {
             return Promise.resolve(mockMessagesData);
           }
           return Promise.resolve({});
@@ -3037,17 +3887,23 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         renderAppAt("/m/consultation");
 
         await waitFor(() => {
-          expect(screen.getByPlaceholderText("Tulis pesan untuk bidan…")).toBeInTheDocument();
+          expect(
+            screen.getByPlaceholderText("Tulis pesan untuk bidan…"),
+          ).toBeInTheDocument();
         });
 
-        const textarea = screen.getByPlaceholderText("Tulis pesan untuk bidan…");
+        const textarea = screen.getByPlaceholderText(
+          "Tulis pesan untuk bidan…",
+        );
         await userEvent.type(textarea, "Pesan darurat tidak boleh hilang");
 
         const sendBtn = screen.getByRole("button", { name: "Kirim pesan" });
         await userEvent.click(sendBtn);
 
         await waitFor(() => {
-          expect(screen.getByText(/Jaringan terputus saat mengirim pesan/i)).toBeInTheDocument();
+          expect(
+            screen.getByText(/Jaringan terputus saat mengirim pesan/i),
+          ).toBeInTheDocument();
         });
 
         // The text MUST remain in the composer
@@ -3064,13 +3920,19 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         const fileInput = screen.getByLabelText("Lampirkan Foto");
 
         // 1. Oversized file (> 5 MB)
-        const bigFile = new File([new Uint8Array(6 * 1024 * 1024)], "foto_besar.jpg", {
-          type: "image/jpeg",
-        });
+        const bigFile = new File(
+          [new Uint8Array(6 * 1024 * 1024)],
+          "foto_besar.jpg",
+          {
+            type: "image/jpeg",
+          },
+        );
         await userEvent.upload(fileInput, bigFile);
 
         await waitFor(() => {
-          expect(screen.getByText(/Ukuran foto melebihi batas maksimal 5 MB/i)).toBeInTheDocument();
+          expect(
+            screen.getByText(/Ukuran foto melebihi batas maksimal 5 MB/i),
+          ).toBeInTheDocument();
         });
 
         // 2. Disallowed MIME type
@@ -3084,7 +3946,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         fireEvent.change(fileInput);
 
         await waitFor(() => {
-          expect(screen.getByText(/Format foto tidak didukung/i)).toBeInTheDocument();
+          expect(
+            screen.getByText(/Format foto tidak didukung/i),
+          ).toBeInTheDocument();
         });
       });
 
@@ -3092,14 +3956,22 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         renderAppAt("/m/consultation");
 
         await waitFor(() => {
-          expect(screen.getByRole("button", { name: "Rekam Pesan Suara" })).toBeInTheDocument();
+          expect(
+            screen.getByRole("button", { name: "Rekam Pesan Suara" }),
+          ).toBeInTheDocument();
         });
 
-        const micBtn = screen.getByRole("button", { name: "Rekam Pesan Suara" });
+        const micBtn = screen.getByRole("button", {
+          name: "Rekam Pesan Suara",
+        });
         await userEvent.click(micBtn);
 
         await waitFor(() => {
-          expect(screen.getByText(/Izin mikrofon ditolak atau perangkat mikrofon tidak tersedia/i)).toBeInTheDocument();
+          expect(
+            screen.getByText(
+              /Izin mikrofon ditolak atau perangkat mikrofon tidak tersedia/i,
+            ),
+          ).toBeInTheDocument();
         });
       });
 
@@ -3107,19 +3979,30 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         renderAppAt("/m/consultation");
 
         await waitFor(() => {
-          expect(screen.getByRole("button", { name: /Video Konsultasi/i })).toBeInTheDocument();
+          expect(
+            screen.getByRole("button", { name: /Video Konsultasi/i }),
+          ).toBeInTheDocument();
         });
 
-        const videoTab = screen.getByRole("button", { name: /Video Konsultasi/i });
+        const videoTab = screen.getByRole("button", {
+          name: /Video Konsultasi/i,
+        });
         await userEvent.click(videoTab);
 
         await waitFor(() => {
-          expect(screen.getByRole("heading", { name: "Konsultasi Video Mendatang" })).toBeInTheDocument();
+          expect(
+            screen.getByRole("heading", { name: "Konsultasi Video Mendatang" }),
+          ).toBeInTheDocument();
         });
 
         expect(screen.getByText(/10\.00 WIT/)).toBeInTheDocument();
-        const joinLink = screen.getByRole("link", { name: /Gabung Video Sekarang/i });
-        expect(joinLink).toHaveAttribute("href", "https://meet.jit.si/pfram-consult-123");
+        const joinLink = screen.getByRole("link", {
+          name: /Gabung Video Sekarang/i,
+        });
+        expect(joinLink).toHaveAttribute(
+          "href",
+          "https://meet.jit.si/pfram-consult-123",
+        );
         expect(joinLink).toHaveAttribute("target", "_blank");
       });
 
@@ -3134,12 +4017,17 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
             platforms: string[];
           };
           installEvent.prompt = vi.fn().mockResolvedValue(undefined);
-          installEvent.userChoice = Promise.resolve({ outcome: "accepted", platform: "web" });
+          installEvent.userChoice = Promise.resolve({
+            outcome: "accepted",
+            platform: "web",
+          });
           window.dispatchEvent(installEvent as unknown as Event);
         });
 
         await waitFor(() => {
-          expect(screen.getByRole("button", { name: /Pasang Aplikasi PFRAM/i })).toBeInTheDocument();
+          expect(
+            screen.getByRole("button", { name: /Pasang Aplikasi PFRAM/i }),
+          ).toBeInTheDocument();
         });
       });
 
@@ -3159,7 +4047,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
         renderAppAt("/login");
 
-        expect(screen.queryByRole("button", { name: /Pasang Aplikasi PFRAM/i })).toBeNull();
+        expect(
+          screen.queryByRole("button", { name: /Pasang Aplikasi PFRAM/i }),
+        ).toBeNull();
         expect(screen.queryByText(/Cara memasang aplikasi/i)).toBeNull();
 
         window.matchMedia = originalMatchMedia;
@@ -3170,16 +4060,24 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         renderAppAt("/login");
 
         await waitFor(() => {
-          expect(screen.getByRole("button", { name: /Cara memasang aplikasi/i })).toBeInTheDocument();
+          expect(
+            screen.getByRole("button", { name: /Cara memasang aplikasi/i }),
+          ).toBeInTheDocument();
         });
 
-        const guideBtn = screen.getByRole("button", { name: /Cara memasang aplikasi/i });
+        const guideBtn = screen.getByRole("button", {
+          name: /Cara memasang aplikasi/i,
+        });
         await userEvent.click(guideBtn);
 
         await waitFor(() => {
-          expect(screen.getByText(/Pasang PFRAM di Perangkat Anda:/i)).toBeInTheDocument();
+          expect(
+            screen.getByText(/Pasang PFRAM di Perangkat Anda:/i),
+          ).toBeInTheDocument();
         });
-        expect(screen.getByText(/Buka menu opsi peramban/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/Buka menu opsi peramban/i),
+        ).toBeInTheDocument();
       });
 
       it("104. consultation module strictly maintains browser storage isolation (no chat messages or credentials persisted)", () => {
@@ -3204,7 +4102,10 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
           platforms: string[];
         };
         earlyEvent.prompt = earlyPromptSpy;
-        earlyEvent.userChoice = Promise.resolve({ outcome: "accepted", platform: "web" });
+        earlyEvent.userChoice = Promise.resolve({
+          outcome: "accepted",
+          platform: "web",
+        });
 
         act(() => {
           window.dispatchEvent(earlyEvent as unknown as Event);
@@ -3213,7 +4114,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         renderAppAt("/login");
 
         await waitFor(() => {
-          expect(screen.getByRole("button", { name: /Pasang Aplikasi PFRAM/i })).toBeInTheDocument();
+          expect(
+            screen.getByRole("button", { name: /Pasang Aplikasi PFRAM/i }),
+          ).toBeInTheDocument();
         });
       });
 
@@ -3228,7 +4131,10 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
           platforms: string[];
         };
         installEvent.prompt = promptSpy;
-        installEvent.userChoice = Promise.resolve({ outcome: "accepted", platform: "web" });
+        installEvent.userChoice = Promise.resolve({
+          outcome: "accepted",
+          platform: "web",
+        });
 
         act(() => {
           window.dispatchEvent(installEvent as unknown as Event);
@@ -3236,13 +4142,17 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
         renderAppAt("/login");
 
-        const installBtn = await screen.findByRole("button", { name: /Pasang Aplikasi PFRAM/i });
+        const installBtn = await screen.findByRole("button", {
+          name: /Pasang Aplikasi PFRAM/i,
+        });
         await userEvent.click(installBtn);
 
         expect(promptSpy).toHaveBeenCalledTimes(1);
 
         await waitFor(() => {
-          expect(screen.queryByRole("button", { name: /Pasang Aplikasi PFRAM/i })).toBeNull();
+          expect(
+            screen.queryByRole("button", { name: /Pasang Aplikasi PFRAM/i }),
+          ).toBeNull();
           expect(screen.queryByText(/Cara memasang aplikasi/i)).toBeNull();
         });
       });
@@ -3258,7 +4168,10 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
           platforms: string[];
         };
         installEvent.prompt = promptSpy;
-        installEvent.userChoice = Promise.resolve({ outcome: "dismissed", platform: "web" });
+        installEvent.userChoice = Promise.resolve({
+          outcome: "dismissed",
+          platform: "web",
+        });
 
         act(() => {
           window.dispatchEvent(installEvent as unknown as Event);
@@ -3266,14 +4179,20 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
         renderAppAt("/login");
 
-        const installBtn = await screen.findByRole("button", { name: /Pasang Aplikasi PFRAM/i });
+        const installBtn = await screen.findByRole("button", {
+          name: /Pasang Aplikasi PFRAM/i,
+        });
         await userEvent.click(installBtn);
 
         expect(promptSpy).toHaveBeenCalledTimes(1);
 
         await waitFor(() => {
-          expect(screen.queryByRole("button", { name: /Pasang Aplikasi PFRAM/i })).toBeNull();
-          expect(screen.getByRole("button", { name: /Cara memasang aplikasi/i })).toBeInTheDocument();
+          expect(
+            screen.queryByRole("button", { name: /Pasang Aplikasi PFRAM/i }),
+          ).toBeNull();
+          expect(
+            screen.getByRole("button", { name: /Cara memasang aplikasi/i }),
+          ).toBeInTheDocument();
         });
       });
 
@@ -3287,7 +4206,10 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
           platforms: string[];
         };
         installEvent.prompt = vi.fn().mockResolvedValue(undefined);
-        installEvent.userChoice = Promise.resolve({ outcome: "dismissed", platform: "web" });
+        installEvent.userChoice = Promise.resolve({
+          outcome: "dismissed",
+          platform: "web",
+        });
 
         act(() => {
           window.dispatchEvent(installEvent as unknown as Event);
@@ -3302,7 +4224,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         });
 
         await waitFor(() => {
-          expect(screen.queryByRole("button", { name: /Pasang Aplikasi PFRAM/i })).toBeNull();
+          expect(
+            screen.queryByRole("button", { name: /Pasang Aplikasi PFRAM/i }),
+          ).toBeNull();
           expect(screen.queryByText(/Cara memasang aplikasi/i)).toBeNull();
         });
       });
@@ -3318,7 +4242,10 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
           platforms: string[];
         };
         installEvent1.prompt = promptSpy1;
-        installEvent1.userChoice = Promise.resolve({ outcome: "dismissed", platform: "web" });
+        installEvent1.userChoice = Promise.resolve({
+          outcome: "dismissed",
+          platform: "web",
+        });
 
         act(() => {
           window.dispatchEvent(installEvent1 as unknown as Event);
@@ -3326,11 +4253,15 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
         renderAppAt("/login");
 
-        const installBtn1 = await screen.findByRole("button", { name: /Pasang Aplikasi PFRAM/i });
+        const installBtn1 = await screen.findByRole("button", {
+          name: /Pasang Aplikasi PFRAM/i,
+        });
         await userEvent.click(installBtn1);
 
         await waitFor(() => {
-          expect(screen.queryByRole("button", { name: /Pasang Aplikasi PFRAM/i })).toBeNull();
+          expect(
+            screen.queryByRole("button", { name: /Pasang Aplikasi PFRAM/i }),
+          ).toBeNull();
         });
 
         const promptSpy2 = vi.fn().mockResolvedValue(undefined);
@@ -3340,14 +4271,19 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
           platforms: string[];
         };
         installEvent2.prompt = promptSpy2;
-        installEvent2.userChoice = Promise.resolve({ outcome: "accepted", platform: "web" });
+        installEvent2.userChoice = Promise.resolve({
+          outcome: "accepted",
+          platform: "web",
+        });
 
         act(() => {
           window.dispatchEvent(installEvent2 as unknown as Event);
         });
 
         await waitFor(() => {
-          expect(screen.getByRole("button", { name: /Pasang Aplikasi PFRAM/i })).toBeInTheDocument();
+          expect(
+            screen.getByRole("button", { name: /Pasang Aplikasi PFRAM/i }),
+          ).toBeInTheDocument();
         });
       });
 
@@ -3362,21 +4298,28 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
           platforms: string[];
         };
         installEvent.prompt = promptSpy;
-        installEvent.userChoice = Promise.resolve({ outcome: "accepted", platform: "web" });
+        installEvent.userChoice = Promise.resolve({
+          outcome: "accepted",
+          platform: "web",
+        });
 
         act(() => {
           window.dispatchEvent(installEvent as unknown as Event);
         });
 
         const { unmount } = renderAppAt("/login");
-        expect(await screen.findByRole("button", { name: /Pasang Aplikasi PFRAM/i })).toBeInTheDocument();
+        expect(
+          await screen.findByRole("button", { name: /Pasang Aplikasi PFRAM/i }),
+        ).toBeInTheDocument();
 
         unmount();
 
         renderAppAt("/login");
 
         await waitFor(() => {
-          expect(screen.getByRole("button", { name: /Pasang Aplikasi PFRAM/i })).toBeInTheDocument();
+          expect(
+            screen.getByRole("button", { name: /Pasang Aplikasi PFRAM/i }),
+          ).toBeInTheDocument();
         });
       });
 
@@ -3409,7 +4352,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
         renderAppAt("/login");
 
-        expect(screen.queryByRole("button", { name: /Pasang Aplikasi PFRAM/i })).toBeNull();
+        expect(
+          screen.queryByRole("button", { name: /Pasang Aplikasi PFRAM/i }),
+        ).toBeNull();
         expect(screen.queryByText(/Cara memasang aplikasi/i)).toBeNull();
 
         window.matchMedia = originalMatchMedia;
@@ -3417,7 +4362,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
       it("113. Web API baseUrl defaults safely to same-origin /api without leaking localhost:3200", () => {
         expect(import.meta.env.VITE_API_URL || "/api").toMatch(/^\/api/);
-        expect(import.meta.env.VITE_API_URL || "/api").not.toContain("localhost:3200");
+        expect(import.meta.env.VITE_API_URL || "/api").not.toContain(
+          "localhost:3200",
+        );
       });
     });
 
@@ -3428,8 +4375,10 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
             publicId: "ART-01",
             slug: "nutrisi-kehamilan",
             title: "Gizi Seimbang Ibu Hamil & Konsumsi Daun Kelor",
-            summary: "Panduan asupan makronutrien dan mikronutrien berbasis pangan lokal.",
-            content: "## Pentingnya Gizi Seimbang\n\nIbu hamil membutuhkan gizi yang cukup untuk tumbuh kembang janin.\n\n### Manfaat Pangan Lokal\n\n- Daun kelor kaya zat besi\n- Ikan cakalang kaya omega 3\n\n> Konsultasikan bila memiliki riwayat alergi tertentu.",
+            summary:
+              "Panduan asupan makronutrien dan mikronutrien berbasis pangan lokal.",
+            content:
+              "## Pentingnya Gizi Seimbang\n\nIbu hamil membutuhkan gizi yang cukup untuk tumbuh kembang janin.\n\n### Manfaat Pangan Lokal\n\n- Daun kelor kaya zat besi\n- Ikan cakalang kaya omega 3\n\n> Konsultasikan bila memiliki riwayat alergi tertentu.",
             category: "NUTRITION",
             trimester: "ALL",
             featured: true,
@@ -3444,8 +4393,10 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
             publicId: "ART-02",
             slug: "tablet-tambah-darah",
             title: "Pentingnya Minum Tablet Tambah Darah (TTD)",
-            summary: "Cegah anemia dan KEK dengan konsumsi rutin minimal 90 tablet selama kehamilan.",
-            content: "## Aturan Minum TTD\n\nMinum 1 tablet setiap hari.\n\n- Jangan minum dengan teh atau kopi\n- Minum dengan air putih atau jus jeruk",
+            summary:
+              "Cegah anemia dan KEK dengan konsumsi rutin minimal 90 tablet selama kehamilan.",
+            content:
+              "## Aturan Minum TTD\n\nMinum 1 tablet setiap hari.\n\n- Jangan minum dengan teh atau kopi\n- Minum dengan air putih atau jus jeruk",
             category: "IRON_TABLET",
             trimester: "TRIMESTER_1",
             featured: false,
@@ -3489,16 +4440,28 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         };
 
         mockRequest.mockImplementation((url: string) => {
-          if (typeof url === "string" && url.includes("/mother/education/featured")) {
+          if (
+            typeof url === "string" &&
+            url.includes("/mother/education/featured")
+          ) {
             return Promise.resolve([mockEducationArticlesList.items[0]]);
           }
-          if (typeof url === "string" && url.includes("/mother/education/nutrisi-kehamilan")) {
+          if (
+            typeof url === "string" &&
+            url.includes("/mother/education/nutrisi-kehamilan")
+          ) {
             return Promise.resolve(mockEducationArticlesList.items[0]);
           }
-          if (typeof url === "string" && url.includes("/mother/education/tablet-tambah-darah")) {
+          if (
+            typeof url === "string" &&
+            url.includes("/mother/education/tablet-tambah-darah")
+          ) {
             return Promise.resolve(mockEducationArticlesList.items[1]);
           }
-          if (typeof url === "string" && url.includes("/mother/education/not-found")) {
+          if (
+            typeof url === "string" &&
+            url.includes("/mother/education/not-found")
+          ) {
             return Promise.reject(new Error("Artikel tidak ditemukan"));
           }
           if (typeof url === "string" && url.includes("/mother/education")) {
@@ -3512,25 +4475,43 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         renderAppAt("/m/education");
 
         await waitFor(() => {
-          expect(screen.getByRole("heading", { name: "Edukasi Kehamilan" })).toBeInTheDocument();
+          expect(
+            screen.getByRole("heading", { name: "Edukasi Kehamilan" }),
+          ).toBeInTheDocument();
         });
 
-        expect(screen.getByText("Panduan Resmi Buku KIA Kemenkes RI")).toBeInTheDocument();
-        expect(screen.getByPlaceholderText(/Cari artikel/i)).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: "Semua Kategori" })).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: "Gizi & Nutrisi" })).toBeInTheDocument();
-        expect(screen.getByRole("button", { name: "Tablet Tambah Darah" })).toBeInTheDocument();
+        expect(
+          screen.getByText("Panduan Resmi Buku KIA Kemenkes RI"),
+        ).toBeInTheDocument();
+        expect(
+          screen.getByPlaceholderText(/Cari artikel/i),
+        ).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "Semua Kategori" }),
+        ).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "Gizi & Nutrisi" }),
+        ).toBeInTheDocument();
+        expect(
+          screen.getByRole("button", { name: "Tablet Tambah Darah" }),
+        ).toBeInTheDocument();
       });
 
       it("115. displays personalized trimester recommendation banner when recommendation is available", async () => {
         renderAppAt("/m/education");
 
         await waitFor(() => {
-          expect(screen.getByText("Rekomendasi Minggu Ini")).toBeInTheDocument();
+          expect(
+            screen.getByText("Rekomendasi Minggu Ini"),
+          ).toBeInTheDocument();
         });
 
-        expect(screen.getAllByText("Trimester 1").length).toBeGreaterThanOrEqual(1);
-        expect(screen.getByText(/disesuaikan dengan perkiraan usia kehamilan/i)).toBeInTheDocument();
+        expect(
+          screen.getAllByText("Trimester 1").length,
+        ).toBeGreaterThanOrEqual(1);
+        expect(
+          screen.getByText(/disesuaikan dengan perkiraan usia kehamilan/i),
+        ).toBeInTheDocument();
       });
 
       it("116. renders featured articles section and allows navigation to article detail", async () => {
@@ -3540,39 +4521,58 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
           expect(screen.getByText("Topik Pilihan Utama")).toBeInTheDocument();
         });
 
-        expect(screen.getAllByText("Gizi Seimbang Ibu Hamil & Konsumsi Daun Kelor").length).toBeGreaterThanOrEqual(1);
-        expect(screen.getAllByText("Buku KIA Kemenkes RI 2024").length).toBeGreaterThanOrEqual(1);
+        expect(
+          screen.getAllByText("Gizi Seimbang Ibu Hamil & Konsumsi Daun Kelor")
+            .length,
+        ).toBeGreaterThanOrEqual(1);
+        expect(
+          screen.getAllByText("Buku KIA Kemenkes RI 2024").length,
+        ).toBeGreaterThanOrEqual(1);
       });
 
       it("117. filters article list by category and trimester options", async () => {
         renderAppAt("/m/education");
 
         await waitFor(() => {
-          expect(screen.getByRole("button", { name: "Tablet Tambah Darah" })).toBeInTheDocument();
+          expect(
+            screen.getByRole("button", { name: "Tablet Tambah Darah" }),
+          ).toBeInTheDocument();
         });
 
-        await userEvent.click(screen.getByRole("button", { name: "Tablet Tambah Darah" }));
+        await userEvent.click(
+          screen.getByRole("button", { name: "Tablet Tambah Darah" }),
+        );
 
         await waitFor(() => {
-          expect(screen.getByText(/Materi: Tablet Tambah Darah/i)).toBeInTheDocument();
+          expect(
+            screen.getByText(/Materi: Tablet Tambah Darah/i),
+          ).toBeInTheDocument();
         });
 
-        expect(screen.getByRole("button", { name: "Trimester 1" })).toBeInTheDocument();
-        await userEvent.click(screen.getByRole("button", { name: "Trimester 1" }));
+        expect(
+          screen.getByRole("button", { name: "Trimester 1" }),
+        ).toBeInTheDocument();
+        await userEvent.click(
+          screen.getByRole("button", { name: "Trimester 1" }),
+        );
       });
 
       it("118. search bar updates and allows clearing search query", async () => {
         renderAppAt("/m/education");
 
         await waitFor(() => {
-          expect(screen.getByPlaceholderText(/Cari artikel/i)).toBeInTheDocument();
+          expect(
+            screen.getByPlaceholderText(/Cari artikel/i),
+          ).toBeInTheDocument();
         });
 
         const searchInput = screen.getByPlaceholderText(/Cari artikel/i);
         await userEvent.type(searchInput, "Kelor");
         expect(searchInput).toHaveValue("Kelor");
 
-        const clearBtn = screen.getByRole("button", { name: "Hapus pencarian" });
+        const clearBtn = screen.getByRole("button", {
+          name: "Hapus pencarian",
+        });
         await userEvent.click(clearBtn);
         expect(searchInput).toHaveValue("");
       });
@@ -3581,15 +4581,29 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         renderAppAt("/m/education/nutrisi-kehamilan");
 
         await waitFor(() => {
-          expect(screen.getByRole("heading", { name: "Gizi Seimbang Ibu Hamil & Konsumsi Daun Kelor" })).toBeInTheDocument();
+          expect(
+            screen.getByRole("heading", {
+              name: "Gizi Seimbang Ibu Hamil & Konsumsi Daun Kelor",
+            }),
+          ).toBeInTheDocument();
         });
 
-        expect(screen.getByText(/Sumber Resmi: Buku KIA Kemenkes RI 2024/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/Sumber Resmi: Buku KIA Kemenkes RI 2024/i),
+        ).toBeInTheDocument();
         expect(screen.getByText("Halaman 18-22")).toBeInTheDocument();
-        expect(screen.getByText("Pentingnya Gizi Seimbang")).toBeInTheDocument();
+        expect(
+          screen.getByText("Pentingnya Gizi Seimbang"),
+        ).toBeInTheDocument();
         expect(screen.getByText("Manfaat Pangan Lokal")).toBeInTheDocument();
-        expect(screen.getByText(/Daun kelor kaya zat besi/i)).toBeInTheDocument();
-        expect(screen.getByText(/Konsultasikan bila memiliki riwayat alergi tertentu/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/Daun kelor kaya zat besi/i),
+        ).toBeInTheDocument();
+        expect(
+          screen.getByText(
+            /Konsultasikan bila memiliki riwayat alergi tertentu/i,
+          ),
+        ).toBeInTheDocument();
         expect(screen.getByText(/menit baca/i)).toBeInTheDocument();
       });
 
@@ -3597,18 +4611,30 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         renderAppAt("/m/education/nutrisi-kehamilan");
 
         await waitFor(() => {
-          expect(screen.getByText("Informasi Kesehatan Edukatif")).toBeInTheDocument();
+          expect(
+            screen.getByText("Informasi Kesehatan Edukatif"),
+          ).toBeInTheDocument();
         });
 
-        expect(screen.getByText(/tidak menggantikan diagnosis medis langsung/i)).toBeInTheDocument();
-        expect(screen.getByText(/Bila ibu merasakan keluhan tidak wajar atau tanda bahaya/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/tidak menggantikan diagnosis medis langsung/i),
+        ).toBeInTheDocument();
+        expect(
+          screen.getByText(
+            /Bila ibu merasakan keluhan tidak wajar atau tanda bahaya/i,
+          ),
+        ).toBeInTheDocument();
 
-        const dangerBtn = screen.getByRole("button", { name: /Skrining Tanda Bahaya →/i });
+        const dangerBtn = screen.getByRole("button", {
+          name: /Skrining Tanda Bahaya →/i,
+        });
         expect(dangerBtn).toBeInTheDocument();
         await userEvent.click(dangerBtn);
 
         await waitFor(() => {
-          expect(screen.getByRole("heading", { name: "Skrining Tanda Bahaya" })).toBeInTheDocument();
+          expect(
+            screen.getByRole("heading", { name: "Skrining Tanda Bahaya" }),
+          ).toBeInTheDocument();
         });
       });
 
@@ -3616,15 +4642,23 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         renderAppAt("/m/education/not-found");
 
         await waitFor(() => {
-          expect(screen.getByText("Artikel Tidak Ditemukan")).toBeInTheDocument();
+          expect(
+            screen.getByText("Artikel Tidak Ditemukan"),
+          ).toBeInTheDocument();
         });
 
-        expect(screen.getByRole("button", { name: "Coba Muat Ulang" })).toBeInTheDocument();
-        const backBtn = screen.getByRole("button", { name: /Kembali ke Daftar Artikel/i });
+        expect(
+          screen.getByRole("button", { name: "Coba Muat Ulang" }),
+        ).toBeInTheDocument();
+        const backBtn = screen.getByRole("button", {
+          name: /Kembali ke Daftar Artikel/i,
+        });
         await userEvent.click(backBtn);
 
         await waitFor(() => {
-          expect(screen.getByRole("heading", { name: "Edukasi Kehamilan" })).toBeInTheDocument();
+          expect(
+            screen.getByRole("heading", { name: "Edukasi Kehamilan" }),
+          ).toBeInTheDocument();
         });
       });
 
@@ -3641,8 +4675,12 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
         await waitFor(() => {
           expect(screen.getByRole("status")).toBeInTheDocument();
-          expect(screen.getByText(/Anda sedang offline\./i)).toBeInTheDocument();
-          expect(screen.getByText(/Beberapa fitur membutuhkan koneksi internet\./i)).toBeInTheDocument();
+          expect(
+            screen.getByText(/Anda sedang offline\./i),
+          ).toBeInTheDocument();
+          expect(
+            screen.getByText(/Beberapa fitur membutuhkan koneksi internet\./i),
+          ).toBeInTheDocument();
         });
 
         act(() => {
@@ -3660,9 +4698,13 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
           "utf-8",
         );
 
-        expect(viteConfigContent).toContain('globPatterns: ["**/*.{js,css,html,ico,png,svg,webp}"]');
-        expect(viteConfigContent).toContain('navigateFallbackDenylist: [/^\\/api\\//]');
-        expect(viteConfigContent).not.toContain('runtimeCaching');
+        expect(viteConfigContent).toContain(
+          'globPatterns: ["**/*.{js,css,html,ico,png,svg,webp}"]',
+        );
+        expect(viteConfigContent).toContain(
+          "navigateFallbackDenylist: [/^\\/api\\//]",
+        );
+        expect(viteConfigContent).not.toContain("runtimeCaching");
       });
 
       it("124. PwaUpdateNotification prompt displays 'Versi baru PFRAM tersedia' with 'Perbarui' and 'Nanti', and safe update guards against interrupting active forms", async () => {
@@ -3676,8 +4718,12 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
           _triggerNeedRefreshForTesting?.();
         });
 
-        expect(screen.getByText("Versi baru PFRAM tersedia")).toBeInTheDocument();
-        expect(screen.getByText(/Pembaruan sistem siap diterapkan/i)).toBeInTheDocument();
+        expect(
+          screen.getByText("Versi baru PFRAM tersedia"),
+        ).toBeInTheDocument();
+        expect(
+          screen.getByText(/Pembaruan sistem siap diterapkan/i),
+        ).toBeInTheDocument();
 
         const perbaruiBtn = screen.getByRole("button", { name: "Perbarui" });
         const nantiBtn = screen.getByRole("button", { name: "Nanti" });
@@ -3686,14 +4732,18 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
 
         // Verify safe check when active recording is on
         const confirmSpy = vi.spyOn(window, "confirm").mockReturnValue(false);
-        (window as unknown as { __pfram_active_recording: boolean }).__pfram_active_recording = true;
+        (
+          window as unknown as { __pfram_active_recording: boolean }
+        ).__pfram_active_recording = true;
 
         await userEvent.click(perbaruiBtn);
         expect(confirmSpy).toHaveBeenCalledWith(
           expect.stringContaining("Ada input atau formulir yang sedang aktif"),
         );
 
-        (window as unknown as { __pfram_active_recording: boolean }).__pfram_active_recording = false;
+        (
+          window as unknown as { __pfram_active_recording: boolean }
+        ).__pfram_active_recording = false;
         confirmSpy.mockRestore();
 
         // Dismiss with "Nanti"
@@ -3716,11 +4766,19 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         renderAppAt("/m/account");
 
         await waitFor(() => {
-          expect(screen.getByRole("heading", { name: /Pengingat & Notifikasi Web/i })).toBeInTheDocument();
+          expect(
+            screen.getByRole("heading", {
+              name: /Pengingat & Notifikasi Web/i,
+            }),
+          ).toBeInTheDocument();
         });
 
-        expect(screen.getByText(/zona waktu operasional Maluku Utara \(WIT\)/i)).toBeInTheDocument();
-        const enableBtn = screen.getByRole("button", { name: /Aktifkan Pengingat/i });
+        expect(
+          screen.getByText(/zona waktu operasional Maluku Utara \(WIT\)/i),
+        ).toBeInTheDocument();
+        const enableBtn = screen.getByRole("button", {
+          name: /Aktifkan Pengingat/i,
+        });
         expect(enableBtn).toBeInTheDocument();
 
         await userEvent.click(enableBtn);
@@ -3730,9 +4788,19 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
           expect(screen.getByText("Notifikasi Aktif")).toBeInTheDocument();
         });
 
-        expect(screen.getByText(/Waktu Indonesia Timur · WIT/i)).toBeInTheDocument();
-        expect(screen.getByText(/Isi pengingat bersifat netral dan dirancang menjaga kerahasiaan medis ibu/i)).toBeInTheDocument();
-        expect(screen.getByText(/"Pengingat Jadwal PFRAM: Waktunya pemeriksaan kehamilan \/ minum TTD\."/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/Waktu Indonesia Timur · WIT/i),
+        ).toBeInTheDocument();
+        expect(
+          screen.getByText(
+            /Isi pengingat bersifat netral dan dirancang menjaga kerahasiaan medis ibu/i,
+          ),
+        ).toBeInTheDocument();
+        expect(
+          screen.getByText(
+            /"Pengingat Jadwal PFRAM: Waktunya pemeriksaan kehamilan \/ minum TTD\."/i,
+          ),
+        ).toBeInTheDocument();
 
         window.Notification = originalNotification;
       });
@@ -3758,16 +4826,26 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         }
         const viteConfigPath = path.resolve(__dirname, "../../vite.config.ts");
         const viteConfig = fs.readFileSync(viteConfigPath, "utf-8");
-        expect(viteConfig).toContain("navigateFallbackDenylist: [/^\\/api\\//]");
+        expect(viteConfig).toContain(
+          "navigateFallbackDenylist: [/^\\/api\\//]",
+        );
       });
 
       it("127. verifies safe video meeting URL validation accepts valid HTTPS meetings and strictly rejects javascript:, data:, and file: schemes", () => {
-        expect(isValidMeetingUrl("https://meet.google.com/abc-defg-hij")).toBe(true);
-        expect(isValidMeetingUrl("https://meet.jit.si/pfram-consultation-123")).toBe(true);
+        expect(isValidMeetingUrl("https://meet.google.com/abc-defg-hij")).toBe(
+          true,
+        );
+        expect(
+          isValidMeetingUrl("https://meet.jit.si/pfram-consultation-123"),
+        ).toBe(true);
         expect(isValidMeetingUrl("javascript:alert(1)")).toBe(false);
-        expect(isValidMeetingUrl("data:text/html,<script>alert(1)</script>")).toBe(false);
+        expect(
+          isValidMeetingUrl("data:text/html,<script>alert(1)</script>"),
+        ).toBe(false);
         expect(isValidMeetingUrl("file:///etc/passwd")).toBe(false);
-        expect(isValidMeetingUrl("http://insecure-meeting.example.com")).toBe(false);
+        expect(isValidMeetingUrl("http://insecure-meeting.example.com")).toBe(
+          false,
+        );
         expect(isValidMeetingUrl("")).toBe(false);
       });
 
@@ -3788,8 +4866,12 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         await waitFor(() => {
           expect(screen.getByText(/Halo, Ibu Rahmawati!/)).toBeInTheDocument();
         });
-        expect(screen.queryByRole("heading", { name: "Dashboard Administrator" })).toBeNull();
-        expect(screen.queryByRole("heading", { name: /Dashboard Bidan/ })).toBeNull();
+        expect(
+          screen.queryByRole("heading", { name: "Dashboard Administrator" }),
+        ).toBeNull();
+        expect(
+          screen.queryByRole("heading", { name: /Dashboard Bidan/ }),
+        ).toBeNull();
         unmount();
       });
 
@@ -3804,7 +4886,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         };
         const { unmount } = renderAppAt("/m/home");
         await waitFor(() => {
-          expect(screen.getByRole("heading", { name: "Dashboard Administrator" })).toBeInTheDocument();
+          expect(
+            screen.getByRole("heading", { name: "Dashboard Administrator" }),
+          ).toBeInTheDocument();
         });
         expect(screen.queryByText("Pantau Kehamilan")).toBeNull();
         unmount();
@@ -3814,15 +4898,23 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         mockUser = null;
         const { unmount } = renderAppAt("/m/consultation");
         await waitFor(() => {
-          expect(screen.getByRole("heading", { name: "Masuk ke PFRAM" })).toBeInTheDocument();
+          expect(
+            screen.getByRole("heading", { name: "Masuk ke PFRAM" }),
+          ).toBeInTheDocument();
         });
         unmount();
       });
 
       it("132. verifies error boundaries and fallbacks provide actionable calm Indonesian messages without technical stack traces", () => {
         const { unmount } = renderAppAt("/403");
-        expect(screen.getByRole("heading", { name: "403 — Akses Ditolak" })).toBeInTheDocument();
-        expect(screen.getByText("Peran akun Anda tidak memiliki izin untuk membuka halaman ini.")).toBeInTheDocument();
+        expect(
+          screen.getByRole("heading", { name: "403 — Akses Ditolak" }),
+        ).toBeInTheDocument();
+        expect(
+          screen.getByText(
+            "Peran akun Anda tidak memiliki izin untuk membuka halaman ini.",
+          ),
+        ).toBeInTheDocument();
         expect(screen.queryByText(/Error: /)).toBeNull();
         expect(screen.queryByText(/Prisma/)).toBeNull();
         unmount();
@@ -3831,9 +4923,14 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       it("133. verifies production build bundle hygiene: no hardcoded backend localhost, LAN IP, or tunnel URLs in client assets", () => {
         const assetsDir = path.join(distDir, "assets");
         if (fs.existsSync(assetsDir)) {
-          const files = fs.readdirSync(assetsDir).filter((f) => f.endsWith(".js"));
+          const files = fs
+            .readdirSync(assetsDir)
+            .filter((f) => f.endsWith(".js"));
           for (const file of files) {
-            const content = fs.readFileSync(path.join(assetsDir, file), "utf-8");
+            const content = fs.readFileSync(
+              path.join(assetsDir, file),
+              "utf-8",
+            );
             expect(content).not.toContain("localhost:3200");
             expect(content).not.toContain("127.0.0.1:3200");
             expect(content).not.toContain("192.168.5.145:3200");
@@ -3851,16 +4948,24 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         mockUser = pwa8MotherUser;
         const { unmount } = renderAppAt("/m/account");
         await waitFor(() => {
-          expect(screen.getByRole("heading", { name: /Pengingat & Notifikasi Web/i })).toBeInTheDocument();
+          expect(
+            screen.getByRole("heading", {
+              name: /Pengingat & Notifikasi Web/i,
+            }),
+          ).toBeInTheDocument();
         });
-        expect(screen.getByText(/zona waktu operasional Maluku Utara \(WIT\)/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/zona waktu operasional Maluku Utara \(WIT\)/i),
+        ).toBeInTheDocument();
         unmount();
       });
 
       it("136. /login renders dynamic title and meta robots index, follow for public SEO", async () => {
         mockUser = null;
         const { unmount } = renderAppAt("/login");
-        expect(document.title).toBe("Masuk ke PFRAM — Layanan Telemedicine Maternal");
+        expect(document.title).toBe(
+          "Masuk ke PFRAM — Layanan Telemedicine Maternal",
+        );
         const metaRobots = document.querySelector('meta[name="robots"]');
         expect(metaRobots?.getAttribute("content")).toBe("index, follow");
         unmount();
@@ -3880,9 +4985,13 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
       it("138. /login interactive tap targets have compliant touch dimensions and legible font sizing", () => {
         mockUser = null;
         const { unmount } = renderAppAt("/login");
-        const registerLink = screen.getByRole("link", { name: /Daftar Akun Ibu/i });
+        const registerLink = screen.getByRole("link", {
+          name: /Daftar Akun Ibu/i,
+        });
         expect(registerLink.className).toContain("min-h-[44px]");
-        const installHelpBtn = screen.getByRole("button", { name: /Cara memasang aplikasi/i });
+        const installHelpBtn = screen.getByRole("button", {
+          name: /Cara memasang aplikasi/i,
+        });
         expect(installHelpBtn.className).toContain("min-h-[44px]");
         unmount();
       });
@@ -3915,7 +5024,9 @@ describe("PWA-2 Authentication, Onboarding & Mother App Shell", () => {
         expect(html).toContain('name="description"');
         expect(html).toContain('property="og:title"');
         expect(html).toContain('type="application/ld+json"');
-        expect(html).toContain('rel="preload" as="image" href="/brand/logo-symbol.png"');
+        expect(html).toContain(
+          'rel="preload" as="image" href="/brand/logo-symbol.png"',
+        );
       });
     });
   });

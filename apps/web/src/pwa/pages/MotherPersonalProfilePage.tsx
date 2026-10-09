@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { motherProfileFieldsSchema, publicIdSchema } from "@pfram/validation";
+import {
+  formatDateOnly,
+  motherProfileFieldsSchema,
+  publicIdSchema,
+  todayDateOnly,
+} from "@pfram/validation";
 import { z } from "zod";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth";
 import { onboardingDraft } from "../onboarding-draft";
 import { MotherAppShell } from "../MotherAppShell";
 import { Button, Card, ErrorState, Input, Select, StatusBadge } from "../../components";
+import { extractAndMapError } from "../../error-mapping";
 
 const personalStepSchema = motherProfileFieldsSchema
   .omit({
@@ -27,7 +33,7 @@ type Page<T> = { items: T[] };
 export function MotherPersonalProfilePage() {
   const { request, user } = useAuth();
   const navigate = useNavigate();
-  const [error, setError] = useState("");
+  const [formError, setFormError] = useState("");
   const [regions, setRegions] = useState<Record<string, Region[]>>({});
 
   const {
@@ -35,6 +41,7 @@ export function MotherPersonalProfilePage() {
     handleSubmit,
     watch,
     setValue,
+    setError: setFieldError,
     register,
     formState: { errors, isSubmitting },
   } = useForm<Values>({
@@ -66,7 +73,7 @@ export function MotherPersonalProfilePage() {
     request<Page<Region>>("/reference/regions?level=PROVINCE&limit=100")
       .then((v) => setRegions((r) => ({ ...r, province: v.items })))
       .catch(() =>
-        setError("Wilayah tidak dapat dimuat. Periksa koneksi dan coba lagi."),
+        setFormError("Wilayah tidak dapat dimuat. Periksa koneksi dan coba lagi."),
       );
   }, [request]);
 
@@ -78,7 +85,7 @@ export function MotherPersonalProfilePage() {
     setValue("villagePublicId", "");
     request<Region[]>(`/reference/regions/${province}/children`)
       .then((v) => setRegions((r) => ({ ...r, regency: v })))
-      .catch(() => setError("Kabupaten/kota gagal dimuat."));
+      .catch(() => setFormError("Kabupaten/kota gagal dimuat."));
   }, [province, request, setValue]);
 
   // Load districts when regency changes
@@ -88,7 +95,7 @@ export function MotherPersonalProfilePage() {
     setValue("villagePublicId", "");
     request<Region[]>(`/reference/regions/${regency}/children`)
       .then((v) => setRegions((r) => ({ ...r, district: v })))
-      .catch(() => setError("Kecamatan gagal dimuat."));
+      .catch(() => setFormError("Kecamatan gagal dimuat."));
   }, [regency, request, setValue]);
 
   // Load villages when district changes
@@ -97,28 +104,30 @@ export function MotherPersonalProfilePage() {
     setValue("villagePublicId", "");
     request<Region[]>(`/reference/regions/${district}/children`)
       .then((v) => setRegions((r) => ({ ...r, village: v })))
-      .catch(() => setError("Kelurahan/desa gagal dimuat."));
+      .catch(() => setFormError("Kelurahan/desa gagal dimuat."));
   }, [district, request, setValue]);
 
   const onSubmit = async (values: Values) => {
-    setError("");
+    setFormError("");
     try {
       const facilities = await request<Page<{ publicId: string }>>(
         `/reference/facilities?district=${values.districtPublicId}&limit=1`,
       );
       if (!facilities.items.length) {
         throw new Error(
-          "Belum ada fasilitas aktif pada kecamatan yang dipilih. Silakan pilih wilayah lain.",
+          "Belum ada fasilitas kesehatan aktif yang terdaftar untuk kecamatan ini. Silakan ubah data domisili atau hubungi petugas kesehatan.",
         );
       }
       onboardingDraft.setPersonal(values);
       navigate("/m/onboarding/facility");
     } catch (e) {
-      setError(
-        e instanceof Error
-          ? e.message
-          : "Data profil belum dapat dilanjutkan.",
-      );
+      const mapped = extractAndMapError(e);
+      setFormError(mapped.message || "Data profil belum dapat dilanjutkan.");
+      if (mapped.fieldErrors) {
+        Object.entries(mapped.fieldErrors).forEach(([field, msg]) => {
+          setFieldError(field as keyof Values, { type: "server", message: msg });
+        });
+      }
     }
   };
 
@@ -134,7 +143,7 @@ export function MotherPersonalProfilePage() {
       }
     >
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {error && <ErrorState message={error} />}
+        {formError && <ErrorState message={formError} />}
 
         <Card className="border border-slate-200/90 bg-white p-5 shadow-sm space-y-4">
           <div className="border-b border-slate-100 pb-3">
@@ -166,6 +175,7 @@ export function MotherPersonalProfilePage() {
             id="dateOfBirth"
             type="date"
             label="Tanggal Lahir *"
+            max={formatDateOnly(todayDateOnly())}
             error={errors.dateOfBirth?.message}
             {...register("dateOfBirth")}
           />
@@ -292,7 +302,7 @@ export function MotherPersonalProfilePage() {
           <Input
             id="familyContactPhone"
             label="Nomor Telepon Keluarga"
-            placeholder="08xxxxxxxxxx"
+            placeholder="Contoh: 0853xxxxxxxx"
             error={errors.familyContactPhone?.message}
             {...register("familyContactPhone")}
           />
@@ -310,7 +320,7 @@ export function MotherPersonalProfilePage() {
           <Input
             id="emergencyContactPhone"
             label="Nomor Telepon Kontak Darurat"
-            placeholder="08xxxxxxxxxx"
+            placeholder="Contoh: 0853xxxxxxxx"
             error={errors.emergencyContactPhone?.message}
             {...register("emergencyContactPhone")}
           />

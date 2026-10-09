@@ -12,6 +12,7 @@ import {
 } from "../../p4k-queries";
 import { formatIndonesianDate } from "../../monitoring-api";
 import { useAuth } from "../../auth";
+import { extractAndMapError } from "../../error-mapping";
 
 type P4kTab = "birthPlan" | "referral" | "checklist";
 
@@ -143,8 +144,13 @@ export function MotherP4kPage() {
         bloodDonors,
       });
       setEditingBirthPlan(false);
-    } catch {
-      setBirthPlanError("Gagal menyimpan rencana persalinan. Silakan coba kembali.");
+    } catch (err) {
+      const mapped = extractAndMapError(err);
+      setBirthPlanError(
+        mapped.fieldErrors && Object.keys(mapped.fieldErrors).length > 0
+          ? mapped.message
+          : "Gagal menyimpan rencana persalinan. Silakan coba kembali.",
+      );
     }
   };
 
@@ -160,8 +166,13 @@ export function MotherP4kPage() {
         estimatedTravelTimeMinutes: travelMinutes ? parseInt(travelMinutes, 10) : undefined,
       });
       setEditingReferral(false);
-    } catch {
-      setReferralError("Gagal menyimpan rencana rujukan. Silakan coba kembali.");
+    } catch (err) {
+      const mapped = extractAndMapError(err);
+      setReferralError(
+        mapped.fieldErrors && Object.keys(mapped.fieldErrors).length > 0
+          ? mapped.message
+          : "Gagal menyimpan rencana rujukan. Silakan coba kembali.",
+      );
     }
   };
 
