@@ -18,6 +18,7 @@ import {
   formatFacilityType,
   formatRegionLevel,
 } from "./components";
+import { extractAndMapError } from "./error-mapping";
 
 type Page<T> = { items: T[]; total: number; page: number; pageSize: number };
 type Region = {
@@ -34,7 +35,14 @@ type Facility = {
   type: string;
   address: string;
   active: boolean;
-  district: { name: string };
+  phoneNumber?: string | null;
+  whatsappNumber?: string | null;
+  emergencyPhone?: string | null;
+  serviceInformation?: string | null;
+  province?: { publicId: string; name: string } | null;
+  regency?: { publicId: string; name: string } | null;
+  district?: { publicId: string; name: string } | null;
+  village?: { publicId: string; name: string } | null;
 };
 type Midwife = {
   publicId: string;
@@ -133,7 +141,6 @@ export function RegionsPage() {
     [levelFilter],
   );
   const list = useList<Region>("/admin/regions", extraQuery);
-  const [message, setMessage] = useState("");
   const [parentOptions, setParentOptions] = useState<Region[]>([]);
   const [form, setForm] = useState({
     name: "",
@@ -142,8 +149,13 @@ export function RegionsPage() {
     parentPublicId: "",
   });
 
+  const [successMessage, setSuccessMessage] = useState("");
+  const [formError, setFormError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
   useEffect(() => {
     const parentLevel = {
+      PROVINCE: null,
       REGENCY: "PROVINCE",
       DISTRICT: "REGENCY",
       VILLAGE: "DISTRICT",
@@ -158,7 +170,9 @@ export function RegionsPage() {
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
-    setMessage("");
+    setSuccessMessage("");
+    setFormError("");
+    setFieldErrors({});
     try {
       await request("/admin/regions", {
         method: "POST",
@@ -168,10 +182,12 @@ export function RegionsPage() {
         }),
       });
       setForm({ ...form, name: "", code: "" });
-      setMessage("Wilayah berhasil ditambahkan ke sistem.");
+      setSuccessMessage("Wilayah berhasil ditambahkan ke sistem.");
       list.load();
     } catch (err) {
-      setMessage(err instanceof Error ? err.message : "Gagal menyimpan wilayah");
+      const mapped = extractAndMapError(err);
+      setFieldErrors(mapped.fieldErrors);
+      setFormError(mapped.message || "Gagal menyimpan wilayah");
     }
   };
 
@@ -194,12 +210,14 @@ export function RegionsPage() {
             placeholder="Contoh: Kabupaten Maluku Tengah"
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
+            error={fieldErrors.name}
           />
           <Input
             label="Kode Wilayah (Opsional)"
             placeholder="Contoh: 81.01"
             value={form.code}
             onChange={(e) => setForm({ ...form, code: e.target.value })}
+            error={fieldErrors.code}
           />
           <label className="grid gap-1.5 text-sm font-medium text-slate-800">
             <span>Tingkat Wilayah</span>
@@ -222,7 +240,12 @@ export function RegionsPage() {
               <span>Induk Wilayah (Parent)</span>
               <select
                 required
-                className="min-h-11 rounded-xl border border-slate-300 bg-white px-3 text-slate-900 shadow-sm focus:border-pfram-primary focus:outline-none focus:ring-2 focus:ring-pfram-primary/20"
+                id="region-parent-select"
+                aria-invalid={Boolean(fieldErrors.parentPublicId)}
+                aria-describedby={fieldErrors.parentPublicId ? "region-parent-select-error" : undefined}
+                className={`min-h-11 rounded-xl border ${
+                  fieldErrors.parentPublicId ? "border-rose-500 ring-1 ring-rose-500/20" : "border-slate-300"
+                } bg-white px-3 text-slate-900 shadow-sm focus:border-pfram-primary focus:outline-none focus:ring-2 focus:ring-pfram-primary/20`}
                 value={form.parentPublicId}
                 onChange={(e) =>
                   setForm({ ...form, parentPublicId: e.target.value })
@@ -235,18 +258,31 @@ export function RegionsPage() {
                   </option>
                 ))}
               </select>
+              {fieldErrors.parentPublicId && (
+                <span id="region-parent-select-error" role="alert" className="text-xs font-semibold text-rose-600">
+                  {fieldErrors.parentPublicId}
+                </span>
+              )}
             </label>
           )}
           <div className="md:col-span-2 pt-1">
             <Button type="submit">Tambah Wilayah</Button>
           </div>
         </form>
-        {message && (
+        {formError && (
+          <p
+            role="alert"
+            className="mt-3 rounded-lg bg-rose-50 p-2.5 text-sm font-medium text-rose-800"
+          >
+            {formError}
+          </p>
+        )}
+        {successMessage && (
           <p
             role="status"
             className="mt-3 rounded-lg bg-emerald-50 p-2.5 text-sm font-medium text-emerald-800"
           >
-            {message}
+            {successMessage}
           </p>
         )}
       </Card>
@@ -341,9 +377,11 @@ export function RegionsPage() {
 function RegionChain({
   values,
   setValues,
+  errors,
 }: {
   values: Record<string, string>;
   setValues: (value: Record<string, string>) => void;
+  errors?: Record<string, string>;
 }) {
   const { request } = useAuth();
   const levels = ["province", "regency", "district", "village"] as const;
@@ -388,30 +426,54 @@ function RegionChain({
 
   return (
     <>
-      {levels.map((key, index) => (
-        <label className="grid gap-1.5 text-sm font-medium text-slate-800" key={key}>
-          <span>{levelLabels[index]}</span>
-          <select
-            required={key !== "village"}
-            className="min-h-11 rounded-xl border border-slate-300 bg-white px-3 text-slate-900 shadow-sm focus:border-pfram-primary focus:outline-none focus:ring-2 focus:ring-pfram-primary/20"
-            value={values[key] ?? ""}
-            onChange={(e) => {
-              const next = { ...values, [key]: e.target.value };
-              levels.slice(index + 1).forEach((k) => {
-                next[k] = "";
-              });
-              setValues(next);
-            }}
+      {levels.map((key, index) => {
+        const fieldError = errors?.[key] || errors?.[`${key}PublicId`];
+        const selectId = `region-select-${key}`;
+        return (
+          <label
+            className="grid gap-1.5 text-sm font-medium text-slate-800"
+            key={key}
+            htmlFor={selectId}
           >
-            <option value="">-- Pilih {levelLabels[index]} --</option>
-            {options[key]?.map((v) => (
-              <option key={v.publicId} value={v.publicId}>
-                {v.code ? `[${v.code}] ${v.name}` : v.name}
-              </option>
-            ))}
-          </select>
-        </label>
-      ))}
+            <span>{levelLabels[index]}</span>
+            <select
+              id={selectId}
+              required={key !== "village"}
+              aria-invalid={Boolean(fieldError)}
+              aria-describedby={fieldError ? `${selectId}-error` : undefined}
+              className={`min-h-11 rounded-xl border ${
+                fieldError
+                  ? "border-rose-500 ring-1 ring-rose-500/20"
+                  : "border-slate-300"
+              } bg-white px-3 text-slate-900 shadow-sm focus:border-pfram-primary focus:outline-none focus:ring-2 focus:ring-pfram-primary/20`}
+              value={values[key] ?? ""}
+              onChange={(e) => {
+                const next = { ...values, [key]: e.target.value };
+                levels.slice(index + 1).forEach((k) => {
+                  next[k] = "";
+                });
+                setValues(next);
+              }}
+            >
+              <option value="">-- Pilih {levelLabels[index]} --</option>
+              {options[key]?.map((v) => (
+                <option key={v.publicId} value={v.publicId}>
+                  {v.code ? `[${v.code}] ${v.name}` : v.name}
+                </option>
+              ))}
+            </select>
+            {fieldError && (
+              <span
+                id={`${selectId}-error`}
+                role="alert"
+                className="text-xs font-semibold text-rose-600"
+              >
+                {fieldError}
+              </span>
+            )}
+          </label>
+        );
+      })}
     </>
   );
 }
@@ -426,10 +488,78 @@ export function FacilitiesPage() {
   const [form, setForm] = useState<Record<string, string>>({
     type: "PUSKESMAS",
   });
-  const [message, setMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [formError, setFormError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+
+  const [editingFacility, setEditingFacility] = useState<Facility | null>(null);
+  const [editForm, setEditForm] = useState<Record<string, string>>({
+    type: "PUSKESMAS",
+  });
+  const [editFormError, setEditFormError] = useState("");
+  const [editFieldErrors, setEditFieldErrors] = useState<Record<string, string>>({});
+  const [editSubmitting, setEditSubmitting] = useState(false);
+
+  const openEditModal = (f: Facility) => {
+    setEditingFacility(f);
+    setEditForm({
+      name: f.name,
+      type: f.type,
+      address: f.address,
+      phoneNumber: f.phoneNumber ?? "",
+      whatsappNumber: f.whatsappNumber ?? "",
+      emergencyPhone: f.emergencyPhone ?? "",
+      serviceInformation: f.serviceInformation ?? "",
+      province: f.province?.publicId ?? "",
+      regency: f.regency?.publicId ?? "",
+      district: f.district?.publicId ?? "",
+      village: f.village?.publicId ?? "",
+    });
+    setEditFormError("");
+    setEditFieldErrors({});
+  };
+
+  const submitEdit = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!editingFacility) return;
+    setSuccessMessage("");
+    setEditFormError("");
+    setEditFieldErrors({});
+    setEditSubmitting(true);
+    try {
+      await request(`/admin/facilities/${editingFacility.publicId}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          name: editForm.name,
+          type: editForm.type,
+          address: editForm.address,
+          provincePublicId: editForm.province,
+          regencyPublicId: editForm.regency,
+          districtPublicId: editForm.district,
+          villagePublicId: editForm.village || undefined,
+          phoneNumber: editForm.phoneNumber || undefined,
+          whatsappNumber: editForm.whatsappNumber || undefined,
+          emergencyPhone: editForm.emergencyPhone || undefined,
+          serviceInformation: editForm.serviceInformation || undefined,
+        }),
+      });
+      setSuccessMessage("Perubahan fasilitas kesehatan berhasil disimpan.");
+      setEditingFacility(null);
+      list.load();
+    } catch (err) {
+      const mapped = extractAndMapError(err);
+      setEditFieldErrors(mapped.fieldErrors);
+      setEditFormError(mapped.message || "Gagal memperbarui fasilitas");
+    } finally {
+      setEditSubmitting(false);
+    }
+  };
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
+    setSuccessMessage("");
+    setFormError("");
+    setFieldErrors({});
     try {
       await request("/admin/facilities", {
         method: "POST",
@@ -443,13 +573,17 @@ export function FacilitiesPage() {
           villagePublicId: form.village || undefined,
           phoneNumber: form.phoneNumber || undefined,
           whatsappNumber: form.whatsappNumber || undefined,
+          emergencyPhone: form.emergencyPhone || undefined,
           serviceInformation: form.serviceInformation || undefined,
         }),
       });
-      setMessage("Fasilitas kesehatan berhasil disimpan.");
+      setSuccessMessage("Fasilitas kesehatan berhasil disimpan.");
+      setForm({ type: "PUSKESMAS" });
       list.load();
     } catch (err) {
-      setMessage(err instanceof Error ? err.message : "Gagal menyimpan fasilitas");
+      const mapped = extractAndMapError(err);
+      setFieldErrors(mapped.fieldErrors);
+      setFormError(mapped.message || "Gagal menyimpan fasilitas");
     }
   };
 
@@ -481,6 +615,7 @@ export function FacilitiesPage() {
             placeholder="Contoh: Puskesmas Banda"
             value={form.name ?? ""}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
+            error={fieldErrors.name}
           />
           <label className="grid gap-1.5 text-sm font-medium text-slate-800">
             <span>Jenis Fasilitas</span>
@@ -502,24 +637,48 @@ export function FacilitiesPage() {
             placeholder="Alamat jalan, nomor, RT/RW"
             value={form.address ?? ""}
             onChange={(e) => setForm({ ...form, address: e.target.value })}
+            error={fieldErrors.address}
           />
           <Input
             label="Nomor Telepon Kontak"
-            placeholder="Nomor kontak operasional"
+            placeholder="Contoh: 0853xxxxxxxx"
             value={form.phoneNumber ?? ""}
             onChange={(e) => setForm({ ...form, phoneNumber: e.target.value })}
+            error={fieldErrors.phoneNumber}
           />
-          <RegionChain values={form} setValues={setForm} />
+          <Input
+            label="Nomor WhatsApp"
+            placeholder="Contoh: 0853xxxxxxxx"
+            value={form.whatsappNumber ?? ""}
+            onChange={(e) => setForm({ ...form, whatsappNumber: e.target.value })}
+            error={fieldErrors.whatsappNumber}
+          />
+          <Input
+            label="Nomor Darurat"
+            placeholder="Contoh: 119 atau 0853xxxxxxxx"
+            value={form.emergencyPhone ?? ""}
+            onChange={(e) => setForm({ ...form, emergencyPhone: e.target.value })}
+            error={fieldErrors.emergencyPhone}
+          />
+          <RegionChain values={form} setValues={setForm} errors={fieldErrors} />
           <div className="md:col-span-2 pt-2">
             <Button type="submit">Tambah Fasilitas</Button>
           </div>
         </form>
-        {message && (
+        {formError && (
+          <p
+            role="alert"
+            className="mt-3 rounded-lg bg-rose-50 p-2.5 text-sm font-medium text-rose-800"
+          >
+            {formError}
+          </p>
+        )}
+        {successMessage && (
           <p
             role="status"
             className="mt-3 rounded-lg bg-emerald-50 p-2.5 text-sm font-medium text-emerald-800"
           >
-            {message}
+            {successMessage}
           </p>
         )}
       </Card>
@@ -561,7 +720,14 @@ export function FacilitiesPage() {
                 </p>
               </div>
 
-              <div className="shrink-0">
+              <div className="shrink-0 flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => openEditModal(v)}
+                >
+                  Ubah
+                </Button>
                 <Button
                   variant="outline"
                   size="sm"
@@ -579,6 +745,135 @@ export function FacilitiesPage() {
           ))}
         </div>
       </Card>
+
+      {/* MODAL EDIT FASILITAS */}
+      {editingFacility && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="edit-facility-title"
+          className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-900/60 p-4 backdrop-blur-sm"
+        >
+          <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl ring-1 ring-slate-900/10">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div>
+                <h3
+                  id="edit-facility-title"
+                  className="text-lg font-bold text-slate-900"
+                >
+                  Ubah Fasilitas Kesehatan
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Perbarui identitas, alamat, atau wilayah kerja {editingFacility.name}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditingFacility(null)}
+                className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+                aria-label="Tutup modal"
+              >
+                ✕
+              </button>
+            </div>
+
+            {editFormError && (
+              <p
+                role="alert"
+                className="mt-4 rounded-lg bg-rose-50 p-2.5 text-sm font-medium text-rose-800"
+              >
+                {editFormError}
+              </p>
+            )}
+
+            <form
+              className="mt-4 grid gap-3.5 md:grid-cols-2"
+              onSubmit={(e) => void submitEdit(e)}
+            >
+              <Input
+                label="Nama Fasilitas"
+                required
+                placeholder="Contoh: Puskesmas Banda"
+                value={editForm.name ?? ""}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, name: e.target.value })
+                }
+                error={editFieldErrors.name}
+              />
+              <label className="grid gap-1.5 text-sm font-medium text-slate-800">
+                <span>Jenis Fasilitas</span>
+                <select
+                  className="min-h-11 rounded-xl border border-slate-300 bg-white px-3 text-slate-900 shadow-sm focus:border-pfram-primary focus:outline-none focus:ring-2 focus:ring-pfram-primary/20"
+                  value={editForm.type}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, type: e.target.value })
+                  }
+                >
+                  {facilityTypes.map((v) => (
+                    <option key={v} value={v}>
+                      {formatFacilityType(v)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <Input
+                label="Alamat Lengkap"
+                required
+                placeholder="Alamat jalan, nomor, RT/RW"
+                value={editForm.address ?? ""}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, address: e.target.value })
+                }
+                error={editFieldErrors.address}
+              />
+              <Input
+                label="Nomor Telepon Kontak"
+                placeholder="Contoh: 0853xxxxxxxx"
+                value={editForm.phoneNumber ?? ""}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, phoneNumber: e.target.value })
+                }
+                error={editFieldErrors.phoneNumber}
+              />
+              <Input
+                label="Nomor WhatsApp"
+                placeholder="Contoh: 0853xxxxxxxx"
+                value={editForm.whatsappNumber ?? ""}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, whatsappNumber: e.target.value })
+                }
+                error={editFieldErrors.whatsappNumber}
+              />
+              <Input
+                label="Nomor Darurat"
+                placeholder="Contoh: 119 atau 0853xxxxxxxx"
+                value={editForm.emergencyPhone ?? ""}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, emergencyPhone: e.target.value })
+                }
+                error={editFieldErrors.emergencyPhone}
+              />
+              <RegionChain
+                values={editForm}
+                setValues={setEditForm}
+                errors={editFieldErrors}
+              />
+              <div className="md:col-span-2 flex justify-end gap-3 pt-3 border-t border-slate-100">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setEditingFacility(null)}
+                >
+                  Batal
+                </Button>
+                <Button type="submit" disabled={editSubmitting}>
+                  {editSubmitting ? "Menyimpan…" : "Simpan Perubahan"}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -900,7 +1195,9 @@ export function AssignmentsPage() {
   >(null);
   const [replacementMidwifeId, setReplacementMidwifeId] = useState("");
   const [reason, setReason] = useState("");
-  const [message, setMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [midwives, setMidwives] = useState<
     { publicId: string; fullName: string }[]
   >([]);
@@ -916,20 +1213,22 @@ export function AssignmentsPage() {
   const handleAction = async (e: FormEvent) => {
     e.preventDefault();
     if (!actionId || !actionType) return;
-    setMessage("");
+    setSuccessMessage("");
+    setErrorMessage("");
+    setFieldErrors({});
     try {
       if (actionType === "replace") {
         await request(`/admin/assignments/${actionId}/replace`, {
           method: "POST",
           body: JSON.stringify({ midwifePublicId: replacementMidwifeId, reason }),
         });
-        setMessage("Pergantian bidan pembina berhasil diproses.");
+        setSuccessMessage("Pergantian bidan pembina berhasil diproses.");
       } else {
         await request(`/admin/assignments/${actionId}/${actionType}`, {
           method: "POST",
           body: JSON.stringify({ reason: reason || undefined }),
         });
-        setMessage(
+        setSuccessMessage(
           `Penugasan berhasil di-${actionType === "complete" ? "selesaikan" : "batalkan"}.`,
         );
       }
@@ -939,7 +1238,9 @@ export function AssignmentsPage() {
       setReplacementMidwifeId("");
       list.load();
     } catch (err) {
-      setMessage(err instanceof Error ? err.message : "Aksi penugasan gagal");
+      const mapped = extractAndMapError(err);
+      setErrorMessage(mapped.message || "Aksi penugasan gagal");
+      setFieldErrors(mapped.fieldErrors);
     }
   };
 
@@ -950,9 +1251,15 @@ export function AssignmentsPage() {
         description="Tetapkan, alihkan pendampingan, dan pantau status pembinaan ibu hamil."
       />
 
-      {message && (
-        <div className="rounded-xl bg-emerald-50 p-3.5 text-sm font-medium text-emerald-800 ring-1 ring-emerald-200">
-          {message}
+      {errorMessage && (
+        <div role="alert" className="rounded-xl bg-rose-50 p-3.5 text-sm font-medium text-rose-800 ring-1 ring-rose-200">
+          {errorMessage}
+        </div>
+      )}
+
+      {successMessage && (
+        <div role="status" className="rounded-xl bg-emerald-50 p-3.5 text-sm font-medium text-emerald-800 ring-1 ring-emerald-200">
+          {successMessage}
         </div>
       )}
 
@@ -1049,10 +1356,13 @@ export function AssignmentsPage() {
                       <label className="grid gap-1.5 text-sm font-medium text-slate-800">
                         <span>Pilih Bidan Pengganti</span>
                         <select
-                          className="min-h-11 rounded-xl border border-slate-300 bg-white px-3 text-slate-900 shadow-sm focus:border-pfram-primary focus:outline-none focus:ring-2 focus:ring-pfram-primary/20"
+                          className={`min-h-11 rounded-xl border ${
+                            fieldErrors.midwifePublicId ? "border-rose-500 ring-1 ring-rose-500/20" : "border-slate-300"
+                          } bg-white px-3 text-slate-900 shadow-sm focus:border-pfram-primary focus:outline-none focus:ring-2 focus:ring-pfram-primary/20`}
                           value={replacementMidwifeId}
                           onChange={(e) => setReplacementMidwifeId(e.target.value)}
                           required
+                          aria-invalid={Boolean(fieldErrors.midwifePublicId)}
                         >
                           <option value="">-- Pilih Bidan Pengganti --</option>
                           {midwives.map((m) => (
@@ -1061,6 +1371,11 @@ export function AssignmentsPage() {
                             </option>
                           ))}
                         </select>
+                        {fieldErrors.midwifePublicId && (
+                          <span role="alert" className="text-xs font-semibold text-rose-600">
+                            {fieldErrors.midwifePublicId}
+                          </span>
+                        )}
                       </label>
                     )}
                     <Input
@@ -1077,6 +1392,7 @@ export function AssignmentsPage() {
                           : "Catatan penutupan penugasan"
                       }
                       required={actionType === "replace"}
+                      error={fieldErrors.reason}
                     />
                     <div className="flex gap-2 pt-1">
                       <Button type="submit" size="sm">

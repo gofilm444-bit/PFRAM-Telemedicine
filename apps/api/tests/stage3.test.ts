@@ -343,6 +343,26 @@ describe("Stage 3 — Verification Suite", () => {
       expect(res.json().data.type).toBe("PUSKESMAS");
     });
 
+    it("pembuatan fasilitas menerima alamat pendek yang sah (misal: Siko)", async () => {
+      const uniqueName = `Pustu Siko ${Date.now()}`;
+      const res = await app.inject({
+        method: "POST",
+        url: "/api/admin/facilities",
+        headers: { authorization: `Bearer ${adminToken}` },
+        payload: {
+          name: uniqueName,
+          type: "PUSKESMAS",
+          address: "Siko",
+          provincePublicId: devProvince.publicId,
+          regencyPublicId: devRegency.publicId,
+          districtPublicId: devDistrict.publicId,
+          phoneNumber: "081234567890",
+        },
+      });
+      expect(res.statusCode).toBe(201);
+      expect(res.json().data.address).toBe("Siko");
+    });
+
     it("pembuatan fasilitas ditolak jika hierarki wilayah tidak konsisten", async () => {
       // Create independent province & regency to cause mismatch
       const otherProv = await prisma.region.create({
@@ -366,7 +386,10 @@ describe("Stage 3 — Verification Suite", () => {
         },
       });
       expect(res.statusCode).toBe(400);
-      expect(res.json().error.code).toBe("REGION_HIERARCHY_INVALID");
+      const errJson = res.json();
+      expect(errJson.error.code).toBe("REGION_HIERARCHY_INVALID");
+      expect(errJson.error.fieldErrors).toBeDefined();
+      expect(errJson.error.fieldErrors.regencyPublicId).toBeDefined();
     });
 
     it("fasilitas nonaktif tidak muncul pada pencarian referensi aktif", async () => {
@@ -454,6 +477,58 @@ describe("Stage 3 — Verification Suite", () => {
         where: { id: devMotherProfile.id },
         data: { fullName: "Ibu Development" },
       });
+    });
+
+    it("pembaruan profil ibu menolak tanggal lahir di masa depan", async () => {
+      const res = await app.inject({
+        method: "PUT",
+        url: "/api/mother/profile",
+        headers: { authorization: `Bearer ${motherToken}` },
+        payload: {
+          fullName: "Ibu Dev Updated",
+          dateOfBirth: "2099-01-01",
+          address: "Siko",
+          provincePublicId: devProvince.publicId,
+          regencyPublicId: devRegency.publicId,
+          districtPublicId: devDistrict.publicId,
+          primaryFacilityPublicId: devFacility.publicId,
+        },
+      });
+      expect(res.statusCode).toBe(400);
+      const json = res.json();
+      expect(json.success).toBe(false);
+      expect(json.error.code).toBe("VALIDATION_ERROR");
+      expect(json.error.fieldErrors).toBeDefined();
+      expect(json.error.fieldErrors.dateOfBirth).toContain("Tanggal lahir tidak boleh berada di masa depan");
+    });
+
+    it("pembaruan profil ibu menerima alamat pendek yang sah (misal: Siko)", async () => {
+      try {
+        const res = await app.inject({
+          method: "PUT",
+          url: "/api/mother/profile",
+          headers: { authorization: `Bearer ${motherToken}` },
+          payload: {
+            fullName: "Ibu Dev Updated",
+            dateOfBirth: "1996-01-01",
+            address: "Siko",
+            provincePublicId: devProvince.publicId,
+            regencyPublicId: devRegency.publicId,
+            districtPublicId: devDistrict.publicId,
+            primaryFacilityPublicId: devFacility.publicId,
+          },
+        });
+        expect(res.statusCode).toBe(200);
+        const updated = await prisma.motherProfile.findUniqueOrThrow({
+          where: { id: devMotherProfile.id },
+        });
+        expect(updated.address).toBe("Siko");
+      } finally {
+        await prisma.motherProfile.update({
+          where: { id: devMotherProfile.id },
+          data: { fullName: "Ibu Development", address: "Jalan Ibu No. 1" },
+        });
+      }
     });
   });
 
@@ -642,69 +717,80 @@ describe("Stage 3 — Verification Suite", () => {
           },
         },
       });
-      const st1 = await profileCompletion(prisma, freshUser.id);
-      expect(st1.status).toBe("ACCOUNT_READY");
 
-      // 2. PERSONAL_PROFILE_INCOMPLETE (partially entered)
-      await prisma.motherProfile.update({
-        where: { userId: freshUser.id },
-        data: { address: "Jalan Uji" },
-      });
-      const st2 = await profileCompletion(prisma, freshUser.id);
-      expect(st2.status).toBe("PERSONAL_PROFILE_INCOMPLETE");
+      try {
+        const st1 = await profileCompletion(prisma, freshUser.id);
+        expect(st1.status).toBe("ACCOUNT_READY");
 
-      // 3. FACILITY_NOT_SELECTED
-      await prisma.motherProfile.update({
-        where: { userId: freshUser.id },
-        data: {
-          dateOfBirth: parseDateOnly("1998-01-01"),
-          provinceId: devProvince.id,
-          regencyId: devRegency.id,
-          districtId: devDistrict.id,
-          profileCompleted: true,
-          primaryFacilityId: null,
-        },
-      });
-      const st3 = await profileCompletion(prisma, freshUser.id);
-      expect(st3.status).toBe("FACILITY_NOT_SELECTED");
+        // 2. PERSONAL_PROFILE_INCOMPLETE (partially entered)
+        await prisma.motherProfile.update({
+          where: { userId: freshUser.id },
+          data: { address: "Jalan Uji" },
+        });
+        const st2 = await profileCompletion(prisma, freshUser.id);
+        expect(st2.status).toBe("PERSONAL_PROFILE_INCOMPLETE");
 
-      // 4. PREGNANCY_PROFILE_INCOMPLETE
-      await prisma.motherProfile.update({
-        where: { userId: freshUser.id },
-        data: { primaryFacilityId: devFacility.id },
-      });
-      const st4 = await profileCompletion(prisma, freshUser.id);
-      expect(st4.status).toBe("PREGNANCY_PROFILE_INCOMPLETE");
+        // 3. FACILITY_NOT_SELECTED
+        await prisma.motherProfile.update({
+          where: { userId: freshUser.id },
+          data: {
+            dateOfBirth: parseDateOnly("1998-01-01"),
+            provinceId: devProvince.id,
+            regencyId: devRegency.id,
+            districtId: devDistrict.id,
+            profileCompleted: true,
+            primaryFacilityId: null,
+          },
+        });
+        const st3 = await profileCompletion(prisma, freshUser.id);
+        expect(st3.status).toBe("FACILITY_NOT_SELECTED");
 
-      // 5. MIDWIFE_NOT_ASSIGNED
-      const preg = await prisma.pregnancy.create({
-        data: {
-          motherId: (await prisma.motherProfile.findUniqueOrThrow({ where: { userId: freshUser.id } })).id,
-          pregnancyNumber: 1,
-          lastMenstrualPeriod: parseDateOnly("2026-06-01"),
-          estimatedDueDate: calculateEstimatedDueDate("2026-06-01"),
-          gestationalAgeSource: "LMP",
-          completedProfile: true,
-        },
-      });
-      const st5 = await profileCompletion(prisma, freshUser.id);
-      expect(st5.status).toBe("MIDWIFE_NOT_ASSIGNED");
+        // 4. PREGNANCY_PROFILE_INCOMPLETE
+        await prisma.motherProfile.update({
+          where: { userId: freshUser.id },
+          data: { primaryFacilityId: devFacility.id },
+        });
+        const st4 = await profileCompletion(prisma, freshUser.id);
+        expect(st4.status).toBe("PREGNANCY_PROFILE_INCOMPLETE");
 
-      // 6. COMPLETE
-      const motherId = (await prisma.motherProfile.findUniqueOrThrow({ where: { userId: freshUser.id } })).id;
-      await prisma.motherMidwifeAssignment.create({
-        data: {
-          motherId,
-          pregnancyId: preg.id,
-          midwifeId: devMidwifeProfile.id,
-          facilityId: devFacility.id,
-          assignedByUserId: devAdminUser.id,
-          status: "ACTIVE",
-        },
-      });
-      const st6 = await profileCompletion(prisma, freshUser.id);
-      expect(st6.status).toBe("COMPLETE");
-      expect(st6.profileCompleted).toBe(true);
+        // 5. MIDWIFE_NOT_ASSIGNED
+        const preg = await prisma.pregnancy.create({
+          data: {
+            motherId: (await prisma.motherProfile.findUniqueOrThrow({ where: { userId: freshUser.id } })).id,
+            pregnancyNumber: 1,
+            lastMenstrualPeriod: parseDateOnly("2026-06-01"),
+            estimatedDueDate: calculateEstimatedDueDate("2026-06-01"),
+            gestationalAgeSource: "LMP",
+            completedProfile: true,
+          },
+        });
+        const st5 = await profileCompletion(prisma, freshUser.id);
+        expect(st5.status).toBe("MIDWIFE_NOT_ASSIGNED");
+
+        // 6. COMPLETE
+        const motherId = (await prisma.motherProfile.findUniqueOrThrow({ where: { userId: freshUser.id } })).id;
+        await prisma.motherMidwifeAssignment.create({
+          data: {
+            motherId,
+            pregnancyId: preg.id,
+            midwifeId: devMidwifeProfile.id,
+            facilityId: devFacility.id,
+            assignedByUserId: devAdminUser.id,
+            status: "ACTIVE",
+          },
+        });
+        const st6 = await profileCompletion(prisma, freshUser.id);
+        expect(st6.status).toBe("COMPLETE");
+        expect(st6.profileCompleted).toBe(true);
+      } finally {
+        const mp = await prisma.motherProfile.findUnique({ where: { userId: freshUser.id } });
+        if (mp) {
+          await prisma.motherMidwifeAssignment.deleteMany({ where: { motherId: mp.id } });
+          await prisma.pregnancy.deleteMany({ where: { motherId: mp.id } });
+          await prisma.motherProfile.delete({ where: { id: mp.id } });
+        }
+        await prisma.user.deleteMany({ where: { id: freshUser.id } });
+      }
     });
   });
 });

@@ -71,6 +71,7 @@ model Region {
 model HealthFacility {
   id                                                              String                      @id @default(uuid()) @db.Uuid
   publicId                                                        String                      @unique @default(uuid()) @db.Uuid
+  masterKey                                                       String?                     @unique
   name                                                            String
   type                                                            HealthFacilityType
   address                                                         String

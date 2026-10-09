@@ -30,6 +30,7 @@ import {
   profileCompletion,
   resolveRegionHierarchy,
 } from "./service.js";
+import { formatZodErrorMessage } from "../../shared/validation.js";
 
 const invalid = (
   reply: FastifyReply,
@@ -40,7 +41,12 @@ const invalid = (
   reply
     .code(400)
     .send(
-      app.fail(req, "VALIDATION_ERROR", "Data tidak valid", error.flatten()),
+      app.fail(
+        req,
+        "VALIDATION_ERROR",
+        formatZodErrorMessage(error),
+        error.flatten(),
+      ),
     );
 const paging = (q: { page: number; limit: number }) => ({
   skip: (q.page - 1) * q.limit,
@@ -95,6 +101,7 @@ type FacilityRecord = Prisma.HealthFacilityGetPayload<{
 }>;
 const facilityView = (f: FacilityRecord) => ({
   publicId: f.publicId,
+  masterKey: f.masterKey ?? null,
   name: f.name,
   type: f.type,
   address: f.address,
@@ -563,8 +570,10 @@ export async function adminStage3Routes(app: FastifyInstance) {
       phoneNumber: existing.phoneNumber ?? undefined,
       whatsappNumber: existing.whatsappNumber ?? undefined,
       emergencyPhone: existing.emergencyPhone ?? undefined,
-      openingHours: existing.openingHours as
-        Record<string, unknown> | undefined,
+      openingHours: (existing.openingHours as
+        | Record<string, unknown>
+        | null
+        | undefined) ?? undefined,
       latitude: existing.latitude ? Number(existing.latitude) : undefined,
       longitude: existing.longitude ? Number(existing.longitude) : undefined,
       serviceInformation: existing.serviceInformation ?? undefined,
@@ -614,6 +623,88 @@ export async function adminStage3Routes(app: FastifyInstance) {
       });
       return app.ok(req, facilityView(row));
     });
+
+  app.delete("/facilities/:publicId", async (req, reply) => {
+    const id = routeParams(req).publicId;
+    const existing = await app.prisma.healthFacility.findUnique({
+      where: { publicId: id },
+    });
+    if (!existing) {
+      return reply
+        .code(404)
+        .send(app.fail(req, "FACILITY_NOT_FOUND", "Fasilitas tidak ditemukan"));
+    }
+
+    const [
+      mothersCount,
+      midwivesCount,
+      midwifeAssignmentsCount,
+      motherAssignmentsCount,
+      ancCount,
+      p4kCount,
+      destRefCount,
+      srcRefCount,
+    ] = await Promise.all([
+      app.prisma.motherProfile.count({
+        where: { primaryFacilityId: existing.id },
+      }),
+      app.prisma.midwifeProfile.count({
+        where: { primaryFacilityId: existing.id },
+      }),
+      app.prisma.midwifeFacilityAssignment.count({
+        where: { facilityId: existing.id },
+      }),
+      app.prisma.motherMidwifeAssignment.count({
+        where: { facilityId: existing.id },
+      }),
+      app.prisma.ancSchedule.count({
+        where: { facilityId: existing.id },
+      }),
+      app.prisma.p4kPlan.count({
+        where: { deliveryFacilityId: existing.id },
+      }),
+      app.prisma.referralPlan.count({
+        where: { destinationFacilityId: existing.id },
+      }),
+      app.prisma.referralPlan.count({
+        where: { sourceFacilityId: existing.id },
+      }),
+    ]);
+
+    const totalRefs =
+      mothersCount +
+      midwivesCount +
+      midwifeAssignmentsCount +
+      motherAssignmentsCount +
+      ancCount +
+      p4kCount +
+      destRefCount +
+      srcRefCount;
+
+    if (totalRefs > 0) {
+      return reply.code(409).send(
+        app.fail(
+          req,
+          "FACILITY_REFERENCED",
+          "Fasilitas kesehatan tidak dapat dihapus karena sudah memiliki riwayat data terkait. Silakan nonaktifkan fasilitas ini.",
+          { totalReferences: totalRefs },
+        ),
+      );
+    }
+
+    await app.prisma.healthFacility.delete({ where: { id: existing.id } });
+    await audit(app.prisma, req, {
+      ...actor(req),
+      action: "FACILITY_DELETED",
+      result: "SUCCESS",
+      entityType: "HealthFacility",
+      entityId: id,
+    });
+    return app.ok(req, {
+      success: true,
+      message: "Fasilitas kesehatan berhasil dihapus.",
+    });
+  });
 
   app.get("/midwives", async (req, reply) => {
     const parsed = paginationSchema.safeParse(req.query);
@@ -1214,6 +1305,30 @@ export async function adminStage3Routes(app: FastifyInstance) {
 
 export async function motherStage3Routes(app: FastifyInstance) {
   app.addHook("preHandler", app.authorize(["MOTHER"]));
+
+  const getRequiredMotherProfile = async (
+    userId: string,
+    req: FastifyRequest,
+    reply: FastifyReply,
+  ) => {
+    const mother = await app.prisma.motherProfile.findUnique({
+      where: { userId },
+    });
+    if (!mother) {
+      reply
+        .code(404)
+        .send(
+          app.fail(
+            req,
+            "MOTHER_PROFILE_NOT_FOUND",
+            "Data profil belum tersedia. Silakan lengkapi kembali data pribadi Anda.",
+          ),
+        );
+      return null;
+    }
+    return mother;
+  };
+
   app.get("/profile", async (req, reply) => {
     const p = await app.prisma.motherProfile.findUnique({
       where: { userId: req.user.sub },
@@ -1247,13 +1362,45 @@ export async function motherStage3Routes(app: FastifyInstance) {
       : reply
           .code(404)
           .send(
-            app.fail(req, "PROFILE_NOT_FOUND", "Profil ibu tidak ditemukan"),
+            app.fail(
+              req,
+              "MOTHER_PROFILE_NOT_FOUND",
+              "Data profil belum tersedia. Silakan lengkapi kembali data pribadi Anda.",
+            ),
           );
   });
   app.put("/profile", async (req, reply) => {
     const parsed = motherProfileSchema.safeParse(req.body);
     if (!parsed.success) return invalid(reply, app, req, parsed.error);
     const v = parsed.data;
+
+    const user = await app.prisma.user.findUnique({
+      where: { id: req.user.sub },
+      include: { motherProfile: true },
+    });
+    if (!user) {
+      return reply
+        .code(401)
+        .send(
+          app.fail(
+            req,
+            "UNAUTHORIZED",
+            "Sesi Anda tidak valid atau telah berakhir. Silakan masuk kembali.",
+          ),
+        );
+    }
+    if (user.role !== "MOTHER") {
+      return reply
+        .code(403)
+        .send(
+          app.fail(
+            req,
+            "FORBIDDEN",
+            "Peran akun Anda tidak memiliki izin untuk memperbarui profil ibu.",
+          ),
+        );
+    }
+
     const regions = await resolveRegionHierarchy(app.prisma, {
       provincePublicId: v.provincePublicId,
       regencyPublicId: v.regencyPublicId,
@@ -1273,7 +1420,7 @@ export async function motherStage3Routes(app: FastifyInstance) {
             "Fasilitas tidak aktif atau tidak sesuai wilayah",
           ),
         );
-    const data = asData<Prisma.MotherProfileUncheckedUpdateInput>({
+    const profileFields = {
       fullName: v.fullName,
       preferredName: v.preferredName,
       dateOfBirth: parseDateOnly(v.dateOfBirth),
@@ -1290,11 +1437,24 @@ export async function motherStage3Routes(app: FastifyInstance) {
       emergencyContactRelationship: v.emergencyContactRelationship,
       profileCompleted: true,
       completedAt: new Date(),
-    });
-    const p = await app.prisma.motherProfile.update({
-      where: { userId: req.user.sub },
-      data,
-    });
+    };
+
+    let p;
+    if (user.motherProfile) {
+      p = await app.prisma.motherProfile.update({
+        where: { id: user.motherProfile.id },
+        data: asData<Prisma.MotherProfileUncheckedUpdateInput>(profileFields),
+      });
+    } else {
+      // Safe transactional recovery: create profile if user.motherProfile was missing
+      p = await app.prisma.motherProfile.create({
+        data: asData<Prisma.MotherProfileUncheckedCreateInput>({
+          userId: user.id,
+          ...profileFields,
+        }),
+      });
+    }
+
     await audit(app.prisma, req, {
       ...actor(req),
       action: "MOTHER_PROFILE_UPDATED",
@@ -1313,10 +1473,9 @@ export async function motherStage3Routes(app: FastifyInstance) {
   app.get("/profile/completion", async (req) =>
     app.ok(req, await profileCompletion(app.prisma, req.user.sub)),
   );
-  app.get("/pregnancies", async (req) => {
-    const mother = await app.prisma.motherProfile.findUniqueOrThrow({
-      where: { userId: req.user.sub },
-    });
+  app.get("/pregnancies", async (req, reply) => {
+    const mother = await getRequiredMotherProfile(req.user.sub, req, reply);
+    if (!mother) return;
     const rows = await app.prisma.pregnancy.findMany({
       where: { motherId: mother.id },
       orderBy: { pregnancyNumber: "desc" },
@@ -1324,9 +1483,8 @@ export async function motherStage3Routes(app: FastifyInstance) {
     return app.ok(req, rows.map(pregnancySummary));
   });
   app.get("/pregnancies/active", async (req, reply) => {
-    const mother = await app.prisma.motherProfile.findUniqueOrThrow({
-      where: { userId: req.user.sub },
-    });
+    const mother = await getRequiredMotherProfile(req.user.sub, req, reply);
+    if (!mother) return;
     const row = await app.prisma.pregnancy.findFirst({
       where: { motherId: mother.id, status: "ACTIVE" },
     });
@@ -1345,9 +1503,8 @@ export async function motherStage3Routes(app: FastifyInstance) {
   app.post("/pregnancies", async (req, reply) => {
     const parsed = pregnancySchema.safeParse(req.body);
     if (!parsed.success) return invalid(reply, app, req, parsed.error);
-    const mother = await app.prisma.motherProfile.findUniqueOrThrow({
-      where: { userId: req.user.sub },
-    });
+    const mother = await getRequiredMotherProfile(req.user.sub, req, reply);
+    if (!mother) return;
     if (!mother.profileCompleted)
       return reply
         .code(409)
@@ -1425,9 +1582,8 @@ export async function motherStage3Routes(app: FastifyInstance) {
   app.put("/pregnancies/:publicId", async (req, reply) => {
     const parsed = pregnancyUpdateSchema.safeParse(req.body);
     if (!parsed.success) return invalid(reply, app, req, parsed.error);
-    const mother = await app.prisma.motherProfile.findUniqueOrThrow({
-      where: { userId: req.user.sub },
-    });
+    const mother = await getRequiredMotherProfile(req.user.sub, req, reply);
+    if (!mother) return;
     const old = await app.prisma.pregnancy.findUnique({
       where: { publicId: routeParams(req).publicId },
     });
@@ -1474,10 +1630,9 @@ export async function motherStage3Routes(app: FastifyInstance) {
     });
     return app.ok(req, pregnancySummary(row));
   });
-  app.get("/midwife-assignment", async (req) => {
-    const mother = await app.prisma.motherProfile.findUniqueOrThrow({
-      where: { userId: req.user.sub },
-    });
+  app.get("/midwife-assignment", async (req, reply) => {
+    const mother = await getRequiredMotherProfile(req.user.sub, req, reply);
+    if (!mother) return;
     const row = await app.prisma.motherMidwifeAssignment.findFirst({
       where: { motherId: mother.id, status: "ACTIVE" },
       include: {

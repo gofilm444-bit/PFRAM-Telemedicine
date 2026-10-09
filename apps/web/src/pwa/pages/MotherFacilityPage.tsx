@@ -4,6 +4,7 @@ import { useAuth } from "../../auth";
 import { onboardingDraft } from "../onboarding-draft";
 import { MotherAppShell } from "../MotherAppShell";
 import { Button, Card, ErrorState, StatusBadge } from "../../components";
+import { extractAndMapError } from "../../error-mapping";
 
 interface Facility {
   publicId: string;
@@ -36,8 +37,9 @@ export function MotherFacilityPage() {
           setSelectedFacilityId(res.items[0].publicId);
         }
       })
-      .catch(() => {
-        setError("Daftar fasilitas kesehatan gagal dimuat. Periksa koneksi.");
+      .catch((err) => {
+        const mapped = extractAndMapError(err);
+        setError(mapped.message || "Daftar fasilitas kesehatan gagal dimuat. Periksa koneksi.");
       })
       .finally(() => {
         setLoading(false);
@@ -94,10 +96,9 @@ export function MotherFacilityPage() {
       await refreshProfile();
       navigate("/m/onboarding/pregnancy");
     } catch (err) {
+      const mapped = extractAndMapError(err);
       setError(
-        err instanceof Error
-          ? err.message
-          : "Gagal menyimpan pilihan fasilitas kesehatan.",
+        mapped.message || "Gagal menyimpan pilihan fasilitas kesehatan.",
       );
     } finally {
       setSubmitting(false);
@@ -136,7 +137,7 @@ export function MotherFacilityPage() {
             </div>
           ) : !facilities || facilities.length === 0 ? (
             <div className="py-6 text-center text-xs text-slate-500">
-              Tidak ditemukan fasilitas kesehatan di kecamatan terpilih. Silakan ubah data domisili.
+              Belum ada fasilitas kesehatan aktif yang terdaftar untuk kecamatan ini. Silakan ubah data domisili atau hubungi petugas kesehatan.
             </div>
           ) : (
             <div className="space-y-2.5">
